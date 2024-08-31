@@ -1,0 +1,239 @@
+<!-- vendor_dashboard.html -->
+
+<div class="container mx-auto py-8">
+	<!-- Vendor Dashboard Title -->
+	<h1 class="text-3xl font-semibold mb-6">My Dashboard</h1>
+
+	<!-- Vendor Dashboard Sections -->
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+		<!-- RFQ Received Section -->
+		<a
+			href="{% url 'quotations' %}"
+			class="bg-white rounded-lg shadow-md hover:shadow-xl transition p-6"
+		>
+			<h2 class="text-xl font-semibold mb-4">Quotation</h2>
+			<!-- Display RFQ received information -->
+			<ul class="divide-y divide-gray-200">
+				{% for quotation in quotations_received %}
+				<li class="py-4">
+					<div class="flex items-center space-x-4">
+						<div class="flex-1">
+							<p class="text-lg font-light text-gray-600">
+								{{ quotation.unique_id }}
+							</p>
+							<p class="text-sm font-semibold text-gray-700">
+								{{ quotation.title }}
+							</p>
+						</div>
+						<div class="flex flex-col gap-1">
+							<p class="text-sm text-gray-600">
+								<span class="text-xs text-sky-500">Expires In:</span>
+								<span>
+									{{quotation.deadline|timeuntil:quotation.created_date }}
+								</span>
+							</p>
+							<p class="text-xs text-gray-500 text-right">@{{company.name}}</p>
+						</div>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</a>
+		<div class="bg-white rounded-lg shadow-md p-6">
+			<h2 class="text-xl font-semibold mb-4">Quotation Responds</h2>
+			<!-- Display RFQ received information -->
+			<ul class="divide-y divide-gray-200">
+				{% for response in quotations_response %}
+				<li class="py-4">
+					<div class="flex items-center space-x-4">
+						<div class="flex-1">
+							<p class="text-sm font-semibold text-gray-700">
+								{{ response.title }}
+							</p>
+						</div>
+						<div class="flex flex-col gap-1">
+							<p class="text-sm text-gray-600">
+								<span class="text-xs text-sky-500">Expires In:</span>
+								<span>
+									{{response.validity_period|timeuntil:response.created_date }}
+								</span>
+							</p>
+							<p class="text-xs text-gray-500 text-right">@{{company.name}}</p>
+						</div>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+		<!-- Orders Section -->
+		<div class="bg-white rounded-lg shadow-md p-6">
+			<h2 class="text-xl font-semibold mb-4">Resent Orders</h2>
+			<div class="block w-full overflow-x-auto overflow-hidden">
+				<table class="min-w-full divide-y divide-gray-200">
+					<thead class="bg-gray-50">
+						<tr>
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
+								Order ID
+							</th>
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
+								Customer
+							</th>
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
+								Order Date
+							</th>
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
+								Total Amount
+							</th>
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
+								Status
+							</th>
+						</tr>
+					</thead>
+					<tbody class="bg-white divide-y divide-gray-200">
+						{% for order in orders_data %}
+						<tr>
+							<td class="px-6 py-4 whitespace-nowrap">{{ order.order_id }}</td>
+							<td class="px-6 py-4 whitespace-nowrap">{{ order.customer }}</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								{{ order.order_date }}
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								{{ order.total_amount }}
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap">{{ order.status }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- Products Section -->
+		<div class="bg-white rounded-lg shadow-md p-6">
+			<h2 class="text-xl font-semibold mb-4">Products</h2>
+			<ul class="divide-y divide-gray-200">
+				{% for product in products_data %}
+				<li class="py-4">
+					<div class="flex items-center space-x-4">
+						<div class="flex-1">
+							<p class="text-lg font-semibold">{{ product.name }}</p>
+							<p class="text-sm text-gray-500">{{ product.description }}</p>
+						</div>
+						<div>
+							<p class="text-lg font-semibold">${{ product.price }}</p>
+							<p class="text-sm text-gray-500">
+								Available: {{ product.quantity_available }}
+							</p>
+						</div>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+		<!-- Analytics/Statistics Section -->
+		<div class="bg-white rounded-lg shadow-md p-6">
+			<h2 class="text-xl font-semibold mb-4">Analytics</h2>
+			<ul class="divide-y divide-gray-200">
+				{% for key, value in analytics_data.items %}
+				<li class="py-4">
+					<div class="flex items-center justify-between">
+						<p class="text-lg font-semibold">{{ key|title }}</p>
+						<p class="text-lg">{{ value }}</p>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+		<!-- Quotations Section -->
+		<div class="bg-white rounded-lg shadow-md p-6">
+			<h2 class="text-xl font-semibold mb-4">Quotations</h2>
+			<!-- Display quotations information -->
+			<ul class="divide-y divide-gray-200">
+				{% for quotation in quotations_data %}
+				<li class="py-4">
+					<div class="flex items-start space-x-4">
+						<div class="flex-1">
+							<p class="text-lg font-semibold">{{ quotation.quotation_id }}</p>
+							<p class="text-sm text-gray-500">
+								{{ quotation.vendor }} - {{ quotation.description }}
+							</p>
+						</div>
+						<div>
+							<p class="text-lg font-semibold">${{ quotation.total_price }}</p>
+							<p class="text-sm text-gray-500">
+								Delivery: {{ quotation.delivery_time }}
+							</p>
+						</div>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+		<!-- Tenders Section -->
+		<div class="bg-white rounded-lg shadow-md p-6">
+			<h2 class="text-xl font-semibold mb-4">Tenders</h2>
+			<!-- Display tenders information -->
+			<ul class="divide-y divide-gray-200">
+				{% for tender in tenders_data %}
+				<li class="py-4">
+					<div class="flex items-start space-x-4">
+						<div class="flex-1">
+							<p class="text-lg font-semibold">{{ tender.tender_id }}</p>
+							<p class="text-sm text-gray-500">{{ tender.title }}</p>
+						</div>
+						<div>
+							<p class="text-sm text-gray-500">
+								Deadline: {{ tender.deadline }}
+							</p>
+						</div>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+		<!-- Messages/Notifications Section -->
+		<div class="bg-white rounded-lg shadow-md p-6">
+			<h2 class="text-xl font-semibold mb-4">Messages</h2>
+			<ul class="divide-y divide-gray-200">
+				{% for message in messages_data %}
+				<li class="py-4">
+					<div class="flex items-start space-x-4">
+						<div class="flex-1">
+							<p class="text-lg font-semibold">{{ message.subject }}</p>
+							<p class="text-sm text-gray-500">
+								{{ message.sender }} | {{ message.date }}
+							</p>
+							<p>{{ message.message }}</p>
+						</div>
+						<div>
+							{% if not message.is_read %}
+							<span
+								class="inline-block bg-blue-500 text-white px-2 py-1 rounded-md text-xs"
+								>New</span
+							>
+							{% endif %}
+						</div>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+		<!-- Additional Section -->
+		<!-- You can add more sections based on your application's functionalities -->
+	</div>
+</div>

@@ -1,0 +1,92 @@
+{% extends "base.html"%} {% block content %}
+
+<div class="container mx-auto p-8 space-y-6">
+	<!-- prettier-ignore -->
+
+	<div class="mb-8 p-6 rounded bg-white shadow relative mt-6">
+		<!-- <h2 class="text-xl font-semibold mb-4">Requisition Approval Tracking</h2> -->
+		<h3
+			class="absolute rounded-t-2xl border-t border-l-2 tracking-wide -top-5 -left-[1px] font-bold text-xl p-2 px-4 bg-white z-1"
+		>
+			Requisitions To Approve
+		</h3>
+
+		<table class="table-auto w-full rounded-t overflow-hidden mt-6">
+			<thead>
+				<tr>
+					<th class="font-semibold text-base">Unique ID</th>
+					<th class="font-semibold text-base">Timestamp</th>
+					<th class="font-semibold text-base">Unit Approval</th>
+					<th class="font-semibold text-base">Department Approval</th>
+					<th class="font-semibold text-base">Finance Approval</th>
+					<th class="font-semibold text-base">Procurement Approval</th>
+					<th class="font-semibold text-base">Approval Status</th>
+					<th class="font-semibold text-base"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for approval in requisition_approvals %}
+				<!-- prettier-ignore -->
+				<tr class="even:bg-gray-50">
+					<td class="p-4 hover:text-sky-600 transition cursor-pointer">
+						{{approval.requisition_number}}
+					</td>
+					<td class="p-4 hover:text-sky-600 transition cursor-pointer">
+						{{approval.requisition.requisition_date|timesince}} ago
+					</td>
+					<td class="p-4 capitalize">
+						{% if approval.unit_approval %}
+							{{approval.unit_approval}}
+						{% else %}
+						-
+						{% endif %}
+					</td>
+					<td class="p-4 capitalize">
+						{% if approval.department_approval %}
+							{{approval.department_approval}}
+						{% else %}
+						-
+						{% endif %}
+					</td>
+					<td class="p-4 capitalize">
+						{% if approval.finance_requisition_approval %}
+							{{approval.finance_requisition_approval}}
+						{% else %}
+						-
+						{% endif %}
+				
+					<td class="p-4 capitalize">
+						{% if approval.procurement_requisition_approval %}
+							{{approval.procurement_requisition_approval}}
+						{% else %}
+						-
+						{% endif %}
+					<td class="p-4 capitalize">
+						{% if approval.requisition_approval_status %}
+							{{approval.requisition_approval_status}}
+						{% else %}
+						-
+						{% endif %}
+						</td>
+					<td class="p-4">
+						<a
+							href="{% url 'requisitions_detail' id=approval.approval_id %}"
+							class="inline-block text-xs font-semibold text-sky-500 hover:text-sky-600 transition"
+						>
+							Approve
+						</a>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<div class="py-4 block">
+			<p>
+				<strong>Total:</strong>
+				<span class="px-4 inline-block">{{requisition_approvals.count}}</span>
+			</p>
+		</div>
+		<hr class="" />
+	</div>
+</div>
+{% endblock %}

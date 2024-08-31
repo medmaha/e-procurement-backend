@@ -1,0 +1,64 @@
+<!-- templates/404.html -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>404 Page Not Found</title>
+
+		<style>
+			/* static/css/custom_404.css */
+
+			:root {
+				--variant: 0.8;
+			}
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #f0f0f0;
+				margin: 0;
+				padding: 0;
+			}
+
+			.container {
+				text-align: center;
+				margin-top: 100px;
+			}
+
+			h1 {
+				font-size: 100px;
+				color: #444;
+			}
+
+			p {
+				font-size: 24px;
+				color: #444;
+			}
+
+			a {
+				--variant: 0.8;
+				background: linear-gradient(to right, rgb(14 165 233), rgb(14 145 250));
+				color: #222;
+				border-radius: 0.5rem;
+				padding: 1rem;
+				font-weight: 600;
+				margin-top: 2rem;
+				display: inline-block;
+				text-decoration: none;
+				font-size: 18px;
+				transition: 300ms ease-in;
+			}
+
+			a:hover {
+				box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.2);
+				background: linear-gradient(to right, rgb(14 145 250), rgb(14 165 233));
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>404</h1>
+			<p>Oops! Page not found.</p>
+			<a href="/">Back to Home</a>
+		</div>
+	</body>
+</html>

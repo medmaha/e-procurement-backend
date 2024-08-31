@@ -1,0 +1,179 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<div class="pt-8 grid grid-cols-[auto,auto] gap-6 md:px-6">
+	<div
+		class="block bg-white rounded-t-xl shadow-md border mx-auto w-full h-max relative max-w-[750px]"
+	>
+		<h3
+			class="absolute rounded-t-2xl border-t border-l-2 tracking-wide -top-5 -left-[1px] font-bold text-xl p-2 px-4 bg-white z-1"
+		>
+			Requisition Approval Details -
+			<a
+				href="{% url 'requisitions_detail' id=approval.requisition.requisition_number %}"
+				class="hover:text-sky-600 text-sky-500 transition"
+			>
+				"{{approval.requisition.requisition_number}}"
+			</a>
+		</h3>
+		<div class="p-6 mt-8 gap-x-4">
+			{% for field in form %} {% if field.name != "remark" %}
+			<div class="mb-6 grid grid-cols-3 gap-x-8">
+				<label for="id_{{field.name}}" class="font-semibold">
+					{{field.label}}
+				</label>
+				<div class="col-span-2">
+					{% if field.label == "Statement of requirements" %}
+					<p class="font-light">
+						{% if field.url %}
+						<a href="{{field.url}}" target="_blank">Files</a>
+						{% else %} No Files {% endif %}
+					</p>
+					{% else %}
+					<p class="font-light">{{field.value}}</p>
+					{% endif %}
+				</div>
+			</div>
+			{% endif %} {% endfor %}
+
+			<!-- remarks -->
+			<div class="col-span-2">
+				<label for="id_remark" class="font-semibold"> Remarks </label>
+				<div class="w-full">
+					<p>{{requisition.remark}}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div
+		class="block bg-white rounded-t-xl shadow-md border mx-auto w-full h-max relative max-w-[500px]"
+	>
+		<form
+			action="{% url 'create_requisition_approval' approval.approval_id %}"
+			method="post"
+		>
+			{% csrf_token %} {% if auth_permissions.procurement.UNIT_REQ_APPROVAL %}
+			<h3 class="text-center font-bold text-xl pt-4 px-4">Unit Approvement</h3>
+			<p class="text-center text-sm pb-4 px-4">
+				Make approval on behalf of the requisition's unit
+			</p>
+			<input type="hidden" name="perm_name" value="UNIT_REQ_APPROVAL" />
+			{% elif auth_permissions.procurement.DEPARTMENT_REQ_APPROVAL %}
+			<h3 class="text-center font-bold text-xl pt-4 px-4">
+				Department Approval
+			</h3>
+			<p class="text-center text-sm pb-4 px-4">
+				Make approval on behalf of the requisition's department
+			</p>
+			<input type="hidden" name="perm_name" value="DEPARTMENT_REQ_APPROVAL" />
+			{% elif auth_permissions.procurement.FINANCE_REQ_APPROVAL %}
+			<h3 class="text-center font-bold text-xl pt-4 px-4">
+				Finance Department
+			</h3>
+			<p class="text-center text-sm pb-4 px-4">
+				Make approval on behalf of the finance department
+			</p>
+			<input type="hidden" name="perm_name" value="FINANCE_REQ_APPROVAL" />
+			{% elif auth_permissions.procurement.PROCUREMENT_REQ_APPROVAL %}
+			<h3 class="text-center font-bold text-xl pt-4 px-4">
+				Procurement Department
+			</h3>
+			<p class="text-center text-sm pb-4 px-4">
+				Make approval on behalf of the procurement department
+			</p>
+			<input type="hidden" name="perm_name" value="PROCUREMENT_REQ_APPROVAL" />
+			{% endif %}
+
+			<div class="p-6 gap-x-4 w-full">
+				<div class="mb-6">
+					<label for="requisition_status" class="font-semibold">
+						Approve Status
+					</label>
+					<div class="">
+						<select
+							id="status"
+							name="status"
+							class="w-full border p-1 px-2 sm:p-2 rounded peer disabled:bg-gray-100 disabled:pointer-events-none"
+						>
+
+							<option value="no" {% if user_approval.approve_status == "no" %} selected {% endif %}>No</option>
+							<option value="yes" {% if user_approval.approve_status == "yes" %} selected {% endif %}>Yes</option>
+						</select>
+					</div>
+				</div>
+				{% if finance %}
+				<div class="flex justify-evenly w-full bg-yellow-400 gap-4 items-center">
+					<div class="mb-6 flex items-center bg-green-500_">
+						<label for="funds_confirmed" class="font-semibold pr-4">
+							Funds Confirmed
+						</label>
+						<div class="pt-1">
+							<input
+								id="funds_confirmed"
+								name="funds_confirmed"
+								type="checkbox"
+								class="border p-1 px-2 sm:p-2 rounded disabled:bg-gray-100 disabled:pointer-events-none"
+								{% if user_approval.funds_confirmed %} checked {% endif %}
+							/>
+						</div>
+					</div>
+					<div class="mb-6 flex items-center bg-blue-500_">
+						<label for="part_of_annual_plan" class="font-semibold pr-4">
+							Part of annual Plan
+						</label>
+						<div class="pt-1 ">
+							<input
+								id="part_of_annual_plan"
+								name="part_of_annual_plan"
+								type="checkbox"
+								class="border p-1 px-2 sm:p-2 rounded disabled:bg-gray-100 disabled:pointer-events-none"
+								{% if user_approval.part_of_annual_plan%} checked {% endif %}
+							/>
+						</div>
+					</div>
+				</div>
+				<div class="mb-6">
+					<label for="annual_procurement_plan" class="font-semibold w-max">
+						Annual Procurement Plan
+					</label>
+					<div class="">
+						<select
+							id="annual_procurement_plan"
+							name="annual_procurement_plan_id"
+							class="w-full border p-1 px-2 sm:p-2 rounded peer disabled:bg-gray-100 disabled:pointer-events-none"
+						>
+							<option>--------</option>
+							{% for plan in plans %}
+								<option  value="{{plan.id}}" {% if user_approval.annual_procurement_plan.name == plan.name %} selected {% endif %}>{{plan.name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>		
+				{% endif %}
+				<div class="mb-2">
+					<label for="remark" class="font-semibold"> Remarks </label>
+					<div class="">
+						<!-- prettier-ignore -->
+						<textarea
+							name="remark"
+							id="remark"
+							rows="4"
+							class="w-full border p-1 px-2 sm:p-2 rounded peer disabled:bg-gray-100 disabled:pointer-events-none max-h-[200px]"
+						>{{user_approval.remark}}</textarea>
+					</div>
+				</div>
+			</div>
+			<div class="block w-full p-6 pt-0">
+				<button
+					class="transition w-full text-white bg-sky-500 hover:bg-sky-600 rounded-lg font-semibold p-2 disabled:pointer-events-none disabled:opacity-50 disabled:animate-pulse"
+				>
+					<span>Submit Approval</span>
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+{% block scripts %} {% endblock %}
+<!--  -->
+{% endblock %}

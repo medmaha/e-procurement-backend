@@ -1,0 +1,42 @@
+{% extends "base.html"%} {% block content %}
+<div class="pt-16" id="signup">
+	<div class="max-w-[70ch] mx-auto">
+		<h2 class="font-bold text-3xl pb-2">Hi {{v_user.full_name}},</h2>
+		<p class="pb-6 pt-2 w-full">
+			We'll send you a confirmation code to the email you provided once we
+			verify your account and organization. <strong>Please note</strong> that
+			this process may take several days.
+		</p>
+	</div>
+	<div class="grid grid-cols-1 max-w-[70ch] mx-auto gap-4 pb-8 border-b mb-4">
+		<p>
+			If you've already received our verification email you can proceed to
+			verify your account
+		</p>
+		<div class="">
+			<a
+				href="{% url 'vendor_activation_proceed' %}"
+				title="If you receive an email"
+				class="font-semibold py-2 px-4 transition bg-sky-500 hover:bg-sky-600 text-white rounded"
+			>
+				Proceed
+			</a>
+		</div>
+	</div>
+	<div class="grid grid-cols-1 px-4 max-w-[650px] mx-auto gap-4 pt-6">
+		<button
+			title="If you receive an email"
+			class="font-semibold text-sm w-full py-1.5 px-2 transition bg-gray-500 hover:bg-sky-600 text-white rounded"
+		>
+			Change Email
+		</button>
+		<a
+			href="{% url 'signup_cancel' %}"
+			class="font-semibold block text-center text-sm w-full py-1.5 px-2 transition bg-red-500 hover:bg-red-600 text-white rounded"
+		>
+			Cancel Registration
+		</a>
+	</div>
+</div>
+
+{% endblock %}

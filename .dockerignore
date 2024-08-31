@@ -1,0 +1,4 @@
+# Ignore virtual environ directory
+
+venv
+

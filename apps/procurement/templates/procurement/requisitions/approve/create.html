@@ -1,0 +1,92 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<div class="pt-8" id="requisitionContainer">
+	<form
+		method="post"
+		enctype="multipart/form-data"
+		class="block bg-white rounded-t-xl shadow-md border mx-auto max-w-[550px] w-full h-max relative"
+	>
+		{% csrf_token %}
+		<h3
+			class="absolute rounded-t-2xl border-t border-l-2 tracking-wide -top-5 -left-[1px] font-semibold text-xl p-2 px-4 bg-white z-1"
+		>
+			Make a Requisition
+		</h3>
+		<div class="p-6 mt-8">
+			{% for field in form %} {% if field.name != "remark" %}
+			<div class="mb-6">
+				<label for="{{field.name}}_id"> {{field.label}} </label>
+				<div class="w-full">{{field}}</div>
+			</div>
+			{% endif %} {% endfor %}
+
+			<!-- remarks -->
+			<div class="">
+				<label for="id_remark"> Remarks </label>
+				<div class="w-full">
+					<textarea
+						name="remark"
+						id="id_remark"
+						rows="4"
+						class="w-full border p-1 px-2 sm:p-2 rounded peer disabled:bg-gray-100 disabled:pointer-events-none"
+					>
+					</textarea>
+				</div>
+			</div>
+		</div>
+
+		<div class="grid sm:grid-cols-2 gap-4 sm:gap-6 p-6 pt-0">
+			<a
+				href="/"
+				type="button"
+				v-bind:disabled="disabled"
+				class="text-white inline-block text-center bg-gray-500 transition hover:bg-red-600 rounded-lg font-semibold p-2 disabled:pointer-events-none disabled:opacity-50"
+			>
+				Cancel Requisition
+			</a>
+
+			<button
+				v-bind:disabled="disabled"
+				class="transition text-white bg-sky-500 hover:bg-sky-600 rounded-lg font-semibold p-2 disabled:pointer-events-none disabled:opacity-50 disabled:animate-pulse"
+			>
+				<span
+					class="hidden"
+					v-bind:class="{'inline-block':loading, hidden:!loading}"
+					>Submitting Requisition...</span
+				>
+				<span v-bind:class="{'inline-block':!loading, hidden:loading}"
+					>Submit Requisition</span
+				>
+			</button>
+		</div>
+	</form>
+</div>
+
+<script>
+	document.getElementById("todaysDate").value = new Date()
+		.toISOString()
+		.split("T")[0];
+	function init() {
+		const quantity = document.getElementById("id_quantity");
+		const unit_cost = document.getElementById("id_estimated_unit_cost");
+		const total_cost = document.getElementById("id_estimated_total_cost");
+
+		const evaluate = () => {
+			const quantity = document.getElementById("id_quantity");
+			const unit_cost = document.getElementById("id_estimated_unit_cost");
+			const total_cost = document.getElementById("id_estimated_total_cost");
+			q = Number(quantity?.value);
+			u = Number(unit_cost?.value);
+			t = Number(total_cost?.value);
+			if (!isNaN(q) && !isNaN(u)) total_cost.value = u * q;
+		};
+
+		quantity.addEventListener("input", evaluate);
+		unit_cost.addEventListener("input", evaluate);
+	}
+	init();
+</script>
+
+{% block scripts %} {% endblock %}
+<!--  -->
+{% endblock %}

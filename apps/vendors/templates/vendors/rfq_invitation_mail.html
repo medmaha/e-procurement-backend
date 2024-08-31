@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>RFQ Invitation</title>
+	</head>
+	<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333">
+		<div
+			style="
+				max-width: 600px;
+				margin: 0 auto;
+				padding: 10px 5px;
+				background-color: #f9f9f9;
+				border-radius: 8px;
+				font-size: 15px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			"
+		>
+			<h2 style="margin-top: 0; font-size: 1.5em">
+				Dear {{ vendor.contact_person.full_name }},
+			</h2>
+
+			<!-- truncate the text -->
+			<p style="margin-bottom: 15px; padding: 0; max-width: 60ch">
+				We are reaching out to invite you (<span
+					>{{ vendor.organization_name }}</span
+				>) to participate in our Request for Quotation (RFQ) process.
+			</p>
+
+			<p style="font-weight: bold; padding: 0; margin: 0">
+				<strong>Details:</strong>
+			</p>
+			<div style="font-weight: bold; padding: 0; margin: 0">
+				<strong>RFQ ID:</strong>
+				{{quotation.rfq_id }}
+			</div>
+			<div style="font-weight: bold; padding: 0; margin: 0">
+				<strong>Type:</strong>
+				{{quotation.title }}
+			</div>
+			<div
+				style="margin-bottom: 1rem; font-weight: bold; padding: 0; margin: 0"
+			>
+				<p style="font-weight: bold; padding: 0; margin: 0">Deadline:</p>
+				{{quotation.deadline }}
+			</div>
+
+			<a
+				href="http;//localhost:3000/vendors/qoutes"
+				style="
+					padding: 15px;
+					border-radius: 1rem;
+					text-decoration: none;
+					color: #fff;
+					background-color: rgb(21, 79, 179);
+				"
+				>View Invitation</a
+			>
+
+			<p style="margin-bottom: 15px; font-size: 14px; padding-top: 1rem">
+				Your participation and submission of a quotation are highly appreciated.
+				<br />
+				Should you have any questions or require further information, please do
+				not hesitate to contact us.
+			</p>
+
+			<p style="margin-bottom: 15px">
+				Thank you for considering this opportunity. We look forward to receiving
+				your quotation.
+			</p>
+
+			<p class="footer" style="margin-top: 30px; font-size: 1em; color: #777">
+				Best regards,<br />{{organization.name}}
+			</p>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,181 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<noscript>
+	This Page request javascript for all functionality to work properly
+</noscript>
+
+<div class="pt-8" id="rfqContainer">
+	<dialog
+		ref="rfqNumberDialog"
+		class="p-8 shadow-md border-2 rounded-xl relative"
+	>
+		<h3 class="text-center font-semibold text-xl max-w-[30ch] mx-auto">
+			Are you sure you want to generate a RFQ number
+		</h3>
+		<div class="pt-8 flex items-center gap-4 justify-around">
+			<button
+				@click="closeRFQNumberDialog"
+				class="text-white bg-gray-500 hover:bg-gray-600 rounded-lg font-semibold p-2"
+			>
+				No Cancel
+			</button>
+			<button
+				@click="generateRFQNumber"
+				class="text-white bg-sky-500 hover:bg-sky-600 rounded-lg font-semibold p-2"
+			>
+				Yes Generate
+			</button>
+		</div>
+		<dialog
+			v-if="generating"
+			open
+			modal
+			class="loading absolute top-0 left-0 w-full h-full backdrop-blur-[3px] bg-black bg-opacity-30 flex items-center justify-center"
+		>
+			<p
+				class="text-center animate-pulse text-sky-500 backdrop-blur-[2px] p-2 px-4 rounded-full"
+			>
+				Generating RFQ number...
+			</p>
+		</dialog>
+	</dialog>
+	<form
+		method="post"
+		action=""
+		@submit.prevent=""
+		class="block bg-white rounded-t-xl shadow-md border mx-auto max-w-[950px] h-max relative"
+	>
+		{% csrf_token %}
+		<input type="hidden" name="employer" v-bind:value="[[authUser.id]]" />
+		<h3
+			class="absolute rounded-t-2xl border-t border-l-2 tracking-wide -top-5 -left-[2px] font-semibold text-xl p-2 px-4 bg-white z-1"
+		>
+			Request for Quotation (RFQ)
+		</h3>
+		<div class="grid sm:grid-cols-2 gap-4 p-6 mt-8">{{rfq_form.as_p}}</div>
+		<div class="grid sm:grid-cols-3 gap-4 sm:gap-6 p-6 pt-0">
+			<button
+				type="button"
+				ref="genRFQBnt"
+				@click="promptRFQNumberGeneration"
+				class="text-white bg-sky-500 hover:bg-sky-600 rounded-lg font-semibold p-2 disabled:pointer-events-none disabled:opacity-50"
+			>
+				Generate RFQ Number
+			</button>
+
+			<button
+				type="button"
+				class="text-white bg-red-500 hover:bg-red-600 rounded-lg font-semibold p-2"
+			>
+				Cancel RFQ
+			</button>
+
+			<button
+				type="button"
+				class="text-white bg-gray-500 hover:bg-gray-600 rounded-lg font-semibold p-2"
+			>
+				Exit Page
+			</button>
+		</div>
+	</form>
+
+	<div class="pt-12">
+		<form
+			method="post"
+			action=""
+			class="block bg-white rounded-t-xl shadow-md border mx-auto max-w-[950px] h-max relative"
+		>
+			{% csrf_token %}
+			<h3
+				class="absolute rounded-t-2xl border-t border-l-2 tracking-wide -top-5 -left-[2px] font-semibold text-xl p-2 px-4 bg-white z-1"
+			>
+				RFQ Items
+			</h3>
+			<div class="grid sm:grid-cols-3 justify-center gap-4 p-6 mt-8">
+				{{rfq_items_form.as_p}}
+			</div>
+			<div class="block w-full sm:gap-6 p-6 pt-0">
+				<button
+					class="text-white w-full bg-sky-500 hover:bg-sky-600 rounded-lg font-semibold p-2"
+				>
+					Add Item To RFQ
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<div class="pt-12 pb-12" v-if="rfqNumber">
+		<div
+			class="block bg-white rounded-t-xl shadow-md border mx-auto max-w-[950px] h-max relative"
+		>
+			<h3
+				class="absolute rounded-t-2xl border-t border-l-2 tracking-wide -top-5 -left-[2px] font-semibold text-xl p-2 px-4 bg-white z-1"
+			>
+				RFQ Detail and Items
+			</h3>
+			<div class="block w-full p-6 mt-8" id="rfqDetails">
+				<div class="space-y-4 block w-full pb-6">
+					{% for field in rfq_form %}
+					<div class="grid grid-cols-2 gap-6">
+						<p class="font-semibold inline-block">{{field.label}}</p>
+						<p class="font-light">[[ formData.rfq[{{field.name}}] ]]</p>
+					</div>
+					{% endfor %}
+				</div>
+				<div class="pt-6 w-full block">
+					<p class="font-semibold text-xl w-full border-y py-2">RFQ Items</p>
+					<table class="w-full table-auto">
+						<thead>
+							<tr>
+								<th>
+									<span class="text-xs">No.</span>
+								</th>
+								<th>Item Description</th>
+								<th>Quantity</th>
+								<th>Measurement unit</th>
+								<th>Evaluation criteria</th>
+								<th>Unit Price</th>
+								<th>Remarks</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<p class="text-xs truncate">1.</p>
+								</td>
+								<td>
+									<p class="text-sm truncate">Hello, world!</p>
+								</td>
+								<td>
+									<p class="text-sm truncate">Hello, world!</p>
+								</td>
+								<td>
+									<p class="text-sm truncate">Hello, world!</p>
+								</td>
+								<td>
+									<p class="text-sm truncate">Hello, world!</p>
+								</td>
+								<td>
+									<p class="text-sm truncate">Hello, world!</p>
+								</td>
+								<td>
+									<p class="text-xs max-w-[20ch] line-clamp-2">
+										Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+										Autem deserunt ipsam expedita eum vel praesentium. Lorem
+										ipsum dolor sit amet, consectetur adipisicing elit. Autem
+										deserunt ipsam expedita eum vel praesentium.
+									</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{% static 'procurements/rfq.js' %}"></script>
+{% block scripts %} {% endblock %}
+<!--  -->
+{% endblock %}

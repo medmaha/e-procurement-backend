@@ -1,0 +1,29 @@
+{% extends "base.html"%}
+<!--  -->
+{% block content %}
+
+<div class="pt-16" id="login">
+	<div
+		action=""
+		method="post"
+		class="block w-full max-w-[450px] space-y-4 sm:p-6 p-4 md:p-8 mx-auto bg-white shadow rounded-md border"
+	>
+		<div class="text-center pb-4">
+			<h2 class="font-semibold text-2xl">{{company.name}} Ltd</h2>
+			<p class="text-sm pt-2">
+				Thanks for spending some quality time with the Web site today. hope to
+				see you soon.
+			</p>
+		</div>
+
+		<div class="block w-full py-t pt-4">
+			<a
+				href="{% url 'account_login' %}"
+				class="font-semibold inline-block text-lg w-full text-center py-2 px-4 transition bg-sky-600 hover:bg-sky-500 text-white rounded-2xl"
+			>
+				Log in again
+			</a>
+		</div>
+	</div>
+</div>
+{% endblock %}

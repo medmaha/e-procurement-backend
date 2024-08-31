@@ -1,0 +1,45 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<div class="pt-8" id="requisitionContainer">
+	<div
+		class="block bg-white rounded-t-xl shadow-md border mx-auto w-full h-max relative max-w-[800px]"
+	>
+		<h3
+			class="absolute rounded-t-2xl border-t border-l-2 tracking-wide -top-5 -left-[1px] font-semibold text-xl p-2 px-4 bg-white z-1"
+		>
+			Requisition Details
+		</h3>
+		<div class="p-6 mt-8 gap-x-4">
+			{% for field in form %} {% if field.name != "remark" %}
+			<div class="mb-6 grid grid-cols-3">
+				<label for="id_{{field.name}}" class="font-semibold">
+					{{field.label}}
+				</label>
+				<div class="col-span-2">
+					{% if field.label == "Statement of requirements" %}
+					<p class="font-light">
+						{% if field.url %}
+						<a href="{{field.url}}" target="_blank">Files</a>
+						{% else %} No Files {% endif %}
+					</p>
+					{% else %}
+					<p class="font-light">{{field.value}}</p>
+					{% endif %}
+				</div>
+			</div>
+			{% endif %} {% endfor %}
+
+			<!-- remarks -->
+			<div class="col-span-2">
+				<label for="id_remark" class="font-semibold"> Remarks </label>
+				<div class="w-full">
+					<p>{{requisition.remark}}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% block scripts %} {% endblock %}
+<!--  -->
+{% endblock %}

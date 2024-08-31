@@ -1,0 +1,298 @@
+<!-- prettier-ignore -->
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="p-4 md:px-8 pt-6" id="registerVendor">
+	<form
+		method="post"
+		class="block max-w-[800px] mx-auto"
+		autocomplete="off"
+		id="vendorSignup"
+		enctype="multipart/form-data"
+	>
+		{%csrf_token %}
+
+		<!-- Vendor Details -->
+		<div
+			id="vendorBlock"
+			class="border-2 p-6 relative rounded-lg mb-12 block bg-white"
+		>
+			<h2
+				class="absolute rounded-t-2xl border-l-2 border-t tracking-wide -top-5 -left-[1px] font-bold text-xl p-1 px-4 bg-white z-1"
+			>
+				Vendor Registration
+			</h2>
+
+			<div class="pt-5 space-y-2">
+				<div class="">
+					<!-- prettier-ignore -->
+
+					{% with label_title="Organization name" value=form.data.organization_name name="organization_name" id="organization_name" type="text" required_field="true" placeholder="" error_message=error.name hint="Please provide the full legal name of your business or organization." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<div class="pb-4 group">
+						<label
+							for="description"
+							class="inline-flex items-center gap-1 text-lg"
+						>
+							<span> Registration Type </span>
+							<span title="Field is required" class="font-bold text-sky-500"
+								>*</span
+							>
+						</label>
+						<select
+							name="registration_type"
+							id="registration_type"
+							class="w-full border p-1.5 px-2 rounded peer disabled:bg-white"
+						>
+							<option>--------</option>
+							{% for b_type in business_structures %}
+							<option {% if form.data.registration_type == b_type.0 %} selected {% endif %} value="{{b_type.0}}">{{b_type.1}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with hint="Provide your business registration number." label_title="Registration number" value=form.data.registration_number name="registration_number" id="registration_number" type="number" required_field="true" placeholder="" error_message=error.registration_number %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with hint="Provide your business license number." label_title="License number" value=form.data.license_number name="license_number" id="license_number" type="number" required_field="true" placeholder="" error_message=error.license_number %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with hint="Enter your Tax Identification Number (TIN) if applicable. Example format: XXX-XXX-XXXX." label_title="Tin number" value=form.data.tin_number name="tin_number" id="tin_number" type="number" required_field="true" placeholder="" error_message=error.tin_number %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with hint="Please provide your Value Added Tax (VAT) Number if available. Example format: XX-XXXXXXXXX" label_title="Vat number" value=form.data.vat_number name="vat_number" id="vat_number" type="number" placeholder="" error_message=error.vat_number %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+
+				<div class="">
+					<div class="pb-4 group">
+						<label
+							for="description"
+							class="inline-flex items-center gap-1 text-lg"
+						>
+							<span> Industry </span>
+							<span title="Field is required" class="font-bold text-sky-500"
+								>*</span
+							>
+						</label>
+						<select
+							name="industry"
+							id="industry"
+							class="w-full border p-1.5 px-2 rounded peer disabled:bg-white"
+						>
+							<option>--------</option>
+							{% for industry in procurement_industries %}
+							<option {% if form.data.industry == industry.0 %} selected {% endif %} value="{{industry.0}}">{{industry.1}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="Country or territory" value=form.data.address__ name="address__" id="country" type="text" required_field="true" placeholder="" error_message=error.country hint="Please choose the country or territory where your business is located or registered." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with todaysDate=todaysDate label_title="Date Established" value=form.data.established_date name="established_date" id="established_date" type="date" required_field="true" placeholder="" error_message=error.established_date hint="Input the date your business was established" %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="Website" value=form.data.website name="website" id="website" type="url" placeholder="https://example.com" error_message=error.website hint="Please provide the full website address (URL) of your business" %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<div class="pb-4 group">
+						<label
+							for="description"
+							class="inline-flex items-center gap-1 text-lg"
+						>
+							Description
+						</label>
+						<textarea
+							id="description"
+							name="description"
+							rows="3"
+							class="w-full border p-1.5 px-2 rounded peer disabled:bg-white resize-y"
+						></textarea>
+
+						<p class="text-sm hidden text-red-400 px-1 error-msg">
+							{% if form.data.description %} {{form.data.description}} {% endif %}
+						</p>
+						<p
+							class="text-sm p-0.5 px-1 bg-gray-50 leading-relaxed scale-0 h-0 group-focus-within:h-max group-focus-within:scale-100 transition"
+						>
+							Write a description about your organization and your vendor
+							servicing.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Contact Person -->
+		<div
+			id="contactBlock"
+			class="border-2 p-6 relative rounded-lg mt-8 mb-12 bg-white hidden"
+		>
+			<h2
+				class="absolute rounded-t-2xl border-l-2 border-t tracking-wide -top-5 -left-[1px] font-bold text-xl p-1 px-4 bg-white z-1"
+			>
+				Vendor Contact Person
+			</h2>
+
+			<div class="pt-5 space-y-2">
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="First name" value=form.data.c_first_name name="c_first_name" id="first_name" required_field="true" error_message=error.first_name hint="Enter the first name of the vendor contact person." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="Last name" value=form.data.c_last_name name="c_last_name" id="last_name" type="text" required_field="true" error_message=error.last_name hint="Enter the last name of the vendor contact person." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="Email Address" value=form.data.c_email_address name="c_email_address" required_field="true" id="email_address" type="email" error_message=error.email_address hint="Provide the email address of the vendor contact person for communication." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="Phone Number" value=form.data.c_phone_number name="c_phone_number" id="phone_number" type="text" required_field="true" error_message=error.phone_number hint="Input the phone number of the vendor contact person for direct contact." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="Address" value=form.data.c_address name="c_address" id="address" type="text" error_message=error.address hint="Enter the address of the vendor contact person or their business location." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+			</div>
+		</div>
+		<!-- User Account -->
+		<div
+			id="userBlock"
+			class="border-2 p-6 relative rounded-lg mt-8 mb-12 block bg-white"
+		>
+			<h2
+				class="absolute rounded-t-2xl border-l-2 border-t tracking-wide -top-5 -left-[1px] font-bold text-xl p-1 px-4 bg-white z-1"
+			>
+				Vendor User Account
+			</h2>
+
+			<div class="pt-5 space-y-2">
+				<p class="text-center">
+					The Contact Person in the previous step id the same as the user
+					account of this step?
+				</p>
+				<div class="pl-4 pt-1 pb-6 flex justify-center gap-6">
+					<label class="inline-flex items-center gap-2">
+						<span> Yes </span>
+						<input
+							type="radio"
+							name="contact_same_as_user"
+							class="form-radio mt-1 h-5 w-5 text-sky-500 border-2 border-gray-300 rounded checked:bg-sky-500 checked:border-transparent focus:outline-none focus:border-sky-500 focus:ring-1 ring-sky-500"
+						/>
+					</label>
+					<label class="inline-flex items-center gap-2">
+						<span> No </span>
+						<input
+							type="radio"
+							checked
+							name="contact_same_as_user"
+							class="form-radio mt-1 h-5 w-5 text-sky-500 border-2 border-gray-300 rounded checked:bg-sky-500 checked:border-transparent focus:outline-none focus:border-sky-500 focus:ring-1 ring-sky-500"
+						/>
+					</label>
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="First name" value=form.data.u_first_name name="u_first_name" id="first_name" type="text" required_field="true" placeholder="" error_message=error.first_name %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="Last name" value=form.data.u_last_name name="u_last_name" id="last_name" type="text" required_field="true" placeholder="" error_message=error.last_name %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="Email Address" value=form.data.u_email name="u_email" id="email" type="email" required_field="true" placeholder="" error_message=error.form_data %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="Password" value=form.data.u_password name="u_password" id="password" type="password" required_field="true" placeholder="" error_message=error.password1 %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="Confirm Password" value=form.data.u_password2 name="u_password2" id="password2" type="password" required_field="true" placeholder="" error_message=error.password2 %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+			</div>
+		</div>
+
+		<div class="flex items-center px-4">
+			<button
+				ref="btn"
+				class="font-semibold text-lg w-full py-1.5 px-4 transition bg-sky-600 disabled:hover:bg-sky-600 hover:bg-sky-500 text-white rounded-full disabled:animate-pulse disabled:pointer-events-none"
+			>
+				Register Vendor
+			</button>
+		</div>
+	</form>
+</div>
+
+{% endblock %} {% block scripts %}
+<script>
+	const formElement = document.getElementById("vendorSignup");
+
+	const userBlock = formElement.querySelector("#userBlock");
+	const contactBlock = formElement.querySelector("#contactBlock");
+	const vendorBlock = formElement.querySelector("#vendorBlock");
+
+	contactBlock.classList.replace("hidden", "block");
+
+	const reloadBrowser = "{{reloadBrowser}}";
+
+	if (reloadBrowser === "True") {
+		setTimeout(() => {
+			window.location.href = "{% url 'account_signup' %}";
+		}, 6800);
+	}
+
+	// TODO
+	// contact_same_as_user
+</script>
+{% endblock %}

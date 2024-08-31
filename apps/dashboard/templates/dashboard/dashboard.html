@@ -1,0 +1,18 @@
+{% extends "base.html"%} {% block content %}
+
+<!-- prettier-ignore -->
+{% if staff %}
+	{% include "dashboard/staff.html" %}
+{% elif vendor %}
+	{% include "vendors/index.html" %}
+{% else %}
+	{% include "dashboard/index.html" %}
+{% endif %}
+
+<script defer>
+	const url = new URL(location.href);
+	if (url.searchParams.get("welcome")) {
+		history.replaceState(null, "", location.pathname);
+	}
+</script>
+{% endblock %}

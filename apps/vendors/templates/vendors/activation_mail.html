@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Account Activation</title>
+	</head>
+	<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px">
+		<table
+			style="
+				max-width: 600px;
+				width: 100%;
+				margin: auto;
+				border-collapse: collapse;
+			"
+		>
+			<tr>
+				<td
+					style="background-color: #f5f5f5; padding: 20px; text-align: center"
+				>
+					<h1>Welcome to {{company.name}}!</h1>
+				</td>
+			</tr>
+			<tr>
+				<td style="padding: 20px">
+					<p style="font-weight: 600">Dear {{recipient}},</p>
+					{% if activated %}
+					<p>
+						Your account has been successfully verified and activated. Please
+						use the code below when prompted to proceed.
+					</p>
+					<p style="padding-top: 20px; font-weight: 600">
+						<span
+							href="#"
+							style="
+								display: inline-block;
+								padding: 15px 30px;
+								background-color: none;
+								color: #333;
+								box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.5);
+								text-decoration: none;
+								border-radius: 5px;
+							"
+							>P-{{code__}}</span
+						>
+					</p>
+					{% else %}
+					<p>
+						We regret to inform you that your account has been deactivated. You
+						may no longer be able to login or use the site.
+					</p>
+					{% endif %}
+
+					<p>
+						If you have any questions or need assistance, please contact our
+						support team.
+					</p>
+					<p>
+						Best regards,<br />
+						{{company.name}}
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td
+					style="background-color: #f5f5f5; padding: 20px; text-align: center"
+				>
+					<p style="font-size: 12px; color: #777">
+						This is an automated email. Please do not reply.
+					</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

@@ -1,0 +1,71 @@
+{% extends "base.html"%} {% block content %}
+
+<div class="bg-white p-6 rounded shadow-md max-w-[450px] mx-auto border">
+	<h2 class="block text-lg font-bold text-center pb-4">
+		Choose a Procurement Method:
+	</h2>
+	<form method="post" action="{% url 'procurement_method' %}" class="block">
+		{% csrf_token %}
+		<div class="py-4">
+			<div class="grid grid-cols-1 space-y-4 w-max mx-auto">
+				<div
+					class="grid grid-cols-[auto,auto] w-max items-center gap-2 hover:text-sky-400"
+				>
+					<div class="h-full flex items-center justify-center">
+						<input
+							type="radio"
+							name="procurement_method"
+							id="tender"
+							required
+							value="tender"
+						/>
+					</div>
+					<label for="tender" class="ml-2 cursor-pointer"
+						>Competitive Bidding</label
+					>
+				</div>
+				<div
+					class="grid grid-cols-[auto,auto] w-max items-center gap-2 hover:text-sky-400"
+				>
+					<div class="h-full flex items-center justify-center">
+						<input
+							type="radio"
+							required
+							name="procurement_method"
+							id="rfq"
+							value="rfq"
+						/>
+					</div>
+					<label for="rfq" class="ml-2 cursor-pointer"
+						>Request For Quotation</label
+					>
+				</div>
+				<div
+					class="grid grid-cols-[auto,auto] w-max items-center gap-2 hover:text-sky-400"
+				>
+					<div class="h-full flex items-center justify-center">
+						<input
+							type="radio"
+							required
+							name="procurement_method"
+							id="ss"
+							value="ss"
+						/>
+					</div>
+					<label for="ss" class="ml-2 cursor-pointer">Single Sourcing</label>
+				</div>
+				<!-- Add more procurement methods as needed -->
+			</div>
+		</div>
+
+		<div class="flex justify-end mt-4">
+			<button
+				type="submit"
+				class="p-1 px-5 rounded-md bg-sky-500 hover:bg-sky-600 text-white font-semibold"
+			>
+				Next
+			</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

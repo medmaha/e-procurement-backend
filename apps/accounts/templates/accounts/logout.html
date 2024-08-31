@@ -1,0 +1,65 @@
+{% extends "base.html"%}
+<!--  -->
+{% block content %}
+
+<div class="pt-16" id="login">
+	<div
+		action=""
+		method="post"
+		class="block w-full max-w-[450px] space-y-4 sm:p-6 p-4 md:p-8 mx-auto bg-white shadow rounded-md border"
+	>
+		<div class="text-center pb-4">
+			<h2 class="font-semibold text-2xl">Logout your account</h2>
+			<p class="text-sm pt-2">
+				Do you really want to close your account and log out? Keep in mind that
+				you'll need your login information to return.
+			</p>
+		</div>
+
+		<div class="grid grid-cols-2 gap-6 w-full py-6">
+			<a
+				href="/"
+				class="font-semibold inline-block text-lg w-full text-center py-1 px-4 transition bg-gray-600 hover:bg-gray-500 text-white rounded-full"
+			>
+				No Cancel
+			</a>
+			<form method="post">
+				{% csrf_token %}
+				<button
+					class="font-semibold text-lg w-full py-1 px-4 transition bg-sky-600 hover:bg-sky-500 text-white rounded-full"
+				>
+					Yes Logout
+				</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	// const { createApp } = Vue;
+	// createApp({
+	// 	data() {
+	// 		return {
+	// 			disabled: false,
+	// 			submitBtnText: "Submit",
+	// 		};
+	// 	},
+	// 	created: () => {
+	// 		document.addEventListener("DOMContentLoaded", () => {
+	// 			const btnServer = document.getElementById("btnServer");
+	// 			const btnClient = document.getElementById("btnClient");
+	// 			btnServer.classList.add("hidden");
+	// 			btnClient.classList.remove("hidden");
+	// 		});
+	// 	},
+	// 	methods: {
+	// 		updateUI() {
+	// 			this.disabled = true;
+	// 			this.submitBtnText = "Submitting...";
+	// 		},
+	// 	},
+	// 	delimiters: ["[[", "]]"],
+	// }).mount("#login");
+</script>
+
+{% endblock %}

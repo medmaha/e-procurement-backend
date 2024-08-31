@@ -1,0 +1,96 @@
+{% extends "base.html"%}
+<br />
+{% block content %}
+
+<div class="pt-16" id="login">
+	<form
+		ref="form"
+		action="{% url 'account_login' %}"
+		method="post"
+		class="block w-full max-w-[600px] sm:p-6 p-4 mx-auto bg-white shadow rounded-md border"
+	>
+		{% csrf_token %}
+		<div class="text-center pb-6">
+			<h2 class="font-semibold text-2xl">{{company.name}} Ltd</h2>
+			<p class="text-sm">Welcome back! Sign in using your credentials</p>
+		</div>
+
+		<!-- prettier-ignore -->
+		{% with label_title="Email Address" value=form.email name="email" id="email" type="email" required_field="true" placeholder="abc@example2.com" error_message=error.email %}
+			{% include "partials/forms/input-field.html"  %}
+		{% endwith %}
+
+		<!-- prettier-ignore -->
+		{% with label_title="Password" name="password" value=form.password id="password" type="password" required_field="true" placeholder="********" error_message=error.password  %}
+			{% include "partials/forms/input-field.html"  %}
+		{% endwith %}
+
+		<div class="flex items-center px-4 pt-4">
+			<button
+				id="btnServer"
+				class="font-semibold text-lg w-full py-1 px-4 transition bg-sky-600 hover:bg-sky-500 text-white rounded-full"
+			>
+				Submit
+			</button>
+			<button
+				id="btnClient"
+				v-bind:disabled="disabled"
+				@click="handleSubmit"
+				class="hidden font-semibold text-lg w-full py-1 px-4 transition bg-sky-600 disabled:hover:bg-sky-600 hover:bg-sky-500 text-white rounded-full disabled:animate-pulse disabled:pointer-events-none"
+			>
+				[[submitBtnText]]
+			</button>
+		</div>
+	</form>
+
+	<div class="pt-8">
+		<p class="text-center text-sm">
+			Don&apos;t have an account yet?
+			<a href="{% url 'account_signup' %}">
+				<b class="text-sky-500 text-base">Signup now</b>
+			</a>
+		</p>
+	</div>
+</div>
+
+<script>
+	const { createApp } = Vue;
+	createApp({
+		data() {
+			return {
+				disabled: false,
+				submitBtnText: "Submit",
+			};
+		},
+		created: () => {
+			document.addEventListener("DOMContentLoaded", () => {
+				const btnServer = document.getElementById("btnServer");
+				const btnClient = document.getElementById("btnClient");
+				btnServer.classList.add("hidden");
+				btnClient.classList.remove("hidden");
+			});
+		},
+		methods: {
+			handleSubmit() {
+				this.submitBtnText = "Submitting...";
+				this.disabled = true;
+				this.$refs.form.submit();
+			},
+			handleInputChange(event) {
+				event.target
+					.closest(".group")
+					?.querySelector(".error-msg")
+					?.classList.add("peer-invalid:block");
+			},
+			handleInputFocus(event) {
+				event.target
+					.closest(".group")
+					?.querySelector(".error-msg")
+					?.classList.remove("peer-invalid:block");
+			},
+		},
+		delimiters: ["[[", "]]"],
+	}).mount("#login");
+</script>
+
+{% endblock %}

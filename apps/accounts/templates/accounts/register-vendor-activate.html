@@ -1,0 +1,85 @@
+{% extends "base.html"%} {% block content %}
+<div class="pt-16" id="signup">
+	<div class="max-w-[70ch] mx-auto">
+		<h2 class="font-bold text-3xl pb-2">Welcome {{v_user.full_name}},</h2>
+		<p class="pb-6 pt-2 w-full">
+			Please provide the verification code we sent to your email This code
+			should last one hour (1hr) before its expires.
+		</p>
+	</div>
+	<form
+		method="post"
+		class="p-6 mt-4 max-w-[600px] mx-auto bg-white rounded-lg block relative transition duration-150 border-2 group mb-4"
+	>
+		<h2
+			class="absolute rounded-t-2xl border-l-2 border-t tracking-wide -top-5 -left-[1px] font-bold text-xl p-1 px-4 bg-white z-1"
+		>
+			Enter Confirmation Code
+		</h2>
+		<div class="p-6 flex justify-center gap-2 items-center">
+			<div data-codes class="flex justify-center gap-2 items-center">
+				{% csrf_token %}
+				<input
+					type="text"
+					name="code"
+					autocomplete="off"
+					required
+					minlength="6"
+					maxlength="6"
+					value="{{request.POST.code}}"
+					class="block tracking-widest w-[100px] h-[40px] text-center text-lg outline-2 focus:outline-sky-500 outline rounded outline-gray-300"
+				/>
+			</div>
+		</div>
+		<div class="flex items-center px-4">
+			<button
+				ref="btn"
+				class="font-semibold text-lg w-full py-1.5 px-4 transition bg-sky-600 disabled:hover:bg-sky-600 hover:bg-sky-500 text-white rounded-2xl disabled:animate-pulse disabled:pointer-events-none"
+			>
+				Submit
+			</button>
+		</div>
+	</form>
+
+	<div class="grid grid-cols-1 px-4 max-w-[650px] mx-auto gap-4 pt-6">
+		<form method="post">
+			{% csrf_token %}
+			<input type="hidden" name="resend_code" value="1" />
+			<button
+				title="If you receive an email"
+				class="font-semibold text-sm w-full py-1.5 px-2 transition bg-gray-500 hover:bg-sky-500 text-white rounded"
+			>
+				Resend Verification Code
+			</button>
+		</form>
+		<button
+			title="If you receive an email"
+			class="font-semibold text-sm w-full py-1.5 px-2 transition bg-gray-500 hover:bg-sky-600 text-white rounded"
+		>
+			Change Email
+		</button>
+		<a
+			href="{% url 'signup_cancel' %}"
+			class="font-semibold block text-center text-sm w-full py-1.5 px-2 transition bg-red-500 hover:bg-red-600 text-white rounded"
+		>
+			Cancel Registration
+		</a>
+	</div>
+</div>
+
+<!-- prettier-ignore -->
+{% block scripts %}
+<script>
+	function wrapper() {
+		event.stopPropagation();
+		event.preventDefault();
+		event.cancelBubble = true;
+	}
+	document
+		.querySelector('input[name="code"]')
+		.addEventListener("keydown", (event) => {
+			if (event.key.length === 6) wrapper();
+			if (event.key.length === 1 && isNaN(Number(event.key))) wrapper();
+		});
+</script>
+{% endblock %} {% endblock %}

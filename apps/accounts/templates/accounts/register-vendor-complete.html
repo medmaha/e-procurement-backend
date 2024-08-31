@@ -1,0 +1,132 @@
+<!-- prettier-ignore -->
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="p-4 md:px-8 pt-6" id="registerVendor">
+	<form
+		method="post"
+		class="block max-w-[800px] mx-auto"
+		autocomplete="off"
+		id="vendorSignup"
+		enctype="multipart/form-data"
+	>
+		{%csrf_token %}
+
+		<!-- Vendor/Supply Details -->
+		<p class="mb-8 text-center font-semibold text-lg">
+			Hi, <strong> {{v_user.full_name}}</strong>, <br />
+			Let's complete your registration
+		</p>
+		<div
+			id="vendorBlock"
+			class="border-2 p-6 relative rounded-lg mb-12 block bg-white"
+		>
+			<h2
+				class="absolute rounded-t-2xl border-l-2 border-t tracking-wide -top-5 -left-[1px] font-bold text-xl p-1 px-4 bg-white z-1"
+			>
+				Organization
+			</h2>
+
+			<div class="pt-5 space-y-2">
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with label_title="Brand Logo" value=form.data.logo name="logo" id="logo" type="file" error_message=error.logo hint="Upload your organization's logo. Accepted formats: JPG, PNG, JPEG. Maximum file size: 5MB." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+			</div>
+		</div>
+		<div
+			id="contactBlock"
+			class="border-2 p-6 relative rounded-lg mt-8 mb-6 bg-white hidden"
+		>
+			<h2
+				class="absolute rounded-t-2xl border-l-2 border-t tracking-wide -top-5 -left-[1px] font-bold text-xl p-1 px-4 bg-white z-1"
+			>
+				Certificates
+			</h2>
+
+			<div class="pt-5 space-y-2">
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with required_field="true" label_title="Registration Certificate" value=form.data.registration name="registration" id="registration" type="file" error_message=error.logo hint="Upload your Registration Certificate. Accepted formats: JPG, PNG, JPEG, DOCX. Maximum file size: 10MB." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+			</div>
+
+			<div class="pt-5 space-y-2">
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with required_field="true" label_title="Incorporation Certificate" value=form.data.incorporation name="incorporation" id="incorporation" type="file" error_message=error.logo hint="Upload your Registration Certificate. Accepted formats: JPG, PNG, JPEG, DOCX. Maximum file size: 10MB." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+			</div>
+			<div class="pt-5 space-y-2">
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with required_field="true" label_title="Tax Clearance Certificate" value=form.data.tax_clearance name="tax_clearance" id="tax_clearance" type="file" error_message=error.logo hint="Upload your Registration Certificate. Accepted formats: JPG, PNG, JPEG, DOCX. Maximum file size: 10MB." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+			</div>
+			<div class="pt-5 space-y-2">
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with  label_title="TIN Certificate" required_field="true" value=form.data.tin_registration name="tin_registration" id="tin_registration" type="file" error_message=error.logo hint="Upload your Registration Certificate. Accepted formats: JPG, PNG, JPEG, DOCX. Maximum file size: 10MB." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+			</div>
+			<div class="pt-5 space-y-2">
+				<div class="">
+					<!-- prettier-ignore -->
+					{% with  label_title="VAT Registration Certificate" required_field="true" value=form.data.vat_registration name="vat_registration" id="vat_registration" type="file" error_message=error.logo hint="Upload your Registration Certificate. Accepted formats: JPG, PNG, JPEG, DOCX. Maximum file size: 10MB." %}
+                        {% include "partials/forms/input-field.html"  %}
+                    {% endwith %}
+				</div>
+			</div>
+		</div>
+
+		<div class="flex items-center justify-center flex-col gap-4 px-4">
+			<button
+				class="font-semibold text-lg w-full py-1.5 px-4 transition bg-sky-500 hover:bg-sky-600 text-white rounded-full disabled:animate-pulse disabled:pointer-events-none"
+			>
+				Submit
+			</button>
+			<a
+				href="{% url 'signup_cancel' %}"
+				class="font-semibold inline-block text-center text-lg w-full py-1.5 px-4 transition bg-red-600 hover:bg-red-500 text-white rounded-full disabled:animate-pulse disabled:pointer-events-none"
+				class="font-semibold inline-block text-center text-lg w-full py-1.5 px-4 transition bg-red-600 hover:bg-red-500 text-white rounded-full disabled:animate-pulse disabled:pointer-events-none"
+			>
+				Cancel Registration
+			</a>
+		</div>
+	</form>
+</div>
+
+{% endblock %} {% block scripts %}
+<script>
+	const formElement = document.getElementById("vendorSignup");
+
+	const userBlock = formElement.querySelector("#userBlock");
+	const contactBlock = formElement.querySelector("#contactBlock");
+	const vendorBlock = formElement.querySelector("#vendorBlock");
+
+	contactBlock.classList.replace("hidden", "block");
+
+	const reloadBrowser = "{{reloadBrowser}}";
+
+	if (reloadBrowser === "True") {
+		setTimeout(() => {
+			window.location.href = "{% url 'account_signup' %}";
+		}, 6800);
+	}
+
+	// TODO
+	// contact_same_as_user
+</script>
+{% endblock %}

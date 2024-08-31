@@ -1,0 +1,99 @@
+{% extends "base.html"%}
+<br />
+{% block content %}
+
+<!-- Main Content -->
+<div class="container mx-auto mt-8 p-8">
+	<h1 class="text-3xl font-semibold mb-6">Procurement Opportunities</h1>
+
+	<!-- Procurement Opportunities Section -->
+	<div class="bg-white p-4 shadow rounded mb-6">
+		<h2 class="text-xl font-semibold mb-4">Available Opportunities</h2>
+		<!-- Sample Procurement Opportunities (Replace with dynamic data from your backend) -->
+		<div class="flex items-center justify-between mb-2">
+			<span>Opportunity #1</span>
+			<a href="/opportunity/1" class="btn btn-primary">View Details</a>
+		</div>
+		<div class="flex items-center justify-between mb-2">
+			<span>Opportunity #2</span>
+			<a href="/opportunity/2" class="btn btn-primary">View Details</a>
+		</div>
+		<!-- More Procurement Opportunities... -->
+	</div>
+
+	<!-- Bid Submission Section -->
+	<div class="bg-white p-4 shadow rounded mb-6">
+		<h2 class="text-xl font-semibold mb-4">Submit Your Bid</h2>
+		<form>
+			<!-- Product/Service Details -->
+			<div class="mb-4">
+				<label
+					for="productDetails"
+					class="block text-sm font-medium text-gray-600"
+					>Product/Service Details</label
+				>
+				<textarea
+					id="productDetails"
+					name="productDetails"
+					rows="4"
+					class="mt-1 p-2 border border-gray-300 rounded w-full"
+					required
+				></textarea>
+			</div>
+
+			<!-- Pricing -->
+			<div class="mb-4">
+				<label for="price" class="block text-sm font-medium text-gray-600"
+					>Price</label
+				>
+				<input
+					type="number"
+					id="price"
+					name="price"
+					class="mt-1 p-2 border border-gray-300 rounded w-full"
+					required
+				/>
+			</div>
+
+			<!-- Delivery Time -->
+			<div class="mb-4">
+				<label
+					for="deliveryTime"
+					class="block text-sm font-medium text-gray-600"
+					>Delivery Time (days)</label
+				>
+				<input
+					type="number"
+					id="deliveryTime"
+					name="deliveryTime"
+					class="mt-1 p-2 border border-gray-300 rounded w-full"
+					required
+				/>
+			</div>
+
+			<!-- Additional Documents Upload -->
+			<div class="mb-4">
+				<label
+					for="additionalDocuments"
+					class="block text-sm font-medium text-gray-600"
+					>Additional Documents (e.g., Certifications, References)</label
+				>
+				<input
+					type="file"
+					id="additionalDocuments"
+					name="additionalDocuments"
+					class="mt-1 p-2 border border-gray-300 rounded w-full"
+				/>
+			</div>
+
+			<!-- Submit button -->
+			<button type="submit" class="btn btn-primary">Submit Bid</button>
+		</form>
+	</div>
+
+	<!-- Communication Section (Similar to the previous examples) -->
+
+	<!-- Proposal Status Section (Similar to the previous examples) -->
+</div>
+
+{% endblock %}

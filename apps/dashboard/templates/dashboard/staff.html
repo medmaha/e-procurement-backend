@@ -1,0 +1,171 @@
+<div class="px-8 mx-auto p-8 space-y-6">
+	<!-- Welcome Message -->
+	<h1 class="text-3xl text-right">
+		Welcome,
+		<span class="capitalize font-semibold"
+			>{{request.user.first_name}} {{request.user.last_name}}</span
+		>
+	</h1>
+
+	<!-- Recent Orders Section -->
+	<div
+		class="mb-8 p-6 rounded bg-white w-full mx-auto max-w-[1300px] shadow relative mt-6"
+	>
+		<h3
+			class="absolute rounded-t-2xl border-t border-l-2 tracking-wide -top-5 -left-[1px] font-bold text-xl p-2 px-4 bg-white z-1"
+		>
+			<!-- prettier-ignore -->
+			Your Requisition
+		</h3>
+
+		<table class="table-auto w-full rounded-t overflow-hidden mt-6">
+			<thead>
+				<tr>
+					<th class="font-semibold text-base">Unique ID</th>
+					<th class="font-semibold text-base">Timestamp</th>
+					<th class="font-semibold text-base">Item Description</th>
+					<th class="font-semibold text-base">Quantity</th>
+					<th class="font-semibold text-base">Measurement Unit</th>
+					<th class="font-semibold text-base">Unit Cost</th>
+					<th class="font-semibold text-base">Total Cost</th>
+					<th class="font-semibold text-base">Status</th>
+					<th class="font-semibold text-base"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in requisitions %}
+				<tr class="even:bg-gray-50">
+					<td class="p-4">
+						<a
+							class="hover:text-sky-600 transition"
+							href="{% url 'requisitions_detail' id=item.requisition_number %} "
+						>
+							{{item.requisition_number}}
+						</a>
+					</td>
+					<td class="p-4">{{item.requisition_date|timesince}} ago</td>
+					<td class="p-4">{{item.item_description}}</td>
+					<td class="p-4">{{item.quantity}}</td>
+					<td class="p-4 uppercase">{{item.measurement_unit}}</td>
+					<td class="p-4">{{CURRENCY}}{{item.estimated_unit_cost}}</td>
+					<td class="p-4">{{CURRENCY}}{{item.estimated_total_cost}}</td>
+					<td
+						class="p-4 capitalize {% if requisition_status == 'accepted' %} text-green-500 {% elif requisition_status == 'decliined' %} text-red-500 {% else %} text-gray-700 {% endif %}"
+					>
+						{{item.requisition_status}}
+					</td>
+					<td class="p-4">
+						<a
+							href="{% url 'requisitions_detail' id=item.requisition_number %}"
+							class="inline-block text-xs font-semibold text-sky-500 hover:text-sky-600 transition"
+						>
+							View or Edit
+						</a>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<div class="py-4 block">
+			<p>
+				<strong>Total:</strong>
+				<span class="px-4 inline-block">{{requisitions.count}}</span>
+			</p>
+		</div>
+		<hr class="" />
+	</div>
+	<div class="py-6"></div>
+
+	<div
+		class="mb-8 p-6 rounded bg-white shadow w-full mx-auto max-w-[1300px] relative mt-6"
+	>
+		<!-- <h2 class="text-xl font-semibold mb-4">Requisition Approval Tracking</h2> -->
+		<h3
+			class="absolute rounded-t-2xl border-t border-l-2 tracking-wide -top-5 -left-[1px] font-bold text-xl p-2 px-4 bg-white z-1"
+		>
+			Requisition Approval Tracking
+		</h3>
+
+		<table class="table-auto w-full rounded-t overflow-hidden mt-6">
+			<thead>
+				<tr>
+					<th class="font-semibold text-base">Unique ID</th>
+					<th class="font-semibold text-base">Timestamp</th>
+					<th class="font-semibold text-base">Unit Approval</th>
+					<th class="font-semibold text-base">Department Approval</th>
+					<th class="font-semibold text-base">Finance Approval</th>
+					<th class="font-semibold text-base">Procurement Approval</th>
+					<th class="font-semibold text-base">Approval Status</th>
+					<th class="font-semibold text-base"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for approval in requisition_approvals %}
+				<!-- prettier-ignore -->
+				<tr class="even:bg-gray-50">
+					<td class="p-4 ">
+						<a
+						class="hover:text-sky-600 transition"
+						href="{% url 'detail_requisition_approval' id=approval.approval_id %} "
+					>
+					{{approval.approval_id}}
+				</a>
+					</td>
+					<td class="p-4 hover:text-sky-600 transition cursor-pointer">
+						{{approval.requisition.requisition_date|timesince}} ago
+					</td>
+					<td class="p-4">
+						{% if approval.unit_approval %}
+							{{approval.unit_approval}}
+						{% else %}
+						-
+						{% endif %}
+					</td>
+					<td class="p-4 uppercase">
+						{% if approval.department_approval %}
+							{{approval.department_approval}}
+						{% else %}
+						-
+						{% endif %}
+					</td>
+					<td class="p-4">
+						{% if approval.finance_requisition_approval %}
+							{{approval.finance_requisition_approval}}
+						{% else %}
+						-
+						{% endif %}
+				
+					<td class="p-4">
+						{% if approval.procurement_requisition_approval %}
+							{{approval.procurement_requisition_approval}}
+						{% else %}
+						-
+						{% endif %}
+					<td class="p-4">
+						{% if approval.requisition_approval_status %}
+							{{approval.requisition_approval_status}}
+						{% else %}
+						-
+						{% endif %}
+						</td>
+					<td class="p-4">
+						<a
+							href="{% url 'detail_requisition_approval' id=approval.approval_id %} "
+							class="inline-block text-xs font-semibold text-sky-500 hover:text-sky-600 transition"
+						>
+							View or Edit
+						</a>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<div class="py-4 block">
+			<p>
+				<strong>Total:</strong>
+				<span class="px-4 inline-block">{{requisition_approvals.count}}</span>
+			</p>
+		</div>
+		<hr class="" />
+	</div>
+</div>

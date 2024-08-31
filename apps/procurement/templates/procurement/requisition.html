@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<div class="pt-8" id="requisitionContainer">
+	<form
+		method="post"
+		enctype="multipart/form-data"
+		class="block bg-white rounded-t-xl shadow-md border mx-auto max-w-[1000px] h-max relative"
+	>
+		{% csrf_token %}
+		<h3
+			class="absolute rounded-t-2xl border-t border-l-2 tracking-wide -top-5 -left-[2px] font-semibold text-xl p-2 px-4 bg-white z-1"
+		>
+			Make a Requisition
+		</h3>
+		<div class="grid sm:grid-cols-3 gap-4 p-6 mt-8">{{form.as_p}}</div>
+		<div class="grid sm:grid-cols-2 gap-4 sm:gap-6 p-6 pt-0">
+			<button
+				type="button"
+				v-bind:disabled="disabled"
+				class="text-white bg-gray-500 transition hover:bg-red-600 rounded-lg font-semibold p-2 disabled:pointer-events-none disabled:opacity-50"
+			>
+				Cancel Requisition
+			</button>
+
+			<button
+				v-bind:disabled="disabled"
+				class="transition text-white bg-sky-500 hover:bg-sky-600 rounded-lg font-semibold p-2 disabled:pointer-events-none disabled:opacity-50 disabled:animate-pulse"
+			>
+				<span
+					class="hidden"
+					v-bind:class="{'inline-block':loading, hidden:!loading}"
+					>Submitting Requisition...</span
+				>
+				<span v-bind:class="{'inline-block':!loading, hidden:loading}"
+					>Submit Requisition</span
+				>
+			</button>
+		</div>
+	</form>
+</div>
+
+<!-- <script src="{% static 'procurement/requisition.js' %}"></script> -->
+
+{% block scripts %} {% endblock %} {% endblock %}
