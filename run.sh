@@ -1,3 +1,7 @@
 #!/bin/bash
 
-docker run intrasoft0/e-procurement:backend-001
+source ./build.sh import
+
+REPO_NAME="$REPO:$TAG"
+
+docker run "$REPO_NAME"
