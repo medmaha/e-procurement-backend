@@ -11,12 +11,11 @@ from .admin import *
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("apps.urls")),
-    re_path(r"^", include("apps.urls")),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-admin.site.index_title = APP_COMPANY.get("name", "") + " | E-Procurement"
-admin.site.site_title = APP_COMPANY.get("name", "") + " - Procurement Portal"
+admin.site.index_title = "E-Procurement"
+admin.site.site_title = "E-Procurement Portal"
 admin.site.site_header = admin.site.index_title

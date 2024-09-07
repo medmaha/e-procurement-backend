@@ -23,18 +23,18 @@ from .views.account.retrieve import AccountRetrieveView
 urlpatterns = [
     #
     # Accounts
-    path("users/", AccountListView.as_view()),
-    path("users/<user_id>/", AccountRetrieveView.as_view()),
-    path("login/", views.LoginTokensObtainView.as_view()),
+    # path("users/", AccountListView.as_view()),
+    # path("users/<user_id>/", AccountRetrieveView.as_view()),
+    path("login/", views.LoginAPIView.as_view()),
     path("signup/", views.VendorSignupView.as_view()),
-    path("session/", views.RefreshAuthSessionTokens.as_view()),
+    # path("session/", views.RefreshAuthSessionTokens.as_view()),
     #
     # Groups
-    path("groups/create/", GroupCreateView.as_view()),
-    path("groups/update/", GroupUpdateView.as_view()),
-    path("groups/select/", GroupListSelectView.as_view()),
-    path("groups/", GroupListView.as_view()),
+    # path("groups/create/", GroupCreateView.as_view()),
+    # path("groups/update/", GroupUpdateView.as_view()),
+    # path("groups/select/", GroupListSelectView.as_view()),
+    # path("groups/", GroupListView.as_view()),
     #
     # Permissions
-    path("permissions/select/", PermissionSelectListView.as_view()),
+    # path("permissions/select/", PermissionSelectListView.as_view()),
 ]

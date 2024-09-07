@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     # My projects
     "apps.core",
+    "apps.app",
     "apps.accounts",
     "apps.vendors",
     "apps.dashboard",
@@ -82,22 +83,22 @@ WSGI_APPLICATION = "base.wsgi.application"
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db" / "db.sqlite3",
-    }
-}
 # DATABASES = {
 #     "default": {
-#         "NAME": os.getenv("DATABASE_NAME"),
-#         "USER": os.getenv("DATABASE_USER"),
-#         "HOST": os.getenv("DATABASE_HOST"),
-#         "PORT": os.getenv("DATABASE_PORT"),
-#         "PASSWORD": os.getenv("DATABASE_PASSWORD"),
-#         "ENGINE": os.getenv("DATABASE_ENGINE"),
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db" / "db.sqlite3",
 #     }
 # }
+DATABASES = {
+    "default": {
+        "NAME": os.getenv("DATABASE_NAME"),
+        "USER": os.getenv("DATABASE_USER"),
+        "HOST": os.getenv("DATABASE_HOST"),
+        "PORT": os.getenv("DATABASE_PORT"),
+        "PASSWORD": os.getenv("DATABASE_PASSWORD"),
+        "ENGINE": os.getenv("DATABASE_ENGINE"),
+    }
+}
 
 
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
@@ -164,4 +165,6 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 20,
 }

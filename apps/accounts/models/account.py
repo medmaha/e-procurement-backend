@@ -21,15 +21,16 @@ def upload_avatar(instance, filename: str):
 
 class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    avatar = models.ImageField(
-        upload_to=upload_avatar,
-        null=True,
+    avatar = models.CharField(
         default="/img/default/avatar.png",
+        null=True,
         blank=True,
     )
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, null=True, blank=True)
+
+    address = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
 
     is_active = models.BooleanField(default=False)

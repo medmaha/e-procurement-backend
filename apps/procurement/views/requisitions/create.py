@@ -5,7 +5,6 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from apps.core.decorators.permissions import create_requisition, staff_view
 from apps.organization.models import Staff
-from apps.procurement.models.requisition import generateReqNumber
 
 from apps.procurement.forms import RequisitionForm
 
@@ -31,7 +30,6 @@ def requisitions_create(request):
                 "estimated_total_cost": str(total_cost),
                 "requisition_date": str(requisition_date),
                 "requisition_status": "pending",
-                "requisition_number": generateReqNumber(),
                 "staff": str(request.user.profile.pk),
             }
         )

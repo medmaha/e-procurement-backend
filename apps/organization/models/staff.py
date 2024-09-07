@@ -1,4 +1,4 @@
-import random
+import random, uuid
 from django.db import models
 from apps.accounts.models import Account
 from apps.organization.models.unit import Unit
@@ -15,6 +15,7 @@ def generateEmployerNumber():
 
 
 class Staff(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField()
     first_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, default="", blank=True)

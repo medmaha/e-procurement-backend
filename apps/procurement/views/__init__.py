@@ -13,7 +13,6 @@ from apps.procurement.views.requisitions.detail import requisitions_detail
 from ..forms import RFQForm, RFQItemsForm, RequisitionForm
 
 from ..models import Requisition
-from ..models.requisition import generateReqNumber
 
 
 @login_required

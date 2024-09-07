@@ -2,7 +2,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from apps.accounts.models import Account
-from apps.vendors.models.vendor import Vendor
+from rest_framework.response import Response
+
+from backend.apps.organization.models.unit import Unit
 
 
 class AuthTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -12,20 +14,15 @@ class AuthTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-class LoginTokensObtainView(TokenObtainPairView):
+class LoginAPIView(TokenObtainPairView):
     serializer_class = AuthTokenObtainPairSerializer
 
     def finalize_response(self, request, response, *args, **kwargs):
-        # for v in Vendor.objects.all():
-        #     v.user_account.set_password("prc@2k2*")
-        #     v.user_account.save()
+        if response.status_code != 200:
+            response = Response(
+                {"error": "Oops!Invalid credentials"}, status=response.status_code
+            )
 
-        # for acc in Account.objects.all():
-        # acc.set_password("prc@2k2*")
-
-        if response.status_code > 201:
-            if request.method == "POST":
-                response.data.update({"detail": "Oops! your credentials are invalid"})
         return super().finalize_response(request, response, *args, **kwargs)
 
 
@@ -38,10 +35,9 @@ def populate_token(user: Account, token):
     payload["profile_type"] = profile_type
 
     payload["meta"] = {}
-    payload["meta"]["id"] = user.pk
 
     if profile_type == "Vendor":
-        registration = profile.vendorregistration_set.first()
+        registration = profile.vendorregistration_set.select_related().first()
         vendor = {
             "id": profile.pk,
             "name": profile.organization_name,
@@ -52,13 +48,25 @@ def populate_token(user: Account, token):
         payload["meta"]["vendor"] = vendor
 
     elif profile_type == "Staff":
-        unit = profile.unit
+        unit: Unit = profile.unit
         department = unit.department
         staff = {
             "id": profile.pk,
-            "unit": unit.name,
-            "department": department.name,
+            "name": user.full_name,
+            "unit": {
+                "slug": unit.slug,
+                "name": unit.name,
+            },
+            "department": {
+                "slug": department.slug,
+                "name": department.name,
+            },
+            "company": {
+                "name": department.company.name,
+                "slug": department.company.slug,
+            },
             "is_activated": not profile.disabled,
+            "created_date": profile.created_date,
         }
         payload["meta"]["staff"] = staff
 

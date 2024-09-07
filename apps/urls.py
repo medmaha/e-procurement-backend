@@ -41,10 +41,11 @@ def not_found(request: HttpRequest):
 
 
 urlpatterns = [
-    path("", index, name="index"),
-    path(r"api/account/", include("apps.accounts.api.urls")),
-    path(r"api/organization/", include("apps.organization.api.urls")),
-    path(r"api/procurement/", include("apps.procurement.api.urls")),
-    path(r"api/vendors/", include("apps.vendors.api.urls")),
-    re_path(r"^api/", not_found, name="not_found"),
+    # path("", index, name="index"),
+    path("api/company/", include("apps.app.api.urls")),
+    path("api/account/", include("apps.accounts.api.urls")),
+    # path(r"api/organization/", include("apps.organization.api.urls")),
+    # path(r"api/procurement/", include("apps.procurement.api.urls")),
+    # path(r"api/vendors/", include("apps.vendors.api.urls")),
+    # re_path(r"^api/", not_found, name="not_found"),
 ]

@@ -4,7 +4,6 @@ from django import forms
 from ..models import (
     Requisition,
 )
-from ..models.requisition import generateReqNumber
 
 
 class RequisitionCreateForm(forms.ModelForm):
@@ -41,9 +40,9 @@ class RequisitionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         for k, v in self.fields.items():
-            v.widget.attrs[
-                "class"
-            ] = "w-full border p-1 px-2 sm:p-2 rounded peer disabled:bg-gray-100"
+            v.widget.attrs["class"] = (
+                "w-full border p-1 px-2 sm:p-2 rounded peer disabled:bg-gray-100"
+            )
 
 
 class RequisitionDetailForm(RequisitionForm):

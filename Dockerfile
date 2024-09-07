@@ -1,7 +1,7 @@
 FROM python:3.12.0-slim
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
@@ -18,4 +18,4 @@ ENV PORT=8000
 
 EXPOSE ${PORT}
 
-CMD gunicorn base.wsgi:application --bind 0.0.0.0:${PORT}
+CMD ["gunicorn", "base.wsgi:application", "--bind 0.0.0.0:${PORT}"]
