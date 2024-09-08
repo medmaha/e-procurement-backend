@@ -1,8 +1,12 @@
 
 
 venv/
+htmlcov/
 __pycache__/
 */**/__pycache__/
-db copy.sqlite3
+
+
+.coverage
+.coveragerc
 Dockerfile
 

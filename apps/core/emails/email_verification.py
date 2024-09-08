@@ -16,7 +16,6 @@ def send_verification_code(user:Account, code: str | int, expires_at: str | int)
     }
     template = render_to_string("core/email_verification.html", context=context)
 
-    print("VerificationCode", code)
     mailer(user.email, template)
 
 def mailer(recipient, template):

@@ -36,7 +36,7 @@ class ContactPersonSerializer(serializers.ModelSerializer):
         return instance.address.to_string if instance.address else None
 
 
-class ContactPersonRetrieveView(RetrieveAPIView):
+class ContactPersonGetAPIView(RetrieveAPIView):
     serializer_class = ContactPersonSerializer
 
     def get_queryset(self, request, profile_type, profile):

@@ -6,7 +6,7 @@ from apps.organization.api.serializers.department import DepartmentRetrieveSeria
 from apps.accounts.models import Account
 
 
-class DepartmentRetrieveView(RetrieveAPIView):
+class DepartmentGetAPIView(RetrieveAPIView):
     serializer_class = DepartmentRetrieveSerializer
 
     def retrieve(self, request, *args, **kwargs):

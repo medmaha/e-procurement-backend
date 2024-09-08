@@ -1,24 +1,7 @@
-from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from apps.accounts.verification_db import VendorVerificationDB
 
-from .models import VendorRegistration, Vendor, ContactPerson
-
-
-@receiver(post_save, sender=ContactPerson)
-def contact_person_verification(created, instance: ContactPerson, *args, **kwargs):
-    if not created:
-        with transaction.atomic():
-            ContactPerson.objects.filter(pk=instance.pk).update(
-                verified=instance.verified
-            )
-            Vendor.objects.filter(contact_person=instance).update(
-                verified=instance.verified
-            )
-            VendorRegistration.objects.filter(vendor__contact_person=instance).update(
-                is_validated=instance.verified
-            )
+from .models import VendorRegistration, Vendor
 
 
 @receiver(post_save, sender=Vendor)
@@ -55,5 +38,4 @@ def handle_vendor_activation(created, instance, *args, **kwargs):
                 vendor.user_account.is_active = False
                 vendor.user_account.save()
                 vendor.save()
-                CODE = VendorVerificationDB().generate_code(vendor)
-                vendor.send_activation_mail(v_code=CODE, activation=True)
+                # vendor.send_activation_mail(v_code=CODE, activation=True)

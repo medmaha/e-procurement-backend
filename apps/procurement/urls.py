@@ -1,5 +1,4 @@
 from django.urls import path
-from . import views
 
 
 # reference /procurement/*
@@ -25,8 +24,3 @@ urlpatterns = [
     # path("", views.procurement_view, name="procurement"),
     # path("method", views.procurement_method, name="procurement_method"),
 ]
-
-
-from .views.requisitions.urls import requisitions_url
-
-urlpatterns += requisitions_url

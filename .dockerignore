@@ -1,5 +1,12 @@
 # Ignore virtual environ directory
 
-venv/
 .git/
-
+venv/
+media/
+static/
+htmlcov/
+.scripts/
+.fixtures/
+*/**/tests/
+staticfiles/
+*.sh

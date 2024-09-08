@@ -4,13 +4,14 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from apps.accounts.models import Account
 from rest_framework.response import Response
 
-from backend.apps.organization.models.unit import Unit
+from apps.organization.models.unit import Unit
 
 
 class AuthTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user: Account):
-        token = populate_token(user, super().get_token(user))
+        _token = super().get_token(user)
+        token = populate_token(user, _token)
         return token
 
 
@@ -20,30 +21,38 @@ class LoginAPIView(TokenObtainPairView):
     def finalize_response(self, request, response, *args, **kwargs):
         if response.status_code != 200:
             response = Response(
-                {"error": "Oops!Invalid credentials"}, status=response.status_code
+                {"error": "Oops! Invalid credentials"}, status=response.status_code
             )
-
         return super().finalize_response(request, response, *args, **kwargs)
 
 
 def populate_token(user: Account, token):
     profile_type, profile = user.get_profile()
 
+    user_id = str(user.id)
+
     payload = {}
+    payload["meta"] = {}
+    payload["id"] = user_id
     payload["name"] = user.full_name
-    payload["profile_id"] = profile.pk
+
+    if not profile:
+        token["user_id"] = user_id
+        token["user"] = payload
+
+        return token
+
+    payload["profile_id"] = str(profile.id)
     payload["profile_type"] = profile_type
 
-    payload["meta"] = {}
-
     if profile_type == "Vendor":
-        registration = profile.vendorregistration_set.select_related().first()
         vendor = {
-            "id": profile.pk,
-            "name": profile.organization_name,
-            "industry": profile.industry,
-            "is_validated": registration.is_validated,
-            "activation_status": registration.status,
+            "id": str(profile.id),
+            "company": {
+                "name": profile.company.name,
+                "slug": profile.company.slug,
+            },
+            "created_date": str(profile.created_date),
         }
         payload["meta"]["vendor"] = vendor
 
@@ -51,7 +60,7 @@ def populate_token(user: Account, token):
         unit: Unit = profile.unit
         department = unit.department
         staff = {
-            "id": profile.pk,
+            "id": str(profile.id),
             "name": user.full_name,
             "unit": {
                 "slug": unit.slug,
@@ -66,7 +75,7 @@ def populate_token(user: Account, token):
                 "slug": department.company.slug,
             },
             "is_activated": not profile.disabled,
-            "created_date": profile.created_date,
+            "created_date": str(profile.created_date),
         }
         payload["meta"]["staff"] = staff
 

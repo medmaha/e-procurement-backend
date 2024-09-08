@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     # My projects
     "apps.core",
-    "apps.app",
     "apps.accounts",
     "apps.vendors",
     "apps.dashboard",
@@ -142,6 +141,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "public/dist/static/")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+FIXTURE_DIRS = [BASE_DIR / ".fixtures"]
+
 from .jwt_settings import *
 
 CORS_ALLOWED_ORIGINS = [
@@ -152,6 +153,7 @@ CORS_ALLOWED_ORIGINS = [
 
 
 REST_FRAMEWORK = {
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",

@@ -1,0 +1,194 @@
+[
+  {
+    "model": "accounts.account",
+    "pk": "bdc2860c-4ff0-4933-bc62-0548c099f683",
+    "fields": {
+      "password": "pbkdf2_sha256$720000$nbGGdHms3tbzQCo4c5idLj$pdJI0I4jC2aacp/CwYi1Y6QHlQuJzefW2cIm3adybUE=",
+      "last_login": null,
+      "email": "staff1@intrasoft.com",
+      "avatar": "/img/default/avatar.png",
+      "first_name": "Staff",
+      "last_name": "Member",
+      "middle_name": null,
+      "phone_number": null,
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "created_date": "2024-09-07T23:44:00.553Z",
+      "last_modified": "2024-09-08T01:31:17.198Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.account",
+    "pk": "bdc2860c-4ff0-4933-bc62-0548c099f684",
+    "fields": {
+      "password": "pbkdf2_sha256$720000$Ud0xWwMyEX07U3xm7CoXQQ$3jibLdUZPrb7NeBR/fbU+VIxQCncjIIsRgl2IoHXMyM=",
+      "last_login": "2024-09-08T01:25:47.202Z",
+      "email": "admin@admin.com",
+      "avatar": "/img/default/avatar.png",
+      "first_name": "Super",
+      "last_name": "Admin",
+      "middle_name": "",
+      "phone_number": null,
+      "is_active": true,
+      "is_staff": true,
+      "is_superuser": true,
+      "created_date": "2024-09-07T23:31:24.472Z",
+      "last_modified": "2024-09-07T23:31:24.472Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.account",
+    "pk": "cd26fc48-b8be-49f6-95f3-6f65ea041197",
+    "fields": {
+      "password": "pbkdf2_sha256$720000$nbGGdHms3tbzQCo4c5idLj$pdJI0I4jC2aacp/CwYi1Y6QHlQuJzefW2cIm3adybUE=",
+      "last_login": null,
+      "email": "vendor1@datalink.com",
+      "avatar": "/img/default/avatar.png",
+      "first_name": "Omosh",
+      "last_name": "Yusiki",
+      "middle_name": null,
+      "phone_number": null,
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "created_date": "2024-09-08T01:29:49.675Z",
+      "last_modified": "2024-09-08T01:29:49.675Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "vendors.vendor",
+    "pk": "d18241d9-f0ba-4a73-8be3-fb64198b1770",
+    "fields": {
+      "company": "b4e6af53-e267-4df1-8bdb-b714a9d642c6",
+      "active": true,
+      "user_account": "cd26fc48-b8be-49f6-95f3-6f65ea041197",
+      "verified": true,
+      "created_date": "2024-09-08T01:29:55.773Z",
+      "last_modified": "2024-09-08T01:29:55.773Z"
+    }
+  },
+  {
+    "model": "vendors.vendorregistration",
+    "pk": 1,
+    "fields": {
+      "vendor": "d18241d9-f0ba-4a73-8be3-fb64198b1770",
+      "status": "inactive",
+      "is_validated": false,
+      "created_date": "2024-09-08T01:29:55.773Z",
+      "last_modified": "2024-09-08T01:29:55.773Z"
+    }
+  },
+  {
+    "model": "organization.company",
+    "pk": "80a549db-bf52-4dec-9acf-16eb97fcf26d",
+    "fields": {
+      "name": "Intra Software",
+      "slug": "intra-software",
+      "description": "",
+      "contact_email": "support@intrasoft.com",
+      "contact_phone": null,
+      "city": null,
+      "address": null,
+      "coordinates": null,
+      "country": "The Gambia",
+      "website_url": null,
+      "industry": null,
+      "tax_id": null,
+      "postal_code": null,
+      "license_number": null,
+      "registration_number": null,
+      "registration_certificate_url": null,
+      "verified": false,
+      "date_verified": null,
+      "created_date": "2024-09-07T23:32:54.470Z",
+      "last_modified": "2024-09-07T23:32:54.470Z",
+      "is_deleted": false,
+      "date_deleted": null
+    }
+  },
+  {
+    "model": "organization.company",
+    "pk": "b4e6af53-e267-4df1-8bdb-b714a9d642c6",
+    "fields": {
+      "name": "Data-Link",
+      "slug": "data-link",
+      "description": "",
+      "contact_email": "support@vendor.com",
+      "contact_phone": null,
+      "city": null,
+      "address": null,
+      "coordinates": null,
+      "country": "The Gambia",
+      "website_url": null,
+      "industry": null,
+      "tax_id": null,
+      "postal_code": null,
+      "license_number": null,
+      "registration_number": null,
+      "registration_certificate_url": null,
+      "verified": true,
+      "date_verified": null,
+      "created_date": "2024-09-08T01:26:30.241Z",
+      "last_modified": "2024-09-08T01:26:30.241Z",
+      "is_deleted": false,
+      "date_deleted": null
+    }
+  },
+  {
+    "model": "organization.department",
+    "pk": "b24bd68a-6101-4353-a816-4ae6f18bd854",
+    "fields": {
+      "company": "80a549db-bf52-4dec-9acf-16eb97fcf26d",
+      "name": "Department 1",
+      "slug": "intra-softwaredepartment-1",
+      "email": null,
+      "description": "",
+      "department_head": null,
+      "phone": "",
+      "disabled": false,
+      "last_modified": "2024-09-07T23:33:31.952Z",
+      "created_date": "2024-09-07T23:33:31.952Z",
+      "enabled_since": "2024-09-07T23:33:31.952Z"
+    }
+  },
+  {
+    "model": "organization.unit",
+    "pk": "4e2307ac-0beb-4069-b695-e84198dee6e5",
+    "fields": {
+      "name": "Unit 1",
+      "slug": "intra-softwareunit-1",
+      "department": "b24bd68a-6101-4353-a816-4ae6f18bd854",
+      "description": "",
+      "unit_head": null,
+      "phone": "",
+      "disabled": false,
+      "last_modified": "2024-09-07T23:33:55.990Z",
+      "created_date": "2024-09-07T23:33:55.990Z",
+      "enabled_since": "2024-09-07T23:33:55.990Z"
+    }
+  },
+  {
+    "model": "organization.staff",
+    "pk": "459fb981-24f6-4908-b151-661e72f53d8d",
+    "fields": {
+      "phone": "3332050",
+      "biography": "",
+      "job_title": "",
+      "gender": "other",
+      "address": null,
+      "disabled": false,
+      "is_admin": false,
+      "unit": "4e2307ac-0beb-4069-b695-e84198dee6e5",
+      "user_account": "bdc2860c-4ff0-4933-bc62-0548c099f683",
+      "last_modified": "2024-09-08T01:30:41.678Z",
+      "created_date": "2024-09-07T23:44:06.925Z"
+    }
+  }
+]

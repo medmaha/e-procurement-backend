@@ -11,7 +11,7 @@ from apps.core.utilities.generators import revert_unique_id
 from apps.procurement.models.rfq_contract import RFQContract
 
 
-class QuotationRespondRetrieveView(RetrieveAPIView):
+class QuotationRespondGetAPIView(RetrieveAPIView):
     serializer_class = RFQResponseRetrieveSerializer
 
     def retrieve(self, request, *args, **kwargs):

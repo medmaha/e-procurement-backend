@@ -46,7 +46,6 @@ class UnitsUpdateView(UpdateAPIView):
         )
 
         if serializer.is_valid():
-            print(serializer.validated_data)
             with transaction.atomic():
                 unit: Unit = serializer.save()  # type: ignore
                 return Response(

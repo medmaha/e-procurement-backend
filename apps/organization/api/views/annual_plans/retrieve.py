@@ -11,7 +11,7 @@ from apps.organization.api.serializers.plan import (
 from apps.accounts.models import Account
 
 
-class AnnualPlanRetrieveView(RetrieveAPIView):
+class AnnualPlanGetAPIView(RetrieveAPIView):
     serializer_class = AnnualPlanRetrieveSerializer
 
     def retrieve(self, request, *args, **kwargs):

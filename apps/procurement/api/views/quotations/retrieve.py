@@ -10,7 +10,7 @@ from backend.apps.vendors.models.rfq_response import RFQResponse
 from apps.core.utilities.generators import revert_unique_id
 
 
-class QuotationRespondRetrieveView(RetrieveAPIView):
+class QuotationRespondGetAPIView(RetrieveAPIView):
     serializer_class = RFQResponseListSerializer
 
     def retrieve(self, request, *args, **kwargs):

@@ -12,7 +12,7 @@ from apps.procurement.models.rfq import RFQ
 from apps.core.utilities.generators import revert_unique_id
 
 
-class RFQEvaluationRetrieveView(RetrieveAPIView):
+class RFQEvaluationGetAPIView(RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         profile_type, profile = request.user.get_profile()

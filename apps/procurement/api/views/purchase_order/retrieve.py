@@ -7,7 +7,7 @@ from apps.procurement.api.serializers.purchase_order import (
 )
 
 
-class PurchaseOrderRetrieveView(RetrieveAPIView):
+class PurchaseOrderGetAPIView(RetrieveAPIView):
     serializer_class = PurchaseOrderRetrieveSerializer
 
     def get_queryset(self):

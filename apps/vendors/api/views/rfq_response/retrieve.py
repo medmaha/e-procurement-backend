@@ -8,7 +8,7 @@ from apps.vendors.api.serializers.rfq_response import (
 )
 
 
-class RFQResponseRetrieveView(RetrieveAPIView):
+class RFQResponseGetAPIView(RetrieveAPIView):
     serializer_class = RFQResponseRetrieveSerializer
 
     def retrieve(self, request, *args, **kwargs):

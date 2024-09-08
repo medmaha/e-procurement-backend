@@ -10,7 +10,7 @@ from apps.vendors.api.serializers.registration import (
 from apps.core.utilities.generators import revert_unique_id
 
 
-class VendorRegistrationRetrieveView(RetrieveAPIView):
+class VendorRegistrationGetAPIView(RetrieveAPIView):
     serializer_class = VendorRegistrationRetrieveSerializer
 
     def retrieve(self, request, *args, **kwargs):

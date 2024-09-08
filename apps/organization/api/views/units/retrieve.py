@@ -9,7 +9,7 @@ from apps.organization.api.serializers.unit import (
 from apps.accounts.models import Account
 
 
-class UnitsRetrieveView(RetrieveAPIView):
+class UnitsGetAPIView(RetrieveAPIView):
     serializer_class = UnitRetrieveSerializer
 
     def retrieve(self, request, *args, **kwargs):

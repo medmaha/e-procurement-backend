@@ -18,7 +18,7 @@ from .serializer import (
 )
 
 
-class Form101RetrieveView(GenericAPIView):
+class Form101GetAPIView(GenericAPIView):
     def get_query_params(self) -> dict[str, str]:
         return self.request.query_params or {}  # type: ignore
 

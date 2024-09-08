@@ -1,4 +1,3 @@
-from django.db.models import Subquery
 from rest_framework import serializers
 
 from apps.organization.models import Department, Unit

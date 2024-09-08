@@ -37,7 +37,7 @@ class VendorSerializer(serializers.ModelSerializer):
         exclude = []
 
 
-class VendorRetrieveView(RetrieveAPIView):
+class VendorGetAPIView(RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         profile_type, profile = request.user.get_profile()
         query = None

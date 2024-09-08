@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 
-from apps.app.models.company import Company
+from .company import Company
 
 
 class Department(models.Model):
@@ -35,7 +35,7 @@ class Department(models.Model):
             ).strip()
 
             # create slug
-            slug_prefix = slugify(self.company.slug + "-")
+            slug_prefix = f"{self.company.slug + "-"}"
             self.slug = slugify(slug_prefix + self.name)
 
             exists = Department.objects.select_related().filter(slug=self.slug).exists()
@@ -43,7 +43,7 @@ class Department(models.Model):
             # create new slug if exists
             while exists:
                 self.slug = slugify(
-                    slug_prefix + self.name + "-" + get_random_string(5)
+                    slug_prefix + "-" + self.name + "-" + get_random_string(5)
                 )
                 exists = (
                     Department.objects.select_related().filter(slug=self.slug).exists()

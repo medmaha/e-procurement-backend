@@ -13,15 +13,6 @@ class PermissionDenied(admin.ModelAdmin):
 
 
 class SupplierAdmin(PermissionDenied):
-    list_display = [
-        "organization_name",
-        "industry",
-        "contact_person",
-        "license_number",
-        "website",
-        "tin_number",
-        "established_date",
-    ]
 
     sortable_by = []
 

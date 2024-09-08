@@ -4,7 +4,7 @@ from rest_framework.generics import ListAPIView
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q, Subquery
-from apps.accounts.api.serializer.permissions import PermissionSelectListSerializer
+from apps.accounts.serializer.permissions import PermissionSelectListSerializer
 
 
 class PermissionSelectListView(ListAPIView):

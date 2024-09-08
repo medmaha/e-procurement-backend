@@ -1,14 +1,12 @@
-from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-from rest_framework import status
-from apps.organization.models import Staff
-from apps.organization.api.serializers.staff import (
-    StaffListSerializer,
-)
-from apps.accounts.models import Account
+from rest_framework.generics import ListAPIView
+
+from apps.organization.models.staff import Staff
+from apps.organization.api.serializers.staff import StaffListSerializer
 
 
-class StaffListView(ListAPIView):
+class StaffListAPIView(ListAPIView):
+
     serializer_class = StaffListSerializer
 
     def get_queryset(self):
@@ -16,19 +14,13 @@ class StaffListView(ListAPIView):
         return queryset
 
     def list(self, request, *args, **kwargs):
-        user: Account = request.user
-        profile_name, profile = user.get_profile()
         queryset = self.get_queryset()
+
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
         serializer = self.get_serializer(queryset, many=True)
-
-        auth_perms = {
-            "create": request.user.has_perm("organization.add_staff"),
-            "read": request.user.has_perm("organization.view_staff"),
-            "update": request.user.has_perm("organization.change_staff"),
-            "delete": request.user.has_perm("organization.delete_staff"),
-        }
-
-        return Response(
-            {"data": serializer.data, "auth_perms": auth_perms},
-            status=status.HTTP_200_OK,
-        )
+        return Response(serializer.data)

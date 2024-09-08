@@ -29,4 +29,4 @@ def mailer(recipient, template):
     try:
         MultiThreading(target=target)
     except smtplib.SMTPException as e:
-        print("ERROR!", e)
+        pass

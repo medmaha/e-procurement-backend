@@ -12,10 +12,10 @@ from apps.procurement.api.serializers.quotations import RFQItemsSerializer
 from apps.organization.models.staff import Staff
 
 
-class RfqRetrieveView(RetrieveAPIView):
+class RfqGetAPIView(RetrieveAPIView):
     serializer_class = RFQListSerializer
 
-    def retrieve(self, request, *args, **kwargs): 
+    def retrieve(self, request, *args, **kwargs):
         slug = kwargs.get("slug")
         _id = revert_unique_id("RFQ", slug or "0")
         print(_id)

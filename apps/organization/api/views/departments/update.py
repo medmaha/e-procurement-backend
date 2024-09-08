@@ -43,7 +43,6 @@ class DepartmentUpdateView(UpdateAPIView):
                 status=status.HTTP_200_OK,
             )
 
-        print(request.data)
         serializer = DepartmentUpdateSerializer(
             instance=department, data=request.data, context={"request": request}
         )

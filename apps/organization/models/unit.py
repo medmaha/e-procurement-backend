@@ -8,7 +8,7 @@ from apps.core.utilities.generators import generate_unique_id
 class Unit(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, db_index=True, unique=True)
+    slug = models.SlugField(max_length=255, db_index=True, unique=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     description = models.TextField(max_length=500, blank=True, null=True)
     unit_head = models.ForeignKey(
@@ -28,6 +28,12 @@ class Unit(models.Model):
         return self.name
 
     @property
+    def staffs(self):
+        from apps.organization.models.staff import Staff
+
+        return Staff.objects.filter(unit=self)
+
+    @property
     def unique_id(self):
         return generate_unique_id(None, self.pk)
 
@@ -45,7 +51,7 @@ class Unit(models.Model):
             ).strip()
 
             # create slug
-            slug_prefix = slugify(self.department.company.slug + "-")
+            slug_prefix = self.department.slug + "-"
             self.slug = slugify(slug_prefix + self.name)
 
             exists = Unit.objects.select_related().filter(slug=self.slug).exists()
@@ -53,7 +59,7 @@ class Unit(models.Model):
             # create new slug if exists
             while exists:
                 self.slug = slugify(
-                    slug_prefix + self.name + "-" + get_random_string(5)
+                    slug_prefix + "-" + self.name + "-" + get_random_string(5)
                 )
                 exists = Unit.objects.select_related().filter(slug=self.slug).exists()
 

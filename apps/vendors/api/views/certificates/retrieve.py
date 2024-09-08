@@ -10,7 +10,7 @@ from apps.vendors.api.serializers.certificates import (
 from apps.core.utilities.generators import revert_unique_id
 
 
-class CertificateRetrieveView(RetrieveAPIView):
+class CertificateGetAPIView(RetrieveAPIView):
     serializer_class = CertificateRetrieveSerializer
 
     def retrieve(self, request, *args, **kwargs):

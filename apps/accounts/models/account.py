@@ -1,14 +1,26 @@
 from typing import Any
+import uuid
 from django.db import models
 from django.contrib.auth.models import (
-    BaseUserManager,
+    UserManager,
     AbstractBaseUser,
     PermissionsMixin,
 )
 
 
-class AccountManager(BaseUserManager):
-    pass
+class AccountManager(UserManager):
+
+    def create_superuser(self, email: str, password: str, **kwargs: Any):
+        account = Account(email=email, **kwargs)
+
+        account.is_superuser = True
+        account.is_staff = True
+        account.is_active = True
+        account.set_password(password)
+        account.full_clean()
+        account.save(using=self._db)
+
+        return account
 
 
 DEFAULT_PASSWORD = "prc@2k2*"
@@ -20,17 +32,20 @@ def upload_avatar(instance, filename: str):
 
 
 class Account(AbstractBaseUser, PermissionsMixin):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     email = models.EmailField(unique=True)
+
     avatar = models.CharField(
         default="/img/default/avatar.png",
         null=True,
         blank=True,
     )
+
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, null=True, blank=True)
 
-    address = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
 
     is_active = models.BooleanField(default=False)
@@ -43,31 +58,31 @@ class Account(AbstractBaseUser, PermissionsMixin):
     DEFAULT_PASSWORD = DEFAULT_PASSWORD
     REQUIRED_FIELDS = ["first_name", "last_name", "middle_name"]
 
+    is_deleted = models.BooleanField(default=False)
+    date_deleted = models.DateTimeField(null=True, blank=True)
+
     created_date = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_date", "is_active"]
 
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            if not ("sha256" in self.password):
+                self.set_password(self.password or self.DEFAULT_PASSWORD)
+        return super().save(*args, **kwargs)
+
     def __str__(self):
-        if self.is_superuser:
-            return "Superuser - @IntraSoft-ICT-SOLUTIONS"
         return self.email
 
     @property
     def full_name(self):
         space = " "
-        if self.is_superuser:
-            return self.__str__()
         return "%s%s" % (
             self.first_name,
             ((space + self.middle_name + space) if self.middle_name else space),
         ) + str(self.last_name)
-
-    def save(self, *args, **kwargs):
-        if not self.password:  # type: ignore
-            raise ValueError("The Password field must be set")
-        return super().save(*args, **kwargs)
 
     @property
     def profile(self):
@@ -83,16 +98,17 @@ class Account(AbstractBaseUser, PermissionsMixin):
         return "Admin"
 
     def get_profile(self) -> tuple[str, Any]:
-        staff = self.staff_account.filter().first()  # type: ignore
+        staff = self.staff_account.first()  # type: ignore
         if staff:  # type: ignore
             return ("Staff", staff)
-        vendor = self.vendor_account.filter().first()  # type: ignore
+        vendor = self.vendor_account.first()  # type: ignore
         if vendor:
             return ("Vendor", vendor)
-        gppa = self.gppa_account.filter().first()  # type: ignore
+        gppa = self.gppa_account.first()  # type: ignore
         if gppa:
             return ("GPPA", gppa)
-        if self.is_superuser:
+        if self.is_staff:
+            # TODO: return a System admin Profile
             return ("Admin", None)
         return ("None", None)
 

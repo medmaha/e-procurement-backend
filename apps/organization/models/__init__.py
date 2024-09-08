@@ -1,6 +1,7 @@
 from .unit import Unit
 from .staff import Staff
 from .department import Department
+from .company import Company
 
 from .procurement_plan import (
     AnnualPlan,
@@ -17,6 +18,7 @@ __all__ = (
     "Unit",
     "Department",
     "AnnualPlan",
+    "Company",
     "AnnualPlanApproval",
     "AnnualPlanApprovalGPPA",
     "DepartmentProcurementPlan",

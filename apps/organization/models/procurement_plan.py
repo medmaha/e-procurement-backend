@@ -167,21 +167,21 @@ class AnnualPlan(models.Model):
     def get_plan_by_year(cls, year: str | None):
         "* Tries to get the annual plan based on provided year or else returns the current plan"
         plan = None
-        print("Plan", plan)
+
         if not year:
             plan = cls.get_current_plan()
         else:
             try:
                 int(year)
                 plan = cls.objects.filter(year_start__year__lte=year).first()
-                print("PlanB", plan)
+
             except Exception as e:
-                print(e)
+
                 plan = cls.get_current_plan()
-                print("PlanC", plan)
+
         if not plan:
             plan = cls.objects.first()
-            print("PlanD", plan)
+
         return plan
 
     @property
@@ -197,7 +197,6 @@ class AnnualPlan(models.Model):
 
     def send_approval_emails(self, level):
         "A helper attribute to send the approval email"
-        print("<====== Sending approval emails ======>")
 
     class Meta:
         verbose_name = "Annual Plan"

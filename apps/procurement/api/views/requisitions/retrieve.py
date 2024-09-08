@@ -10,7 +10,7 @@ from apps.procurement.api.serializers.requisition import (
 from apps.core.utilities.generators import revert_unique_id
 
 
-class RequisitionRetrieveView(RetrieveAPIView):
+class RequisitionGetAPIView(RetrieveAPIView):
     serializer_class = RequisitionRetrieveSerializer
 
     def retrieve(self, request, *args, **kwargs):

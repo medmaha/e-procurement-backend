@@ -8,7 +8,10 @@ from apps.accounts.models import AuthGroup
 class StaffSelectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Staff
-        fields = ["id", "name", "employee_id"]
+        fields = [
+            "id",
+            "name",
+        ]
 
 
 class Validators:
@@ -25,7 +28,7 @@ class Validators:
 
         instance: Staff = self.instance  # type: ignore
         if instance:
-            if instance.email != value:
+            if instance.user_account.email != value:
                 check_email()
         else:
             check_email()
@@ -63,14 +66,12 @@ class StaffCreateSerializer(serializers.ModelSerializer, Validators):
     class Meta:
         model = Staff
         fields = [
-            "first_name",
-            "last_name",
-            "email",
-            "phone",
             "job_title",
             "gender",
+            "phone",
             "unit",
             "biography",
+            "user_account",
         ]
 
 
@@ -79,10 +80,6 @@ class StaffUpdateSerializer(serializers.ModelSerializer, Validators):
     class Meta:
         model = Staff
         fields = [
-            "email",
-            "phone",
-            "name",
-            "email",
             "phone",
             "gender",
             "biography",
@@ -136,7 +133,6 @@ class StaffListSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "name",
-            "employee_id",
             "job_title",
             "disabled",
             "biography",
@@ -148,15 +144,11 @@ class StaffRetrieveSerializer(serializers.ModelSerializer):
         model = Staff
         fields = [
             "id",
-            "employee_id",
             "job_title",
-            "user_id",
-            "name",
-            "email",
-            "phone",
-            "gender",
+            "user_account_id",
             "biography",
-            "disabled",
+            "gender",
+            "phone",
             "created_date",
             "last_modified",
         ]
@@ -185,8 +177,11 @@ class StaffRetrieveSerializer(serializers.ModelSerializer):
         return data
 
     def get_groups(self, obj):
-        groups = obj.user_account.groups.filter()
-        sub_query = Subquery(groups.values("pk"))
+        sub_query = obj.user_account.groups.filter().values_list("pk", flat=True)
+
+        if not sub_query:
+            return []
+
         auth_groups = AuthGroup.objects.filter(group_id__in=sub_query).order_by(
             "-created_date"
         )
