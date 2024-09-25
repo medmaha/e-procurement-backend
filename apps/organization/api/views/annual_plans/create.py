@@ -20,14 +20,14 @@ class AnnuaLPlanCreateView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         user: Account = request.user
 
-        if not user.has_perm("organization.add_annualplan"):
-            return Response(
-                {
-                    "success": False,
-                    "message": "You do not have permission to create a annual procurement plan",
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        # if not user.has_perm("organization.add_annualplan"):
+        #     return Response(
+        #         {
+        #             "success": False,
+        #             "message": "You do not have permission to create a annual procurement plan",
+        #         },
+        #         status=status.HTTP_400_BAD_REQUEST,
+        #     )
 
         profile_name, profile = user.get_profile()
 

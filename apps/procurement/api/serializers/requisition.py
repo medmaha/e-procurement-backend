@@ -111,6 +111,8 @@ class RequisitionListSerializer(serializers.ModelSerializer):
             "officer",
             "remarks",
             "approval",
+            "created_date",
+            "last_modified",
         ]
 
     def get_approval(self, obj):

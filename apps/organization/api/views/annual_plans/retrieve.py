@@ -38,7 +38,8 @@ class AnnualPlanRetrieveView(RetrieveAPIView):
             query = {"year_start__year__lte": year}
 
         current_plan = AnnualPlan.objects.filter(**query).first()
-        auth_perms = {"create": request.user.has_perm("organization.add_annualplan")}
+        auth_perms = {"create": True}
+        # auth_perms = {"create": request.user.has_perm("organization.add_annualplan")}
 
         if current_plan:
             serializer = self.get_serializer(
