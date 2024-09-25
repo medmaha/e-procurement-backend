@@ -7,7 +7,8 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = bool(int(os.getenv("DEBUG") or 0))
+# DEBUG = bool(int(os.getenv("DEBUG") or 0))
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "129.151.181.32",
@@ -30,7 +31,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Third party
     # "django_cron",
-    "django_crontab",
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
