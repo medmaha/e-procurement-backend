@@ -17,7 +17,10 @@ class Threshold(models.Model):
     description = models.CharField(max_length=100, default="")
     gppa_requirement = models.BooleanField(default=False)
     procurement_method = models.CharField(
-        max_length=100, choices=ProcurementMethodChoices.choices
+        max_length=100,
+        choices=ProcurementMethodChoices.choices,
+        null=True,
+        blank=True,
     )
 
     class Meta:
@@ -155,12 +158,12 @@ class AnnualPlan(models.Model):
 
     @classmethod
     def has_approvers(cls):
-        group_name = [
+        group_names = [
             APP_CONSTANTS["GROUPS"]["Annual Procurement Approver"]["name"],
             APP_CONSTANTS["GROUPS"]["Annual Procurement Approver GPPA"]["name"],
         ]
         return Account.objects.filter(
-            group__name__in=group_name, is_active=True
+            groups__name__in=group_names, is_active=True
         ).exists()
 
     @classmethod

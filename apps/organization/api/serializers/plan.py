@@ -17,14 +17,14 @@ class PlanItemListSerializer(serializers.ModelSerializer):
             "quantity",
             "budget",
             "measurement_unit",
-            "procurement_method",
+            # "procurement_method",
             "quarter_1_budget",
             "quarter_2_budget",
             "quarter_3_budget",
             "quarter_4_budget",
         ]
 
-    def validate_budget(self, value: int):
+    def _validate_budget(self, value: int):
         matching_threshold = Threshold.get_matching_threshold(value)
         if not matching_threshold:
             raise serializers.ValidationError("Budget not in threshold")
@@ -79,6 +79,7 @@ class AnnualPlanCreateSerializer(serializers.ModelSerializer):
 
 class AnnualPlanRetrieveSerializer(serializers.ModelSerializer):
     department_plans = DepartmentProcurementPlanListSerializer(many=True)
+
     class Meta:
         model = AnnualPlan
         fields = [
@@ -95,14 +96,40 @@ class AnnualPlanRetrieveSerializer(serializers.ModelSerializer):
     def to_representation(self, instance: AnnualPlan):
         data = super().to_representation(instance)
         request = self.context.get("request")
+        data["officer"] = (
+            (
+                {
+                    "id": instance.officer.pk,
+                    "name": instance.officer.name,
+                    "employee_id": instance.officer.employee_id,
+                    "unit": {
+                        "id": instance.officer.unit.pk,
+                        "name": instance.officer.unit.name,
+                        "department": {
+                            **(
+                                {
+                                    "id": instance.officer.department.pk,
+                                    "name": instance.officer.department.name,
+                                }
+                                if instance.officer.department
+                                else {}
+                            )
+                        },
+                    },
+                }
+            )
+            if instance.officer
+            else None
+        )
         if request and instance.officer == request.user.profile:
             data["request_for_approval_both"] = not (
                 instance.org_approved or instance.gppa_approved
             )
             if not data["request_for_approval_both"]:
                 data["request_for_approval_org"] = not instance.org_approved
-            if not data.get("request_for_approval_org"):
-                data["request_for_approval_gppa"] = not instance.gppa_approved
+
+                if not data.get("request_for_approval_org"):
+                    data["request_for_approval_gppa"] = not instance.gppa_approved
 
         return data
 

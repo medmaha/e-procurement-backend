@@ -2,8 +2,8 @@ from datetime import timedelta
 import os
 
 
-ACCESS_TOKEN_LIFETIME = timedelta(hours=1)
-REFRESH_TOKEN_LIFETIME = timedelta(minutes=62)
+ACCESS_TOKEN_LIFETIME = timedelta(hours=24)
+REFRESH_TOKEN_LIFETIME = timedelta(hours=25)
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": ACCESS_TOKEN_LIFETIME,

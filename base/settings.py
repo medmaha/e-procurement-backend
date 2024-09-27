@@ -14,6 +14,7 @@ ALLOWED_HOSTS = [
     "129.151.181.32",
     "127.0.0.1",
     "localhost",
+    "e-procurement-backend-bp56.onrender.com",
 ]
 
 CORS_ALLOWED_ORIGINS = [os.environ.get("CLIENT_HOST")]

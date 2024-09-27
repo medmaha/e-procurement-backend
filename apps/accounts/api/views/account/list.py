@@ -25,11 +25,17 @@ class AccountListSerializer(serializers.ModelSerializer):
 class AccountListView(ListAPIView):
     serializer_class = AccountListSerializer
 
-    def get_queryset(self):
+    def get_queryset(self, is_superuser: bool):
+
+        if not is_superuser:
+            return Account.objects.filter(is_superuser=False, is_active=True)
+
         return Account.objects.filter()
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        user: Account = request.user
+        queryset = self.get_queryset(user.is_superuser)
+
         serializer = self.get_serializer(
             queryset, many=True, context={"request": request}
         )

@@ -25,21 +25,22 @@ class AnnualPlanApprovalView(UpdateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # TODO: implement a better solution for this
         group_name = APP_CONSTANTS["GROUPS"]["Annual Procurement Approver"]["name"]
         accounts = Account.objects.filter(
-            group__name__iexact=group_name, is_active=True
+            groups__name__iexact=group_name, is_active=True
         )
 
         if not accounts.exists():
             return Response(
-                {"message": "Your organization has no staff to approve the plan"},
+                {
+                    "message": "Your organization has no staff authorized to approve the plan"
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         if profile_name == "Staff":
-            approval = AnnualPlanApproval.objects.filter(
-                annual_plan=annual_plan
-            ).last()
+            approval = AnnualPlanApproval.objects.filter(annual_plan=annual_plan).last()
             if approval:
                 return Response(
                     {

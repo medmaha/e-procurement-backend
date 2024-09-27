@@ -41,12 +41,15 @@ class StaffUpdateView(UpdateAPIView):
                     staff.save()
                     return Response(
                         {
-                            "message": "Staff %s successfully" % "enabled"
-                            if is_enabled
-                            else "disabled",
+                            "message": (
+                                "Staff %s successfully" % "enabled"
+                                if is_enabled
+                                else "disabled"
+                            ),
                         },
                         status=status.HTTP_200_OK,
                     )
+                groups = None
                 if "group_ids" in request.data:
                     try:
                         groups = Group.objects.filter(
@@ -61,12 +64,15 @@ class StaffUpdateView(UpdateAPIView):
                             staff.user_account.groups.set(groups)
                         else:
                             staff.user_account.groups.set(groups)
-                    except Exception:
+                    except Exception as e:
+                        print(e)
+                        print(groups)
+                        print(request.data["group_ids"])
                         return Response(
                             {
-                                "message": "Group not found",
+                                "message":f"Groups  \"[{", ".join(request.data["group_ids"])}]\" not found",
                             },
-                            status=status.HTTP_404_NOT_FOUND,
+                            status=status.HTTP_400_BAD_REQUEST,
                         )
 
                 serializer = AdminStaffUpdateSerializer(
