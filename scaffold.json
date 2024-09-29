@@ -1,0 +1,404 @@
+[
+  {
+    "model": "accounts.account",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$HVn5b1GlRkPbbQuEiBnA8N$hq81mkGDf6CCsxVz9Cl93XYZ9Q4BMJF5khww5ltIxBo=",
+      "last_login": "2024-09-25T21:52:30.001Z",
+      "email": "admin@mail.com",
+      "avatar": "/img/default/avatar.png",
+      "first_name": "System",
+      "last_name": "Admin",
+      "middle_name": null,
+      "phone_number": null,
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "created_date": "2024-02-20T12:21:51.428Z",
+      "last_modified": "2024-09-25T22:09:23.286Z",
+      "groups": [1, 2],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.account",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$QvLXi9yWeFp6lGvJnB0gKn$80bVHvJR3Il4uBeHxB9+9YNVrN7NELrACmxcVN6Q9vM=",
+      "last_login": "2024-08-31T01:14:44.585Z",
+      "email": "gppa@mail.com",
+      "avatar": "/img/default/avatar.png",
+      "first_name": "GPPA",
+      "last_name": "User",
+      "middle_name": null,
+      "phone_number": null,
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "created_date": "2024-02-20T12:21:52.008Z",
+      "last_modified": "2024-02-20T12:21:52.008Z",
+      "groups": [9],
+      "user_permissions": []
+    }
+  },
+
+  {
+    "model": "accounts.authgroup",
+    "pk": 2,
+    "fields": {
+      "name": "Staff",
+      "description": "The basic staff permissions for the system",
+      "editable": false,
+      "group_id": "2",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.700Z",
+      "last_modified": "2024-02-20T12:21:50.700Z"
+    }
+  },
+  {
+    "model": "accounts.authgroup",
+    "pk": 3,
+    "fields": {
+      "name": "Requisition Approver (Unit)",
+      "description": "This groups allows the approval of requisitions within the same unit",
+      "editable": false,
+      "group_id": "3",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.716Z",
+      "last_modified": "2024-02-20T12:21:50.716Z"
+    }
+  },
+  {
+    "model": "accounts.authgroup",
+    "pk": 4,
+    "fields": {
+      "name": "Requisition Approver (Department)",
+      "description": "This group allows the approval of requisitions within the same department",
+      "editable": false,
+      "group_id": "4",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.716Z",
+      "last_modified": "2024-02-20T12:21:50.716Z"
+    }
+  },
+  {
+    "model": "accounts.authgroup",
+    "pk": 5,
+    "fields": {
+      "name": "Requisition Approver (Procurement)",
+      "description": "Approves the requisitions on behalf of the procurement department",
+      "editable": false,
+      "group_id": "5",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.716Z",
+      "last_modified": "2024-02-20T12:21:50.716Z"
+    }
+  },
+  {
+    "model": "accounts.authgroup",
+    "pk": 6,
+    "fields": {
+      "name": "Requisition Approver (Finance)",
+      "description": "Approves the financial status of a requisitions, this is done by the finance department",
+      "editable": false,
+      "group_id": "6",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.738Z",
+      "last_modified": "2024-02-20T12:21:50.738Z"
+    }
+  },
+  {
+    "model": "accounts.authgroup",
+    "pk": 7,
+    "fields": {
+      "name": "RFQ Creator",
+      "description": "This groups allows members to create RFQ",
+      "editable": false,
+      "group_id": "7",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.738Z",
+      "last_modified": "2024-02-20T12:21:50.738Z"
+    }
+  },
+  {
+    "model": "accounts.authgroup",
+    "pk": 8,
+    "fields": {
+      "name": "RFQ Approver",
+      "description": "A group enabling members to authorize RFQs",
+      "editable": false,
+      "group_id": "8",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.749Z",
+      "last_modified": "2024-02-20T12:21:50.749Z"
+    }
+  },
+  {
+    "model": "accounts.authgroup",
+    "pk": 9,
+    "fields": {
+      "name": "GPPA RFQ Approver",
+      "description": "A group that enables GPPA members to authorize RFQs",
+      "editable": false,
+      "group_id": "9",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.749Z",
+      "last_modified": "2024-02-20T12:21:50.749Z"
+    }
+  },
+  {
+    "model": "accounts.authgroup",
+    "pk": 10,
+    "fields": {
+      "name": "RFQ Response Opener",
+      "description": "This group member are allowed to view RFQ Responses",
+      "editable": false,
+      "group_id": "10",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.749Z",
+      "last_modified": "2024-02-20T12:21:50.749Z"
+    }
+  },
+  {
+    "model": "accounts.authgroup",
+    "pk": 11,
+    "fields": {
+      "name": "Annual Plan Creator",
+      "description": "Members of this group can create/add Annual Procurement Plans",
+      "editable": false,
+      "group_id": "11",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.766Z",
+      "last_modified": "2024-02-20T12:21:50.766Z"
+    }
+  },
+  {
+    "model": "accounts.authgroup",
+    "pk": 12,
+    "fields": {
+      "name": "Annual Plan Approver",
+      "description": "Group that allows members to approve Annual Procurement Plans",
+      "editable": false,
+      "group_id": "12",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.766Z",
+      "last_modified": "2024-02-20T12:21:50.766Z"
+    }
+  },
+  {
+    "model": "accounts.authgroup",
+    "pk": 13,
+    "fields": {
+      "name": "Vendor Registrar",
+      "description": "The staff responsible for registering and approving vendors/suppliers",
+      "editable": false,
+      "group_id": "13",
+      "authored_by": "@system",
+      "created_date": "2024-02-20T12:21:50.766Z",
+      "last_modified": "2024-02-20T12:21:50.766Z"
+    }
+  },
+  {
+    "model": "organization.department",
+    "pk": 1,
+    "fields": {
+      "name": "Admin Department",
+      "email": "admin.department@mail.com",
+      "description": "",
+      "department_head": null,
+      "phone": "",
+      "disabled": false,
+      "last_modified": "2024-09-25T16:14:48.097Z",
+      "created_date": "2024-02-20T12:21:50.766Z",
+      "enabled_since": "2024-02-20T12:21:50.766Z"
+    }
+  },
+
+  {
+    "model": "organization.unit",
+    "pk": 1,
+    "fields": {
+      "name": "Admin Unit",
+      "department": 1,
+      "description": "Handles office logistics and administrative tasks.",
+      "unit_head": null,
+      "phone": "+220 123 4567",
+      "disabled": false,
+      "last_modified": "2024-09-25T16:36:16.101Z",
+      "created_date": "2024-02-20T12:21:50.781Z",
+      "enabled_since": "2024-02-20T12:21:50.781Z"
+    }
+  },
+
+  {
+    "model": "organization.staff",
+    "pk": 1,
+    "fields": {
+      "email": "admin@mail.com",
+      "first_name": "System",
+      "middle_name": "",
+      "last_name": "Admin",
+      "phone": "+220 278 9012",
+      "biography": "",
+      "job_title": "Managing Director.",
+      "gender": "other",
+      "address": null,
+      "disabled": false,
+      "is_admin": false,
+      "unit": 1,
+      "user_account": 2,
+      "last_modified": "2024-02-20T12:21:51.428Z",
+      "created_date": "2024-02-20T12:21:51.428Z"
+    }
+  },
+
+  {
+    "model": "organization.threshold",
+    "pk": 1,
+    "fields": {
+      "min_amount": "0.00",
+      "max_amount": "20000.00",
+      "description": "Up to D20,000.00",
+      "gppa_requirement": false,
+      "procurement_method": "single_source"
+    }
+  },
+  {
+    "model": "organization.threshold",
+    "pk": 2,
+    "fields": {
+      "min_amount": "20000.00",
+      "max_amount": "50000.00",
+      "description": "More than D20,000.00 but not more than D50,000.00",
+      "gppa_requirement": false,
+      "procurement_method": "rfq"
+    }
+  },
+  {
+    "model": "organization.threshold",
+    "pk": 3,
+    "fields": {
+      "min_amount": "50000.00",
+      "max_amount": "1000000.00",
+      "description": "From D50,000 but not more than D1,000,000",
+      "gppa_requirement": true,
+      "procurement_method": "rfq 2"
+    }
+  },
+  {
+    "model": "organization.threshold",
+    "pk": 4,
+    "fields": {
+      "min_amount": "1000000.00",
+      "max_amount": "10000000.00",
+      "description": "Between 1 and 10 million",
+      "gppa_requirement": true,
+      "procurement_method": "open_tender"
+    }
+  },
+  {
+    "model": "organization.threshold",
+    "pk": 5,
+    "fields": {
+      "min_amount": "1000000.00",
+      "max_amount": "10000000.00",
+      "description": "GPPA approval is needed with reasons for restricted tender",
+      "gppa_requirement": true,
+      "procurement_method": "restricted_tender"
+    }
+  },
+  {
+    "model": "organization.threshold",
+    "pk": 6,
+    "fields": {
+      "min_amount": "10000000.00",
+      "max_amount": "10000000000.00",
+      "description": "More than 10 million Dalasi",
+      "gppa_requirement": true,
+      "procurement_method": "international_tender"
+    }
+  },
+
+  { "model": "gppa.gppauser", "pk": 1, "fields": { "user_account": 3 } },
+
+  {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+      "name": "System Administrator",
+      "permissions": [81, 82, 83, 84, 101, 102, 103, 104, 109, 110, 111, 112]
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 2,
+    "fields": { "name": "Staff", "permissions": [121, 122, 124] }
+  },
+  {
+    "model": "auth.group",
+    "pk": 3,
+    "fields": {
+      "name": "Requisition Approver (Unit)",
+      "permissions": [181, 182, 184]
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 4,
+    "fields": {
+      "name": "Requisition Approver (Department)",
+      "permissions": [185, 186, 188, 184]
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 5,
+    "fields": {
+      "name": "Requisition Approver (Procurement)",
+      "permissions": [188, 193, 194, 196, 184]
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 6,
+    "fields": {
+      "name": "Requisition Approver (Finance)",
+      "permissions": [188, 189, 190, 192, 196, 184]
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 7,
+    "fields": { "name": "RFQ Creator", "permissions": [133, 134, 136] }
+  },
+  {
+    "model": "auth.group",
+    "pk": 8,
+    "fields": { "name": "RFQ Approver", "permissions": [137, 140] }
+  },
+  {
+    "model": "auth.group",
+    "pk": 9,
+    "fields": { "name": "GPPA RFQ Approver", "permissions": [141, 144] }
+  },
+  {
+    "model": "auth.group",
+    "pk": 10,
+    "fields": { "name": "RFQ Response Opener", "permissions": [60] }
+  },
+  {
+    "model": "auth.group",
+    "pk": 11,
+    "fields": { "name": "Annual Plan Creator", "permissions": [77, 78, 80] }
+  },
+  {
+    "model": "auth.group",
+    "pk": 12,
+    "fields": { "name": "Annual Plan Approver", "permissions": [105, 106, 108] }
+  },
+  {
+    "model": "auth.group",
+    "pk": 13,
+    "fields": { "name": "Vendor Registrar", "permissions": [74, 76] }
+  }
+]

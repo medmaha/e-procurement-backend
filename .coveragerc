@@ -1,0 +1,15 @@
+
+[run]
+omit=
+    */**/tests/* 
+    */**/public/*
+    */**/migrations/*
+    */**/__init__.py
+    *.sh
+    .git/* 
+    .fixtures/* 
+    .scripts/* 
+    *venv/*
+    */static/*
+    *staticfiles/*
+    */media/*

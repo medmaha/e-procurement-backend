@@ -1,0 +1,39 @@
+name: Dockerize and Publish
+
+on:
+  workflow_run:
+    # Triggered when the workflow named TEST-WORKFLOW RUNS
+    workflows: ["TEST-WORKFLOW"]
+
+    # Only trigger when the test-workflow completes!
+    types:
+      - completed
+
+    # Only trigger on the main branch
+    branches: ["main"]
+
+# The jobs that will be executed
+jobs:
+  build:
+    # This job will run on an ubuntu-latest environment
+    runs-on: ubuntu-latest
+
+    # These are the steps that will be executed
+    steps:
+      # Checkout the repository
+
+      - name: Login to Docker Hub
+
+        # Login to Docker Hub with secrets
+        run: echo ${{secrets.DOCKER_HUB_ACCESS_TOKEN}} | docker login -u ${{secrets.DOCKER_HUB_ACCOUNT}} --password-stdin
+
+      - name: Build the Docker image
+        # Build the docker image
+        run: sh build.sh
+
+      - name: Login to Docker Hub
+        run: echo ${{secrets.DOCKER_HUB_ACCESS_TOKEN}} | docker login -u ${{secrets.DOCKER_HUB_ACCOUNT}} --password-stdin
+
+      - name: Push the Docker image
+        # Push the docker built image to dockerhub
+        run: sh push.sh ###✅
