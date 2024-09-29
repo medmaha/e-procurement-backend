@@ -39,5 +39,6 @@ def do_something_with_many_to_many(sender, instance: Requisition, action, **kwar
             approval, _ = RequisitionApproval.objects.get_or_create(
                 requisition=instance
             )
-            approval.procurement_method = matching_threshold.procurement_method
+            if matching_threshold.procurement_method:
+                approval.procurement_method = matching_threshold.procurement_method
             approval.save()

@@ -34,6 +34,7 @@ from .views.rfq.responses.retrieve import QuotationRespondRetrieveView
 # RFQ Contract
 from .views.rfq.contract.create import CreateContract
 from .views.rfq.contract.list import RFQContractListView
+from .views.rfq.contract.approve import ContractApprovalCreateAPIView
 from .views.rfq.contract.negotiations import (
     RFQNegotiationView,
 )
@@ -80,7 +81,11 @@ urlpatterns = [
     path("rfq/contracts/negotiations/", RFQNegotiationView.as_view()),  # CRUD Handlers
     path("rfq/contracts/list/", RFQContractListView.as_view()),
     path("rfq/contracts/create/", CreateContract.as_view()),
+    path("rfq/contracts/create/", CreateContract.as_view()),
     path("rfq/contracts/", RFQContractListView.as_view()),
+    path(
+        "rfq/contracts/<contract_id>/approval/", ContractApprovalCreateAPIView.as_view()
+    ),
     #
     # RFQ
     path("rfq/select/", RfqSelectView.as_view()),

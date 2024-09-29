@@ -124,11 +124,16 @@ class RFQContractAward(models.Model):
 
 
 class RFQContractApproval(models.Model):
+    officer = models.ForeignKey(
+        Staff, on_delete=models.CASCADE, related_name="rfq_contract_approvals"
+    )
+
     contract = models.OneToOneField(
         RFQContract,
         on_delete=models.CASCADE,
         related_name="approval_record",
     )
+    remarks = models.TextField(blank=True, null=True)
     approve = models.CharField(
         max_length=50,
         choices=ApprovalChoices.choices,
@@ -137,6 +142,23 @@ class RFQContractApproval(models.Model):
     editable = models.BooleanField(default=True, blank=True, null=False)
     created_date = models.DateTimeField(null=True, auto_now_add=True)
     last_modified = models.DateTimeField(null=True, auto_now=True)
+
+    @classmethod
+    def has_create_perm(cls, user: Account):
+        """Check if the user has the permission to create the model."""
+        return user.has_perm(f"{cls._meta.app_label}.add_{cls._meta.model_name}")
+
+    def has_update_perm(self, user: Account):
+        """Check if the user has update permission for the model."""
+        return user.has_perm(f"{self._meta.app_label}.change_{self._meta.model_name}")
+
+    def has_delete_perm(self, user: Account):
+        """Check if the user has delete permission for the model."""
+        return user.has_perm(f"{self._meta.app_label}.delete_{self._meta.model_name}")
+
+    def has_read_perm(self, user: Account):
+        """Check if the user has read permission for the model."""
+        return user.has_perm(f"{self._meta.app_label}.view_{self._meta.model_name}")
 
     class Meta:
         ordering = ["-id"]

@@ -1,10 +1,8 @@
 from rest_framework import serializers
 from apps.procurement.models.rfq_contract import (
     RFQContract,
-    RFQContractAward,
-    NegotiationAndAwardStatusChoices,
-    RFQNegotiation,
     RFQNegotiationNote,
+    RFQContractApproval,
 )
 
 
@@ -23,6 +21,42 @@ class NegotiationNoteCreateSerializer(serializers.ModelSerializer):
             "note",
             "file",
         ]
+
+
+class ContractApprovalCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RFQContractApproval
+        fields = [
+            "approve",
+            "remarks",
+            "officer",
+            "contract",
+        ]
+
+
+class ContractApprovalRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RFQContractApproval
+        fields = [
+            "id",
+            "approve",
+            "remarks",
+            "date_created",
+            "last_modified",
+        ]
+
+    def to_representation(self, instance: RFQContractApproval):
+        data = super().to_representation(instance)
+        data["officer"] = {
+            "id": instance.officer.pk,
+            "name": instance.officer.name,
+        }
+        data["contract"] = {
+            "id": instance.contract.pk,
+            "pricing": instance.contract.pricing,
+            "duration": instance.contract.deadline_date,
+        }
+        return data
 
 
 class RFQContractListSerializer(serializers.ModelSerializer):
