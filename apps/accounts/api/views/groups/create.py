@@ -16,6 +16,7 @@ class GroupCreateView(CreateAPIView):
 
         # Extract permissions from request data
         perms = request.data.get("permissions", [])
+        print(request.data)
 
         if not perms or not perms[0]:
             return Response(

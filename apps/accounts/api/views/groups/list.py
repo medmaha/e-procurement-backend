@@ -20,14 +20,13 @@ class GroupListView(ListAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
 
-        groups = request.user.groups.all()
-
         auth_perms = {
-            "create": request.user.has_perm("accounts.add_authgroup"),
-            "read": request.user.has_perm("accounts.view_authgroup"),
-            "update": request.user.has_perm("accounts.change_authgroup"),
-            "delete": request.user.has_perm("accounts.delete_authgroup"),
+            "create": AuthGroup.has_perm(request.user, "add"),
+            "read": AuthGroup.has_perm(request.user, "view"),
+            "update": AuthGroup.has_perm(request.user, "change"),
+            "delete": AuthGroup.has_perm(request.user, "delete"),
         }
+
         return Response({"data": serializer.data, "auth_perms": auth_perms})
 
 

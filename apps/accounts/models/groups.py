@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import Group
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Permission
+
+from apps.accounts.models.account import Account
 
 
 class AuthGroup(models.Model):
@@ -13,7 +17,7 @@ class AuthGroup(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Group"
+        verbose_name = "Authorization Group"
         ordering = ["-last_modified", "-created_date"]
 
     @property
@@ -22,3 +26,21 @@ class AuthGroup(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def has_perm(cls, user: Account, code_action: str, instance=None):
+        """Check if the user has the permission to create the model."""
+
+        if not user.is_active:
+            return False
+
+        if instance:
+            if instance.editable:
+                return False
+            if code_action == "change":
+                if not instance.officer.user == user:
+                    return False
+
+        return user.has_perm(
+            f"{cls._meta.app_label}.{code_action}_{cls._meta.model_name}"
+        )
