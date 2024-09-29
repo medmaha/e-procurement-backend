@@ -31,10 +31,10 @@ APP_COMPANY = {
 APP_CONSTANTS = {
     "GROUPS": {
         "Annual Procurement Approver": {
-            "name": "Annual Procurement Approver",
+            "name": "Annual Plan Approver",
         },
         "Annual Procurement Approver GPPA": {
-            "name": "Annual Procurement Approver GPPA",
+            "name": "Annual Plan Approver GPPA",
         },
     }
 }
