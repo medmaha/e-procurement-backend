@@ -252,15 +252,123 @@ class RequisitionRetrieveSerializer(serializers.ModelSerializer):
             "items",
             "remarks",
             "approval",
-            "unique_id",
             "created_date",
             "last_modified",
         ]
 
-    def get_approval(self, obj):
+    def unit_approval(self, obj: RequisitionApproval):
         try:
-            approval = obj.approval_record
+            if not obj.unit_approval:
+                raise ValueError("")
+
+            return {
+                "id": obj.unit_approval.pk,
+                "name": "Unit Approval",
+                "approve": obj.unit_approval.approve,
+                "officer": {
+                    "id": obj.unit_approval.officer.pk,  # type: ignore
+                    "name": obj.unit_approval.officer.name,  # type: ignore
+                },
+                "remark": obj.unit_approval.remark,
+                "created_date": obj.unit_approval.created_date,
+            }
+        except:
+            return {
+                "id": 0,
+                "name": "Unit Approval",
+            }
+
+    def department_approval(self, obj: RequisitionApproval):
+        try:
+            if not obj.department_approval:
+                raise ValueError("")
+
+            return {
+                "id": obj.department_approval.pk,
+                "name": "Department Approval",
+                "approve": obj.department_approval.approve,
+                "officer": {
+                    "id": obj.department_approval.officer.pk,  # type: ignore
+                    "name": obj.department_approval.officer.name,  # type: ignore
+                },
+                "remark": obj.department_approval.remark,
+                "created_date": obj.department_approval.created_date,
+            }
+        except:
+            return {
+                "id": 0,
+                "name": "Department Approval",
+            }
+
+    def procurement_approval(self, obj: RequisitionApproval):
+
+        try:
+            if not obj.procurement_approval:
+                raise ValueError("")
+
+            return {
+                "id": obj.procurement_approval.pk,
+                "name": "Procurement Approval",
+                "approve": obj.procurement_approval.approve,
+                "part_of_annual_plan": obj.procurement_approval.part_of_annual_plan,
+                "annual_procurement_plan": {
+                    "id": str(obj.procurement_approval.annual_procurement_plan.pk),  # type: ignore
+                    "title": str(obj.procurement_approval.annual_procurement_plan),
+                },
+                "officer": {
+                    "id": obj.procurement_approval.officer.pk,  # type: ignore
+                    "name": obj.procurement_approval.officer.name,  # type: ignore
+                },
+                "remark": obj.procurement_approval.remark,
+                "created_date": obj.procurement_approval.created_date,
+            }
+
+        except:
+            return {
+                "id": 0,
+                "name": "Department Approval",
+            }
+
+    def finance_approval(self, obj: RequisitionApproval):
+
+        try:
+            if not obj.finance_approval:
+                raise ValueError("")
+
+            return {
+                "id": obj.finance_approval.pk,
+                "name": "Finance Approval",
+                "approve": obj.finance_approval.approve,
+                "funds_confirmed": obj.finance_approval.funds_confirmed,
+                "officer": {
+                    "id": obj.finance_approval.officer.pk,  # type: ignore
+                    "name": obj.finance_approval.officer.name,  # type: ignore
+                },
+                "remark": obj.finance_approval.remark,
+                "created_date": obj.finance_approval.created_date,
+            }
+
+        except:
+            return {
+                "name": "Department Approval",
+            }
+
+    def get_approval(self, instance: Requisition):
+        try:
+            approval: RequisitionApproval = instance.approval_record  # type: ignore
         except:
             return None
-        serializer = RequisitionRetrieveApprovalSerializer(instance=approval)
-        return serializer.data
+        data = {}
+
+        data["id"] = approval.pk
+        data["stage"] = approval.stage
+        data["status"] = approval.status
+        data["editable"] = approval.editable
+        data["created_date"] = approval.created_date
+
+        data["unit_approval"] = self.unit_approval(approval)
+        data["department_approval"] = self.department_approval(approval)
+        data["procurement_approval"] = self.procurement_approval(approval)
+        data["finance_approval"] = self.finance_approval(approval)
+
+        return data
