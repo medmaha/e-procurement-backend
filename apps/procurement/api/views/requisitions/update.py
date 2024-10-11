@@ -63,6 +63,7 @@ class RequisitionUpdateView(UpdateAPIView):
                                 "quantity": int(j.get("quantity")),
                                 "unit_cost": Decimal(j.get("unit_cost")),
                                 "measurement_unit": j.get("measurement_unit"),
+                                "remark": j.get("remark"),
                             }
 
                             _i, _ = RequisitionItem.objects.get_or_create(**_data)
@@ -85,7 +86,13 @@ class RequisitionUpdateView(UpdateAPIView):
             if items_to_update:
                 RequisitionItem.objects.filter(pk__in=items_to_update_pks).bulk_update(
                     items_to_update,
-                    ["quantity", "unit_cost", "measurement_unit", "description"],
+                    [
+                        "quantity",
+                        "unit_cost",
+                        "measurement_unit",
+                        "description",
+                        "remark",
+                    ],
                 )
 
             serializer.save(officer=profile)
@@ -94,7 +101,6 @@ class RequisitionUpdateView(UpdateAPIView):
                 status=status.HTTP_200_OK,
             )
 
-        print(serializer.errors)
         return Response(
             {"message": "Failed to create requisition", "success": False},
             status=status.HTTP_400_BAD_REQUEST,
