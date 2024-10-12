@@ -6,12 +6,13 @@ from APP_COMPANY import APP_COMPANY
 from apps.core.processors.multithreading import MultiThreading
 from apps.accounts.models.account import Account
 
-def send_welcome_note(user:Account, code: str | int, expires_at: str | int):
+
+def send_welcome_note(user: Account, code: str | int, expires_at: str | int):
     context = {
         "verification_code": code,
         "APP_COMPANY": APP_COMPANY,
         "full_name": user.full_name,
-        "expires_at":expires_at
+        "expires_at": expires_at,
     }
     template = render_to_string("core/email_verification.html", context=context)
     mailer(user.email, template)

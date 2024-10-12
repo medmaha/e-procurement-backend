@@ -64,7 +64,6 @@ class RFQSubmitView(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         rfq_id = request.data.get("rfq_id")
-        print(rfq_id)
         rfq = get_object_or_404(RFQ, pk=rfq_id)
         profile_type, profile = request.user.get_profile()
 

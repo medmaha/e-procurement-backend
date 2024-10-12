@@ -15,10 +15,9 @@ from apps.organization.models.staff import Staff
 class RfqRetrieveView(RetrieveAPIView):
     serializer_class = RFQListSerializer
 
-    def retrieve(self, request, *args, **kwargs): 
+    def retrieve(self, request, *args, **kwargs):
         slug = kwargs.get("slug")
         _id = revert_unique_id("RFQ", slug or "0")
-        print(_id)
         instance = get_object_or_404(RFQ, pk=_id)
         officer: Staff = instance.officer  # type: ignore
         if request.query_params.get("only") == "items":

@@ -41,8 +41,6 @@ class CertificationUpdateView(UpdateAPIView):
                 {"message": "Certificate updated successfully"},
                 status=status.HTTP_201_CREATED,
             )
-
-        print(serializer.errors)
         return Response(
             {"message": "The data you provided is invalid"},
             status=status.HTTP_400_BAD_REQUEST,

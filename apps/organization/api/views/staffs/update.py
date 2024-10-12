@@ -65,12 +65,9 @@ class StaffUpdateView(UpdateAPIView):
                         else:
                             staff.user_account.groups.set(groups)
                     except Exception as e:
-                        print(e)
-                        print(groups)
-                        print(request.data["group_ids"])
                         return Response(
                             {
-                                "message":f"Groups  \"[{", ".join(request.data["group_ids"])}]\" not found",
+                                "message": f'Groups  "[{", ".join(request.data["group_ids"])}]" not found',
                             },
                             status=status.HTTP_400_BAD_REQUEST,
                         )
@@ -88,7 +85,6 @@ class StaffUpdateView(UpdateAPIView):
                         status=status.HTTP_200_OK,
                     )
                 error_message = get_serializer_error_message(serializer)
-                print(error_message)
                 return Response(
                     {"message": error_message},
                     status=status.HTTP_400_BAD_REQUEST,
@@ -109,7 +105,6 @@ class StaffUpdateView(UpdateAPIView):
                     status=status.HTTP_200_OK,
                 )
             error_message = get_serializer_error_message(serializer)
-            print(error_message)
             return Response(
                 {"message": error_message},
                 status=status.HTTP_400_BAD_REQUEST,

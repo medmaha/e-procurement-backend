@@ -11,6 +11,13 @@ from apps.procurement.api.serializers.requisition import (
 from apps.accounts.models import Account
 from apps.core.utilities.text_choices import (
     ApprovalChoices,
+    ProcurementMethodChoices,
+)
+from apps.procurement.models.requisition_approvals import (
+    UnitRequisitionApproval,
+    DepartmentRequisitionApproval,
+    FinanceRequisitionApproval,
+    ProcurementRequisitionApproval,
 )
 
 
@@ -25,39 +32,57 @@ class RequisitionListView(ListAPIView):
             return None
 
         if user.groups.filter(name__icontains="admin").exists():
-            queryset = Requisition.objects.all()
+            queryset = Requisition.objects.prefetch_related("items")
 
-        elif user.has_perm("procurement.add_unitrequisitionapproval"):
+        elif user.has_perm(
+            f"{UnitRequisitionApproval._meta.app_label}.add_{UnitRequisitionApproval._meta.model_name}"
+        ):
             queryset = Requisition.objects.filter(
-                Q(officer__unit=profile.unit) | Q(officer=profile)
-            )
-        elif user.has_perm("procurement.add_departmentrequisitionapproval"):
+                Q(officer=profile) | Q(officer__unit=profile.unit)
+            ).prefetch_related("items")
+
+        elif user.has_perm(
+            f"{DepartmentRequisitionApproval._meta.app_label}.add_{DepartmentRequisitionApproval._meta.model_name}"
+        ):
+            # Get the requisition where the officer's department is equal to the user's department
+            # And the "Unit" has already approve and accept the requisition
             queryset = Requisition.objects.filter(
                 Q(
-                    officer__unit__department=profile.unit.department,
                     approval_record__unit_approval__isnull=False,
+                    officer__unit__department=profile.unit.department,
+                    approval_record__unit_approval__approve=ApprovalChoices.ACCEPTED,
                 )
                 | Q(officer=profile),
-            )
-        elif user.has_perm("procurement.add_procurementrequisitionapproval"):
+            ).prefetch_related("items")
+
+        elif user.has_perm(
+            f"{FinanceRequisitionApproval._meta.app_label}.add_{FinanceRequisitionApproval._meta.model_name}"
+        ):
+            # And the "Department" has already approve and accept the requisition
             queryset = Requisition.objects.filter(
                 Q(
-                    approval_record__unit_approval__isnull=False,
                     approval_record__department_approval__isnull=False,
+                    approval_record__department_approval__approve=ApprovalChoices.ACCEPTED,
                 )
                 | Q(officer=profile)
-            )
-        elif user.has_perm("procurement.add_financerequisitionapproval"):
+            ).prefetch_related("items")
+
+        elif user.has_perm(
+            f"{ProcurementRequisitionApproval._meta.app_label}.add_{ProcurementRequisitionApproval._meta.model_name}"
+        ):
+            # And the "Finance" has approve and accept the requisition
             queryset = Requisition.objects.filter(
                 Q(
-                    approval_record__unit_approval__isnull=False,
-                    approval_record__department_approval__isnull=False,
-                    approval_record__procurement_approval__isnull=False,
+                    approval_record__finance_approval__isnull=False,
+                    approval_record__finance_approval__approve=ApprovalChoices.ACCEPTED,
                 )
                 | Q(officer=profile)
-            )
+            ).prefetch_related("items")
+
         else:
-            queryset = Requisition.objects.filter(officer=profile)
+            queryset = Requisition.objects.filter(officer=profile).prefetch_related(
+                "items"
+            )
 
         return queryset
 
@@ -83,11 +108,17 @@ class RequisitionSelectView(ListAPIView):
         user: Account = self.request.user  # type: ignore
         profile_name, profile = user.get_profile()  # type: ignore
 
-        queryset = Requisition.objects.filter(
-            approval_record__status=ApprovalChoices.ACCEPTED.value,
-            approval_record__procurement_method__in=["rfq", "rfq 2"],
-            rfq__isnull=True,  # whether this requisition was recently used for rfq
-        )
+        if "rfq" in self.request.query_params:  # type: ignore
+            queryset = Requisition.objects.filter(
+                approval_record__status=ApprovalChoices.ACCEPTED.value,
+                approval_record__procurement_method__in=["rfq"],
+                rfq__isnull=True,  # whether this requisition was recently used for rfq
+            )
+        else:
+            queryset = Requisition.objects.filter(
+                approval_record__status=ApprovalChoices.ACCEPTED.value,
+                rfq__isnull=True,  # whether this requisition was recently used for rfq
+            )
         return queryset
 
     def list(self, request, *args, **kwargs):

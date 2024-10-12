@@ -101,7 +101,6 @@ class CreateContract(CreateAPIView):
                 )
 
             # Checks to see whether the request is made for negotiation purposes or not
-            print(request.data.get("is_negotiation"))
             isNegotiation = request.data.get("is_negotiation") is not None
 
             if not isNegotiation:

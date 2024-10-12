@@ -15,7 +15,6 @@ class UnitsCreateView(CreateAPIView):
         profile_name, profile = user.get_profile()
         serializer = self.get_serializer(data=request.data)
 
-        print(request.data)
         if serializer.is_valid():
             existing_unit = Unit.objects.filter(
                 name__iexact=serializer.validated_data.get("name")

@@ -35,7 +35,6 @@ class AccountRetrieveView(RetrieveAPIView):
         ).data
 
         profile_serializer: dict = {}
-        print(profile_type, profile)
         if profile_type == "Staff":
             profile_serializer = StaffRetrieveSerializer(
                 profile, context={"request": request}

@@ -110,7 +110,7 @@ class Form101RFQRequestSerializer(serializers.ModelSerializer):
                 data["expense_office"] = annual_plan.title
         except Exception as e:
             print(str(e))
-            pass
+
         return data
 
 
@@ -193,7 +193,7 @@ class Form101RFQResponseSerializer(serializers.ModelSerializer):
             # )
         except Exception as e:
             print(str(e))
-            pass
+
         return data
 
 

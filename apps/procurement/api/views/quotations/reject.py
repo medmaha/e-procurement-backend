@@ -19,8 +19,7 @@ class QuotationRespondRejectView(UpdateAPIView):
             )
 
         quote = get_object_or_404(RFQResponse, pk=request.data.get("quote_id"))
-        print(quote.evaluation_status)
-        if quote.evaluation_status != "processing":
+        if quote.status != "processing":
             return Response(
                 {"message": "This quote has already been evaluated."},
                 status=status.HTTP_403_FORBIDDEN,

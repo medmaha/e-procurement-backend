@@ -1,12 +1,12 @@
 from django.db import models
 
-from apps.organization.models import Staff
 from apps.procurement.models.requisition import Requisition
 from apps.core.utilities.text_choices import (
     ApprovalChoices,
     ProcurementMethodChoices,
 )
 from apps.core.utilities.generators import generate_unique_id
+from apps.accounts.models.account import Account
 
 from .requisition_approvals import (
     UnitRequisitionApproval,
@@ -87,16 +87,39 @@ class RequisitionApproval(models.Model):
     def __str__(self):
         return str(self.unique_id)
 
+    def has_approve_perm(self, user: Account):
+
+        if self.status != ApprovalChoices.PENDING:
+            return False
+
+        if not self.unit_approval:
+            return user.has_perm(
+                f"{UnitRequisitionApproval._meta.app_label}.add_{UnitRequisitionApproval._meta.model_name}"
+            )
+        if not self.department_approval:
+            return user.has_perm(
+                f"{DepartmentRequisitionApproval._meta.app_label}.add_{DepartmentRequisitionApproval._meta.model_name}"
+            )
+        if not self.finance_approval:
+            return user.has_perm(
+                f"{FinanceRequisitionApproval._meta.app_label}.add_{FinanceRequisitionApproval._meta.model_name}"
+            )
+        if not self.procurement_approval:
+            return user.has_perm(
+                f"{ProcurementRequisitionApproval._meta.app_label}.add_{ProcurementRequisitionApproval._meta.model_name}"
+            )
+        return False
+
     def get_stage(self):
         if self.status == ApprovalChoices.PENDING.value:
             if not self.unit_approval:
                 return ("Unit", self.unit_approval)
             if not self.department_approval:
                 return ("Department", self.department_approval)
-            if not self.procurement_approval:
-                return ("Procurement", self.procurement_approval)
             if not self.finance_approval:
                 return ("Finance", self.finance_approval)
+            if not self.procurement_approval:
+                return ("Procurement", self.procurement_approval)
         return ("", None)
 
     @property

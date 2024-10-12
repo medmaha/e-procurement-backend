@@ -1,3 +1,4 @@
+import re
 from rest_framework import serializers
 from apps.procurement.models import Requisition, RequisitionItem, RequisitionApproval
 from apps.organization.models import Staff
@@ -59,22 +60,12 @@ class RequisitionListApprovalSerializer(serializers.ModelSerializer):
                 data[name]["status"] = "N/A"
                 data[name]["id"] = None
 
-        data["apposable"] = self.apposable(instance)
-        return data
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            data["apposable"] = instance.has_approve_perm(request.user)
 
-    def apposable(self, data: RequisitionApproval):
-        stage = (data.stage + "_approval").lower()
-        if hasattr(data, stage):
-            if not getattr(data, stage):
-                request = self.context.get("request")
-                if not request or not request.user:
-                    return None
-                return request.user.has_perm(
-                    "procurement.add_%srequisitionapproval" % data.stage.lower()
-                ) or request.user.has_perm(
-                    "procurement.change_%srequisitionapproval" % data.stage.lower()
-                )
-        return False
+        data["procurement_method"] = instance.procurement_method
+        return data
 
 
 class RequisitionListOfficerSerializer(serializers.ModelSerializer):
@@ -97,7 +88,6 @@ class RequisitionListOfficerSerializer(serializers.ModelSerializer):
 class RequisitionListSerializer(serializers.ModelSerializer):
     officer = RequisitionListOfficerSerializer(read_only=True)
     approval = serializers.SerializerMethodField()
-    changeable = serializers.SerializerMethodField()
     items = RequisitionItemSerializer(many=True)
 
     class Meta:
@@ -107,7 +97,6 @@ class RequisitionListSerializer(serializers.ModelSerializer):
             "items",
             "remarks",
             "request_type",
-            "changeable",
             "officer",
             "remarks",
             "approval",
@@ -120,19 +109,18 @@ class RequisitionListSerializer(serializers.ModelSerializer):
             instance=obj.approval_record, context=self.context
         ).data
 
-    def get_changeable(self, obj):
-        if "request" not in self.context:
-            return False
-        # if obj.officer == self.context["request"].user.profile:  # type: ignore
-        #     return obj.approval_record.stage in [None, "Unit"]
-        return False
-
 
 # ==================================== RETRIEVE ================================#
 class RequisitionSelectSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
     class Meta:
         model = Requisition
-        fields = ["unique_id", "id"]
+        fields = ["unique_id", "id", "name"]
+
+    def get_name(self, obj: Requisition):
+        name = f" | ".join([i.description for i in obj.items.all()[:2]])
+        return name[:50]
 
 
 # ==================================== RETRIEVE ================================#
@@ -365,6 +353,7 @@ class RequisitionRetrieveSerializer(serializers.ModelSerializer):
         data["status"] = approval.status
         data["editable"] = approval.editable
         data["created_date"] = approval.created_date
+        data["procurement_method"] = approval.procurement_method
 
         data["unit_approval"] = self.unit_approval(approval)
         data["department_approval"] = self.department_approval(approval)

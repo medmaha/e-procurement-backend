@@ -229,7 +229,6 @@ class VendorSignupView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         account_data = self.handle_user_details(request)
-        print(account_data)
         if isinstance(account_data, str):
             return Response(
                 {"message": account_data},
@@ -237,7 +236,6 @@ class VendorSignupView(CreateAPIView):
             )
         vendor_serializer = VendorSerializer(data=request.data)
         account_serializer = AccountSerializer(data=account_data)
-        print(str(account_serializer))
 
         # #
         __serializer = None
