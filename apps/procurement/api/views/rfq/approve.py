@@ -23,7 +23,7 @@ class RFQApprovalView(GenericAPIView):
         rfq_approval, created = RFQApproval.objects.get_or_create(rfq=rfq)
         is_approved = data.get("approve").lower() == "yes"
         approve_text = (
-            ApprovalChoices.ACCEPTED.value
+            ApprovalChoices.APPROVED.value
             if is_approved
             else ApprovalChoices.REJECTED.value
         )

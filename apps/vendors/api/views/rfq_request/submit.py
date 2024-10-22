@@ -94,7 +94,7 @@ class RFQSubmitView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         with transaction.atomic():
-            rfq_response: RFQResponse = serializer.save(status=ApprovalChoices.ACCEPTED.value, quotation=rfq)  # type: ignore
+            rfq_response: RFQResponse = serializer.save(status=ApprovalChoices.APPROVED.value, quotation=rfq)  # type: ignore
             rfq.save()
             b = brochures_serializer.save(rfq_response=rfq_response)
             rfq_response.brochures.set(b)

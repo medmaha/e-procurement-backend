@@ -1,8 +1,6 @@
 from django.db import models
 from .department import Department
 
-from apps.core.utilities.generators import generate_unique_id
-
 
 class Unit(models.Model):
     name = models.CharField(max_length=255)
@@ -23,10 +21,6 @@ class Unit(models.Model):
 
     def __str__(self):
         return self.name
-
-    @property
-    def unique_id(self):
-        return generate_unique_id(None, self.pk)
 
     class Meta:
         ordering = ["-created_date", "-last_modified"]

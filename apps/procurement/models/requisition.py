@@ -6,6 +6,7 @@ from apps.core.utilities.text_choices import (
     ApprovalChoices,
 )
 from apps.core.utilities.generators import generate_unique_id
+from apps.organization.models.department import Department
 
 
 def upload_to(instance, filename: str):
@@ -53,11 +54,24 @@ class Requisition(models.Model):
     )
     officer = models.ForeignKey(
         Staff,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=False,
+        help_text="Authorizes this instance",
+    )
+
+    officer_department = models.ForeignKey(
+        Department,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        help_text="Authorizes this instance",
+        help_text="The department that the officer belongs to at the time of creation",
     )
+
+    current_approval_step = models.ForeignKey(
+        "ApprovalStep", null=True, blank=True, on_delete=models.SET_NULL
+    )
+
     remarks = models.TextField(null=True, blank=True, default="")
     date_required = models.DateTimeField(auto_now_add=True)
 
@@ -68,5 +82,5 @@ class Requisition(models.Model):
         ordering = ["-id"]
 
     @property
-    def unique_id(self):
-        return generate_unique_id("REQ", self.pk)
+    def total_price(self):
+        return sum([item.total_cost for item in self.items.filter(is_valid=True)])

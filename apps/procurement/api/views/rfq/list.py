@@ -44,7 +44,7 @@ class RfqSelectView(ListAPIView):
         profile_name, profile = user.get_profile()  # type: ignore
 
         queryset = RFQ.objects.filter(
-            approval_record__approve=ApprovalChoices.ACCEPTED.value
+            approval_record__approve=ApprovalChoices.APPROVED.value
         )
         return queryset
 

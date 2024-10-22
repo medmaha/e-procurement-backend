@@ -50,7 +50,7 @@ class RequisitionListView(ListAPIView):
                 Q(
                     approval_record__unit_approval__isnull=False,
                     officer__unit__department=profile.unit.department,
-                    approval_record__unit_approval__approve=ApprovalChoices.ACCEPTED,
+                    approval_record__unit_approval__approve=ApprovalChoices.APPROVED,
                 )
                 | Q(officer=profile),
             ).prefetch_related("items")
@@ -62,7 +62,7 @@ class RequisitionListView(ListAPIView):
             queryset = Requisition.objects.filter(
                 Q(
                     approval_record__department_approval__isnull=False,
-                    approval_record__department_approval__approve=ApprovalChoices.ACCEPTED,
+                    approval_record__department_approval__approve=ApprovalChoices.APPROVED,
                 )
                 | Q(officer=profile)
             ).prefetch_related("items")
@@ -74,7 +74,7 @@ class RequisitionListView(ListAPIView):
             queryset = Requisition.objects.filter(
                 Q(
                     approval_record__finance_approval__isnull=False,
-                    approval_record__finance_approval__approve=ApprovalChoices.ACCEPTED,
+                    approval_record__finance_approval__approve=ApprovalChoices.APPROVED,
                 )
                 | Q(officer=profile)
             ).prefetch_related("items")
@@ -110,13 +110,13 @@ class RequisitionSelectView(ListAPIView):
 
         if "rfq" in self.request.query_params:  # type: ignore
             queryset = Requisition.objects.filter(
-                approval_record__status=ApprovalChoices.ACCEPTED.value,
+                approval_record__status=ApprovalChoices.APPROVED.value,
                 approval_record__procurement_method__in=["rfq"],
                 rfq__isnull=True,  # whether this requisition was recently used for rfq
             )
         else:
             queryset = Requisition.objects.filter(
-                approval_record__status=ApprovalChoices.ACCEPTED.value,
+                approval_record__status=ApprovalChoices.APPROVED.value,
                 rfq__isnull=True,  # whether this requisition was recently used for rfq
             )
         return queryset

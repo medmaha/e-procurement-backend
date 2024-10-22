@@ -51,7 +51,7 @@ class RequisitionApprovalView(UpdateAPIView):
 
         approved = record_data.get("approve") == "on"
         record_data["approve"] = (
-            ApprovalChoices.ACCEPTED.value
+            ApprovalChoices.APPROVED.value
             if approved
             else ApprovalChoices.REJECTED.value
         )

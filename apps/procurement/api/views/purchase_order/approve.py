@@ -33,7 +33,7 @@ class PurchaseOrderApproveView(UpdateAPIView):
         PurchaseOrderApproval.objects.create(
             parent=purchase_order,
             officer=staff,
-            approve=ApprovalChoices.ACCEPTED.value,
+            approve=ApprovalChoices.APPROVED.value,
             remarks=request.data.get("remarks", ""),
         )
 

@@ -26,7 +26,7 @@ def update_approval(created, instance: RequisitionApproval, *args, **kwargs):
             rejected = (
                 instance.finance_approval.approve == ApprovalChoices.REJECTED.value
             )
-            status = ApprovalChoices.ACCEPTED.value
+            status = ApprovalChoices.APPROVED.value
 
         RequisitionApproval.objects.filter(pk=instance.pk).update(
             editable=False,

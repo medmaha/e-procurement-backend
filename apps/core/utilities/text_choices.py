@@ -25,7 +25,7 @@ class MeasurementUnitChoices(models.TextChoices):
 
 class ApprovalChoices(models.TextChoices):
     PENDING = "pending", "Pending"
-    ACCEPTED = "accepted", "Accepted"
+    APPROVED = "approved", "Approved"
     REJECTED = "rejected", "Rejected"
 
 

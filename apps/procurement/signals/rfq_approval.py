@@ -13,8 +13,8 @@ from apps.core.utilities.text_choices import (
 def update_rfq_status(created, instance: RFQApproval, *args, **kwargs):
     status = instance.approve
     instance.rfq.level = RFQLevelChoices.APPROVAL_LEVEL
-    if status == ApprovalChoices.ACCEPTED.value:
-        instance.rfq.approval_status = ApprovalChoices.ACCEPTED
+    if status == ApprovalChoices.APPROVED.value:
+        instance.rfq.approval_status = ApprovalChoices.APPROVED
         requires_approval = instance.rfq.requires_gppa_approval
         if requires_approval and instance.gppa_approval:
             instance.rfq.published = instance.rfq.auto_publish

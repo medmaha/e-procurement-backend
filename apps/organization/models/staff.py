@@ -7,13 +7,6 @@ from apps.core.models import Address
 from apps.core.utilities.generators import generate_unique_id
 
 
-def generateEmployerNumber():
-    start = int("1" + ("0" * 6))
-    end = int("9" + ("0" * 6))
-    suffix = str(random.randrange(start, end))
-    return "EMP" + suffix
-
-
 class Staff(models.Model):
     email = models.EmailField()
     first_name = models.CharField(max_length=255)

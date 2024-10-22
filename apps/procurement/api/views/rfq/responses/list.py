@@ -117,12 +117,12 @@ class QuotationRespondSelectView(ListAPIView):
         if profile_type == "Vendor":
             "Selecting Quotes for invoicing"
             return RFQResponse.objects.filter(
-                status=ApprovalChoices.ACCEPTED.value, evaluation_status="accepted"
+                status=ApprovalChoices.APPROVED.value, evaluation_status="accepted"
             )
 
         "Selecting Quotes for evaluation or purchase orders"
         return RFQResponse.objects.filter(
-            status=ApprovalChoices.ACCEPTED.value, evaluation_status="processing"
+            status=ApprovalChoices.APPROVED.value, evaluation_status="processing"
         )
 
     def list(self, request, *args, **kwargs):
