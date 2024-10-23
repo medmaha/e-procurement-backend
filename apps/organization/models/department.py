@@ -8,8 +8,8 @@ class Department(models.Model):
     department_head = models.ForeignKey(
         "Staff", on_delete=models.SET_NULL, null=True, blank=True
     )
-    phone = models.CharField(max_length=100, default="", blank=True)
     disabled = models.BooleanField(default=False)
+    phone = models.CharField(max_length=100, default="", blank=True)
 
     last_modified = models.DateTimeField(auto_now=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True, null=True)

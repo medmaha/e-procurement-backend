@@ -9,6 +9,6 @@ class Form(forms.ModelForm):
         exclude = []
 
 
+@admin.register(Requisition)
 class RequisitionAdmin(admin.ModelAdmin):
-    model = Requisition
     form = Form

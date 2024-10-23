@@ -1,4 +1,3 @@
-import random
 from django.db import models
 from apps.accounts.models import Account
 from apps.organization.models.unit import Unit
@@ -10,15 +9,17 @@ from apps.core.utilities.generators import generate_unique_id
 class Staff(models.Model):
     email = models.EmailField()
     first_name = models.CharField(max_length=255)
-    middle_name = models.CharField(max_length=255, default="", blank=True)
     last_name = models.CharField(max_length=255)
+    middle_name = models.CharField(max_length=255, default="")
 
     phone = models.CharField(max_length=15, default="")
 
     biography = models.TextField(blank=True, default="")
+
     job_title = models.CharField(
         max_length=255, default="", blank=True, help_text="The job title of the staff"
     )
+
     gender = models.CharField(
         max_length=25,
         choices=[("male", "male"), ("female", "Female"), ("other", "Other")],
@@ -33,7 +34,10 @@ class Staff(models.Model):
         default=True,
         help_text="Whether staff's account is deactivated or not",
     )
-    is_admin = models.BooleanField(default=False, help_text="An IT-Admin user account")
+
+    is_admin = models.BooleanField(
+        default=False, help_text="An System-Admin user account"
+    )
 
     unit = models.ForeignKey(
         Unit,
@@ -44,8 +48,8 @@ class Staff(models.Model):
 
     user_account = models.ForeignKey(
         Account,
-        on_delete=models.CASCADE,
         blank=True,
+        on_delete=models.CASCADE,
         related_name="staff_account",
     )
 

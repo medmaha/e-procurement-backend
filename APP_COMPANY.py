@@ -1,18 +1,18 @@
 import os
 
 APP_COMPANY = {
-    "name": "Gam Petroleum",
-    "description": "Involved in petroleum importation, distribution, and marketing.",
+    "name": "Any Company",
+    "description": "Any description",
     "logo": "img/logo/brand.png",
-    "industry": "Oil and Energy",
-    "website": "https://www.gambia.com/gampetroleum",
-    "address": "Brusubi | Kombo North | WCR | The Gambia",
+    "industry": "Any Industry",
+    "website": "https://www.anycompany.com",
+    "address": "Any Address",
     "established_date": "2007-05-07",
     "client_site": os.environ.get("CLIENT_HOST"),
     "provider": {
-        "name": "IntraSoft Ltd",
+        "name": "Any Provider",
         "logo": "img/logo/brand.png",
-        "website": "https://intrasoft.com",
+        "website": "https://anyprovider.com",
     },
 }
 

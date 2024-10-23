@@ -4,8 +4,9 @@ from .department import Department
 
 class Unit(models.Model):
     name = models.CharField(max_length=255)
+    email = models.EmailField(blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    description = models.TextField(max_length=500, blank=True, null=True)
+    description = models.TextField(max_length=500, blank=True)
     unit_head = models.ForeignKey(
         "Staff",
         on_delete=models.SET_NULL,
