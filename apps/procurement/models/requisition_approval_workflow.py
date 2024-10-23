@@ -9,17 +9,22 @@ from apps.procurement.models.requisition import Requisition, ApprovalChoices
 class ApprovalStep(models.Model):
     name = models.CharField(max_length=255)
     order = models.IntegerField()  # to determine step order
-    role = models.CharField(max_length=255, help_text="Role required for this approval step")
+    role = models.CharField(
+        max_length=255, help_text="Role required for this approval step"
+    )
+    officer = models.ForeignKey(Staff, on_delete=models.SET_NULL, blank=True, null=True)
     is_optional = models.BooleanField(default=False)  # optional approval steps
     department = models.ForeignKey(
         Department, on_delete=models.CASCADE, blank=True, null=True
     )
     remarks = models.TextField(null=True, blank=True, default="", max_length=1_000)
     is_final = models.BooleanField(default=False)
-    time_limit = models.DurationField(null=True, blank=True, help_text="Time limit for this approval step")
+    time_limit = models.DurationField(
+        null=True, blank=True, help_text="Time limit for this approval step"
+    )
+    description = models.TextField(null=True, blank=True, default="", max_length=1_000)
     created_date = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
-
 
     @property
     def workflow(self) -> "ApprovalWorkflow":
@@ -28,17 +33,30 @@ class ApprovalStep(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ["order", "-id"]
+
 
 class ApprovalWorkflow(models.Model):
     name = models.CharField(max_length=255)
-    steps = models.ManyToManyField(ApprovalStep, related_name="workflows", through='WorkflowStep')
+    officer = models.ForeignKey(Staff, on_delete=models.SET_NULL, blank=True, null=True)
+    steps = models.ManyToManyField(
+        ApprovalStep, related_name="workflows", through="WorkflowStep"
+    )
+    description = models.TextField(null=True, blank=True, default="", max_length=1_000)
     created_date = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
+
+    def approval_steps(self, **filter_kwargs) -> list["ApprovalStep"]:
+        return self.steps.filter(**filter_kwargs)  # type: ignore
+
+    def workflow_steps(self) -> list["WorkflowStep"]:
+        return self.workflowstep_set.filter()  # type: ignore
 
     def move_to_next_step(self, requisition: Requisition):
         current_step = requisition.current_approval_step
         if current_step:
-            next_step = self.workflowstep_set.filter(order__gt=current_step.order).first() # type: ignore
+            next_step = self.workflowstep_set.filter(order__gt=current_step.order).first()  # type: ignore
             if next_step:
                 requisition.current_approval_step = next_step
                 requisition.save()
@@ -55,11 +73,16 @@ class WorkflowStep(models.Model):
     workflow = models.ForeignKey(ApprovalWorkflow, on_delete=models.CASCADE)
     step = models.ForeignKey(ApprovalStep, on_delete=models.CASCADE)
     order = models.IntegerField()
-    condition = models.TextField(blank=True, null=True, help_text="Python code for conditional execution")
+    condition = models.TextField(
+        blank=True, null=True, help_text="Python code for conditional execution"
+    )
+
+    created_date = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['order']
-        unique_together = ['workflow', 'order']
+        ordering = ["order"]
+        unique_together = ["workflow", "order"]
 
     def __str__(self):
         return f"{self.workflow.name} - Step {self.order}: {self.step.name}"
@@ -98,10 +121,19 @@ class ApprovalMatrix(models.Model):
 
 
 class ApprovalAction(models.Model):
-    requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, related_name='approval_actions')
+    requisition = models.ForeignKey(
+        Requisition, on_delete=models.CASCADE, related_name="approval_actions"
+    )
     step = models.ForeignKey(ApprovalStep, on_delete=models.CASCADE)
     approver = models.ForeignKey(Staff, on_delete=models.CASCADE)
-    action = models.CharField(max_length=20, choices=[('approved', 'Approved'), ('rejected', 'Rejected'), ('delegated', 'Delegated')])
+    action = models.CharField(
+        max_length=20,
+        choices=[
+            ("approved", "Approved"),
+            ("rejected", "Rejected"),
+            ("delegated", "Delegated"),
+        ],
+    )
     comments = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -110,8 +142,12 @@ class ApprovalAction(models.Model):
 
 
 class Delegation(models.Model):
-    delegator = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='delegated_from')
-    delegate = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='delegated_to')
+    delegator = models.ForeignKey(
+        Staff, on_delete=models.CASCADE, related_name="delegated_from"
+    )
+    delegate = models.ForeignKey(
+        Staff, on_delete=models.CASCADE, related_name="delegated_to"
+    )
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     reason = models.TextField(blank=True, null=True)
@@ -143,7 +179,7 @@ def get_current_approver(requisition: Requisition):
         delegator__job_title=role,
         delegator__unit__department=department,
         start_date__lte=timezone.now(),
-        end_date__gte=timezone.now()
+        end_date__gte=timezone.now(),
     )
 
     if delegations.exists():

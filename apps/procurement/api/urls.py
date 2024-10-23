@@ -1,5 +1,7 @@
 from django.urls import path
 
+from apps.procurement.api.views.workflows.requisition import RequisitionWorkflowAPIView
+
 from .views.plans.list import ProcurementPlanListView
 
 # Requisition
@@ -111,4 +113,7 @@ urlpatterns = [
     path("purchase-orders/reject/", PurchaseOrderRejectView.as_view()),
     path("purchase-orders/list", PurchaseOrderListView.as_view()),
     path("purchase-orders/", PurchaseOrderListView.as_view()),
+    # Workflows
+    path("workflows/", RequisitionWorkflowAPIView.as_view()),
+    path("workflows/<workflow_id>/", RequisitionWorkflowAPIView.as_view()),
 ]

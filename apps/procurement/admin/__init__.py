@@ -6,4 +6,5 @@ from .approval_workflow import (
     ApprovalStepAdmin,
     ApprovalWorkflowAdmin,
     DelegationAdmin,
+    WorkflowStepAdmin,
 )

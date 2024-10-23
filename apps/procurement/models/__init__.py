@@ -17,6 +17,7 @@ from .requisition_approval_workflow import (
     ApprovalAction,
     ApprovalChoices,
     Delegation,
+    WorkflowStep,
 )
 
 # Request For Quotation

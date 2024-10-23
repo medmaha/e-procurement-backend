@@ -5,7 +5,13 @@ from ..models.requisition_approval_workflow import (
     ApprovalStep,
     ApprovalWorkflow,
     Delegation,
+    WorkflowStep,
 )
+
+
+@admin.register(WorkflowStep)
+class WorkflowStepAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(ApprovalWorkflow)
@@ -20,7 +26,16 @@ class ApprovalMatrixAdmin(admin.ModelAdmin):
 
 @admin.register(ApprovalStep)
 class ApprovalStepAdmin(admin.ModelAdmin):
-    pass
+
+    list_display = [
+        "name",
+        "order",
+        "role",
+        "officer",
+        "is_final",
+        "time_limit",
+        "last_modified",
+    ]
 
 
 @admin.register(ApprovalAction)

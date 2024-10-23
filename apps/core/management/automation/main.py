@@ -2,9 +2,13 @@
 
 from django.db import transaction
 from apps.organization.models import Department, Staff, Unit
-from apps.procurement.models import ApprovalMatrix, ApprovalStep, ApprovalWorkflow
+from apps.procurement.models import (
+    ApprovalMatrix,
+    ApprovalStep,
+    ApprovalWorkflow,
+    WorkflowStep,
+)
 from apps.accounts.models import Account
-from backend.apps.procurement.models.requisition_approval_workflow import WorkflowStep
 
 
 @transaction.atomic
@@ -29,7 +33,9 @@ def create_sample_workflows_and_matrices():
 
     # Create staff
     def create_staff(email, first_name, last_name, unit, job_title):
-        account = Account.objects.create(email=email, username=email)
+        account = Account(email=email, first_name=first_name, last_name=last_name)
+        account.set_password(Staff.DEFAULT_PASSWORD)
+        account.save()
         return Staff.objects.create(
             email=email,
             first_name=first_name,
@@ -182,9 +188,11 @@ def create_sample_workflows_and_matrices():
         for step_data in wf_data["steps"]:
             step = ApprovalStep.objects.create(
                 name=step_data["name"],
-                role=step_data["role"],
                 order=step_data["order"],
+                role=step_data.get("role", "No Role"),
+                # officer=step_data.get("officer"),
                 is_final=step_data.get("is_final", False),
+                is_optional=step_data.get("is_optional", False),
                 department=wf_data["matrix"].get("department"),
             )
             WorkflowStep.objects.create(
