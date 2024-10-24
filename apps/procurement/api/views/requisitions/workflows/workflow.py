@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db import transaction
 
 from rest_framework import serializers
 from rest_framework.views import APIView
@@ -6,10 +6,11 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from apps.procurement.models.requisition_approval_workflow import ApprovalWorkflow
-
-
-count = 0
+from apps.procurement.models import ApprovalWorkflow
+from apps.procurement.api.serializers.requisition_workflow import (
+    RequisitionWorkflowCreateSerializer,
+    RequisitionWorkflowStepSerializer,
+)
 
 
 class ApprovalWorkflowSerializer(serializers.ModelSerializer):
@@ -102,3 +103,35 @@ class RequisitionWorkflowAPIView(APIView):
         )
 
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            with transaction.atomic():
+                workflow_steps = request.data.pop("workflow_steps", None)
+                serializer = RequisitionWorkflowCreateSerializer(
+                    data=request.data, context={"request": request}
+                )
+                if serializer.is_valid():
+                    workflow = serializer.save()
+                    for step in workflow_steps:
+                        serializer = RequisitionWorkflowStepSerializer(
+                            data=step, context={"request": request}
+                        )
+                        if serializer.is_valid():
+                            serializer.save(workflow=workflow)
+                        else:
+                            raise serializers.ValidationError(
+                                serializer.errors, code=400
+                            )
+                    return Response(
+                        {"data": serializer.data}, status=status.HTTP_201_CREATED
+                    )
+                return Response(
+                    {"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
+                )
+        except serializers.ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
