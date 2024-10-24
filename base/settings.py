@@ -13,6 +13,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "129.151.181.32",
     "127.0.0.1",
+    "192.168.0.140",
     "localhost",
     "e-procurement-backend-bp56.onrender.com",
 ]

@@ -11,7 +11,7 @@ from ..models.requisition_approval_workflow import (
 
 @admin.register(WorkflowStep)
 class WorkflowStepAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["workflow", "step", "order", "condition_type", "created_date"]
 
 
 @admin.register(ApprovalWorkflow)
@@ -31,7 +31,7 @@ class ApprovalStepAdmin(admin.ModelAdmin):
         "name",
         "order",
         "role",
-        "officer",
+        "approver",
         "is_final",
         "time_limit",
         "last_modified",

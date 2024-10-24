@@ -1,15 +1,11 @@
-from django.db.models import Count
-
 from rest_framework import serializers
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 
 
-from apps.procurement.models.requisition_approval_workflow import ApprovalWorkflow
-
-
-count = 0
+from apps.procurement.models.requisition_approval_workflow import (
+    ApprovalWorkflow,
+    WorkflowStep,
+    ApprovalStep,
+)
 
 
 class ApprovalWorkflowSerializer(serializers.ModelSerializer):
@@ -65,20 +61,8 @@ class ApprovalWorkflowSerializer(serializers.ModelSerializer):
         data["workflow_steps"] = [
             {
                 "id": w_step.pk,
-                "name": w_step.__str__(),
                 "order": w_step.order,
                 "created_date": w_step.created_date,
-                "last_modified": w_step.last_modified,
-                "step": {
-                    "id": w_step.step.pk,
-                    "order": w_step.step.order,
-                    "name": w_step.step.name,
-                    "is_final": w_step.step.is_final,
-                    "is_optional": w_step.step.is_optional,
-                    "time_limit": w_step.step.time_limit,
-                    "created_date": w_step.step.created_date,
-                    "last_modified": w_step.step.last_modified,
-                },
                 "condition": w_step.condition_type,
             }
             for w_step in instance.workflow_steps()
@@ -86,19 +70,17 @@ class ApprovalWorkflowSerializer(serializers.ModelSerializer):
         return data
 
 
-class RequisitionWorkflowAPIView(APIView):
+class RequisitionWorkflowStepSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkflowStep
+        fields = ("id", "order", "step_id", "workflow_id")
 
-    def get(self, request, workflow_id=None, *args, **kwargs):
 
-        if workflow_id:
-            workflows = ApprovalWorkflow.objects.get(id=workflow_id)
-        else:
-            workflows = ApprovalWorkflow.objects.filter()
-
-        serializer = ApprovalWorkflowSerializer(
-            workflows,
-            many=workflow_id is None,
-            context={"request": request, "workflow_id": workflow_id},
+class RequisitionWorkflowCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApprovalWorkflow
+        fields = (
+            "id",
+            "name",
+            "description",
         )
-
-        return Response({"data": serializer.data}, status=status.HTTP_200_OK)

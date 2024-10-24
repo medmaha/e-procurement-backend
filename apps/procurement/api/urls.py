@@ -1,7 +1,5 @@
 from django.urls import path
 
-from apps.procurement.api.views.workflows.requisition import RequisitionWorkflowAPIView
-
 from .views.plans.list import ProcurementPlanListView
 
 # Requisition
@@ -10,6 +8,13 @@ from .views.requisitions.update import RequisitionUpdateView
 from .views.requisitions.retrieve import RequisitionRetrieveView
 from .views.requisitions.list import RequisitionListView, RequisitionSelectView
 from .views.requisitions.approval import RequisitionApprovalView
+
+# - Workflow Approval Steps
+from .views.requisitions.workflows import (
+    RequisitionWorkflowAPIView,
+    RequisitionApprovalStepAPIView,
+    RequisitionApprovalMatrixAPIView,
+)
 
 # RFQ
 from .views.rfq.list import RfqListView, RfqSelectView
@@ -63,6 +68,37 @@ urlpatterns = [
     path("requisitions/create/", RequisitionCreateView.as_view()),
     path("requisitions/update/", RequisitionUpdateView.as_view()),
     path("requisitions/list", RequisitionListView.as_view()),
+    # ---- workflows ----
+    path(
+        "requisitions/workflows/matrices/",
+        RequisitionApprovalMatrixAPIView.as_view(),
+    ),
+    path(
+        "requisitions/workflows/matrices/<matrix_id>/",
+        RequisitionApprovalMatrixAPIView.as_view(),
+    ),
+    path(
+        "requisitions/workflows/steps/",
+        RequisitionApprovalStepAPIView.as_view(),
+    ),
+    path(
+        "requisitions/workflows/steps/<approval_step_id>/",
+        RequisitionApprovalStepAPIView.as_view(),
+    ),
+    path(
+        "requisitions/workflows/approval-steps/",
+        RequisitionApprovalStepAPIView.as_view(),
+    ),
+    path(
+        "requisitions/workflows/approval-steps/<approval_step_id>/",
+        RequisitionApprovalStepAPIView.as_view(),
+    ),
+    path("requisitions/workflows/", RequisitionWorkflowAPIView.as_view()),
+    path(
+        "requisitions/workflows/<workflow_id>/",
+        RequisitionWorkflowAPIView.as_view(),
+    ),
+    # ---- workflows ----
     path("requisitions/<slug>/", RequisitionRetrieveView.as_view()),
     path("requisitions/", RequisitionListView.as_view()),
     #
@@ -113,7 +149,4 @@ urlpatterns = [
     path("purchase-orders/reject/", PurchaseOrderRejectView.as_view()),
     path("purchase-orders/list", PurchaseOrderListView.as_view()),
     path("purchase-orders/", PurchaseOrderListView.as_view()),
-    # Workflows
-    path("workflows/", RequisitionWorkflowAPIView.as_view()),
-    path("workflows/<workflow_id>/", RequisitionWorkflowAPIView.as_view()),
 ]
