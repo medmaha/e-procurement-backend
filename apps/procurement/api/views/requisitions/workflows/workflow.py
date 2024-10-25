@@ -107,12 +107,13 @@ class RequisitionWorkflowAPIView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             with transaction.atomic():
-                workflow_steps = request.data.pop("workflow_steps", None)
+                workflow_steps = request.data.pop("workflow_steps", [])
                 serializer = RequisitionWorkflowCreateSerializer(
                     data=request.data, context={"request": request}
                 )
                 if serializer.is_valid():
                     workflow = serializer.save()
+
                     for step in workflow_steps:
                         serializer = RequisitionWorkflowStepSerializer(
                             data=step, context={"request": request}
@@ -127,11 +128,12 @@ class RequisitionWorkflowAPIView(APIView):
                         {"data": serializer.data}, status=status.HTTP_201_CREATED
                     )
                 return Response(
-                    {"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
+                    {"message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
                 )
         except serializers.ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
+            print(e)
             return Response(
-                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
