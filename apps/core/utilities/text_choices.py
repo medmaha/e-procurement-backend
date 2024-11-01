@@ -29,6 +29,13 @@ class ApprovalChoices(models.TextChoices):
     REJECTED = "rejected", "Rejected"
 
 
+class PRStatusChoices(models.TextChoices):
+    PENDING = "pending", "Pending"
+    INITIATING = "initiating", "Initiating"
+    PROCESSING = "processing", "Processing"
+    REJECTED = "rejected", "Rejected"
+
+
 class RFQLevelChoices(models.TextChoices):
     APPROVAL_LEVEL = "APPROVAL LEVEL", "Approval Level"
     PUBLISH_LEVEL = "PUBLISH LEVEL", "Publish Level"

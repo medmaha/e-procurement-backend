@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from apps.procurement.models.requisition_approval_workflow import ApprovalWorkflow
+from apps.procurement.models import ApprovalWorkflow
 
 
 count = 0

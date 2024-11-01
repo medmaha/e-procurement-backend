@@ -8,6 +8,7 @@ class RFQRequestItemsListSerializer(serializers.ModelSerializer):
     class Meta:
         model = RFQItem
         fields = [
+            "id",
             "item_description",
             "quantity",
             "measurement_unit",
@@ -18,15 +19,21 @@ class RFQRequestItemsListSerializer(serializers.ModelSerializer):
 class RFQRequestListSerializer(serializers.ModelSerializer):
     items = RFQRequestItemsListSerializer(many=True)
 
+    my_response = serializers.ChoiceField(
+        choices=ApprovalChoices.choices, default=ApprovalChoices.PENDING
+    )
+    my_response_id = serializers.IntegerField()
+
     class Meta:
         model = RFQ
         fields = [
             "id",
-            "unique_id",
             "title",
             "description",
             "items",
-            "deadline",
+            "my_response",
+            "my_response_id",
+            "quotation_deadline_date",
             "open_status",
             "created_date",
             "last_modified",
@@ -38,30 +45,10 @@ class RFQRequestListSerializer(serializers.ModelSerializer):
             data["officer"] = {
                 "id": instance.officer.pk,
                 "name": instance.officer.name,
-                "employee_id": instance.officer.employee_id,
+                "job_title": instance.officer.job_title,
             }
-        request = self.context.get("request")
-        my_response = None
-        vendor = None
 
-        if request:
-            profile_type, profile = request.user.get_profile()
-            if profile_type == "Vendor":
-                vendor = profile
-                my_response = RFQResponse.objects.filter(
-                    rfq=instance, vendor=profile
-                ).first()
-                data["responded"] = my_response is not None
-
-        if my_response:
-            data["my_response"] = my_response.status.lower()
-        else:
-            data["my_response"] = ApprovalChoices.PENDING.value.lower()
-
-        if vendor:
-            data["vendor"] = {"id": vendor.pk, "name": vendor.organization_name}
-        else:
-            data["vendor"] = {}
+        data["my_response"] = data.get("my_response", ApprovalChoices.PENDING.value)
 
         return data
 

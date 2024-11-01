@@ -27,7 +27,7 @@ class RFQRespondCreateSerializer(serializers.ModelSerializer):
             "form101",
             "remarks",
             "pricing",
-            "delivery_terms",
+            "delivery_date",
             "payment_method",
             "validity_period",
         ]
@@ -64,6 +64,8 @@ class RFQSubmitView(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         rfq_id = request.data.get("rfq_id")
+        print("rfq_id", rfq_id)
+        print("data", request.data)
         rfq = get_object_or_404(RFQ, pk=rfq_id)
         profile_type, profile = request.user.get_profile()
 
@@ -73,15 +75,11 @@ class RFQSubmitView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if "reject" in request.data:
+        if request.data.get("reject", False):
             rfq_response = RFQResponse.objects.create(
                 status=ApprovalChoices.REJECTED.value,
                 rfq=rfq,
                 vendor=profile,
-                pricing=0,
-                delivery_terms="-",
-                payment_method="-",
-                validity_period="-",
                 remarks=request.data.get("remarks", ""),
             )
             return Response(

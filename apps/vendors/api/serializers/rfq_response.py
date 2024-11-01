@@ -13,7 +13,7 @@ class RFQRespondSelectSerializer(serializers.ModelSerializer):
 
 
 class RFQResponseListSerializer(serializers.ModelSerializer):
-    rfq = RFQListSerializer()
+    rfq = serializers.SerializerMethodField()
     deadline = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
     approved_status = serializers.SerializerMethodField()
@@ -32,21 +32,35 @@ class RFQResponseListSerializer(serializers.ModelSerializer):
             "form101",
             "remarks",
             "pricing",
-            "delivery_terms",
+            "delivery_date",
             "payment_method",
             "validity_period",
             "last_modified",
             "created_date",
         ]
 
-    def get_deadline(self, obj):
-        return obj.rfq.deadline
+    def get_deadline(self, obj: RFQResponse):
+        return obj.rfq.quotation_deadline_date
 
     def get_status(self, obj):
         return obj.status.upper()
 
     def get_approved_status(self, obj):
         return obj.approved_status.upper()
+
+    def get_rfq(self, obj):
+        return {
+            "id": obj.rfq.pk,
+            "items": obj.rfq.items.filter().values(
+                "id",
+                "item_description",
+                "quantity",
+                "measurement_unit",
+                "eval_criteria",
+                "remark",
+            ),
+            "published_at": obj.rfq.published_at,
+        }
 
     def to_representation(self, instance: RFQResponse):
         data = super().to_representation(instance)
@@ -56,6 +70,7 @@ class RFQResponseListSerializer(serializers.ModelSerializer):
         data["vendor"] = {
             "id": instance.vendor.pk,
             "name": instance.vendor.organization_name,
+            "alias": instance.vendor.alias,
         }
         return data
 

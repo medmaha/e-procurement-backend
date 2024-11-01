@@ -48,6 +48,7 @@ class RFQResponseBrochure(models.Model):
 
 class RFQResponse(models.Model):
     "Supplies Send this quote to the [Procuring Organization]"
+
     rfq = models.ForeignKey(
         "procurement.RFQ", on_delete=models.CASCADE, related_name="responses"
     )
@@ -66,10 +67,10 @@ class RFQResponse(models.Model):
     form101 = models.FileField(upload_to=upload_form101, null=True, blank=True)
     brochures = models.ManyToManyField(RFQResponseBrochure, blank=True)
 
-    delivery_terms = models.CharField(max_length=100)
+    delivery_date = models.DateTimeField(max_length=100, null=True)
     payment_method = models.CharField(max_length=100, blank=True, null=True)
-    pricing = models.DecimalField(max_digits=10, decimal_places=2)
-    validity_period = models.CharField(max_length=50)
+    pricing = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    validity_period = models.CharField(max_length=50, null=True)
 
     remarks = models.TextField(max_length=2500, default="", blank=True)
 

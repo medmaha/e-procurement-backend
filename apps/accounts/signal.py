@@ -10,7 +10,7 @@ from django.db.models import F
 def update_user__staff_profile(created, instance: Account, **kwargs):
     profile_name, profile = instance.get_profile()
     if not created and profile_name == "Staff":
-        staff_queryset = Staff.objects.filter(pk=profile.pk)
+        staff_queryset = Staff.objects.only("id").filter(pk=profile.pk)
         staff_queryset.update(
             email=instance.email,
             first_name=instance.first_name,
@@ -23,7 +23,8 @@ def update_user__staff_profile(created, instance: Account, **kwargs):
 
 @receiver(post_save, sender=Group)
 def sync_group_1(created, instance: Group, *args, **kwargs):
-    queryset = AuthGroup.objects.filter(
+
+    queryset = AuthGroup.objects.only("id", "editable").filter(
         group_id=instance.pk,
     )
 
@@ -37,4 +38,4 @@ def sync_group_1(created, instance: Group, *args, **kwargs):
         )
         return
 
-    queryset.update(editable=False, name=instance.name)
+    queryset.update(editable=F("editable") == True, name=instance.name)

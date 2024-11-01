@@ -1,84 +1,77 @@
+from django.db import transaction
 from rest_framework import status
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.generics import UpdateAPIView, get_object_or_404
 
 from apps.accounts.models import Account
-from apps.procurement.api.serializers.requisition import RequisitionApprovalSerializer
-from apps.procurement.models.requisition_approval import RequisitionApproval
-from apps.procurement.models.requisition_approvals import (
-    UnitRequisitionApproval,
-    DepartmentRequisitionApproval,
-    FinanceRequisitionApproval,
-    ProcurementRequisitionApproval,
-)
-from apps.organization.models.procurement_plan import PlanItem
+from apps.procurement.models import Requisition
+
 from apps.core.utilities.text_choices import ApprovalChoices
+from apps.procurement.models.pr_approval_action import ApprovalAction
 
 
-class RequisitionApprovalView(UpdateAPIView):
-    serializer_class = RequisitionApprovalSerializer
+class RequisitionApprovalView(APIView):
 
-    models = {
-        "unit_approval": UnitRequisitionApproval,
-        "department_approval": DepartmentRequisitionApproval,
-        "procurement_approval": ProcurementRequisitionApproval,
-        "finance_approval": FinanceRequisitionApproval,
-    }
+    def put(self, request, slug, *args, **kwargs):
 
-    def update(self, request, *args, **kwargs):
-        user: Account = request.user
-        profile_name, profile = user.get_profile()
+        try:
+            with transaction.atomic():
 
-        approval: RequisitionApproval = get_object_or_404(
-            RequisitionApproval, pk=request.data.get("approval_id")
-        )
+                instance = get_object_or_404(Requisition, pk=slug)
 
-        STAGE = approval.stage.lower()
-        if not STAGE:
-            return Response(
-                {"message": "This requisition is disable for approval"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+                workflow_step = instance.current_approval_step
 
-        record_data = request.data.get(STAGE)
-        STAGE_NAME = STAGE + "_approval"
+                if workflow_step is None:
+                    return Response(
+                        {"detail": "Forbidden! Workflow step not found"},
+                        status=status.HTTP_403_FORBIDDEN,
+                    )
 
-        if not "approve" in record_data:
-            return Response(
-                {"message": "Error! Requisition approval not present"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+                profile = request.user.profile
 
-        approved = record_data.get("approve") == "on"
-        record_data["approve"] = (
-            ApprovalChoices.APPROVED.value
-            if approved
-            else ApprovalChoices.REJECTED.value
-        )
+                comments = request.data.get("comments", None)
+                print(request.data)
+                approved = request.data.get("action", "rejected") in [
+                    True,
+                    "true",
+                    "approved",
+                ]
 
-        if record_data:
-            if STAGE == "procurement":
-                plan_id = record_data.get("annual_procurement_plan")
-                annual_procurement_plan = (
-                    get_object_or_404(PlanItem, pk=plan_id) if plan_id else None
+                if approved:
+                    action = ApprovalChoices.APPROVED
+                else:
+                    error_msg = None
+                    if not comments:
+                        error_msg = f"Comments is required when rejecting a requisition"
+                    if len(comments) < 10:
+                        error_msg = f"Comments must be at least 10 characters long"
+                    if len(comments) > 500:
+                        error_msg = f"Comments must be less than 500 characters long"
+                    if error_msg:
+                        return Response(
+                            {"message": error_msg}, status=status.HTTP_400_BAD_REQUEST
+                        )
+                    action = ApprovalChoices.REJECTED
+
+                approval = ApprovalAction(
+                    action=action,
+                    approver=profile,
+                    requisition=instance,
+                    comments=request.data.get("comments", ""),
+                    workflow_step=instance.current_approval_step,
                 )
-                record_data["part_of_annual_plan"] = annual_procurement_plan is not None
-                record_data["annual_procurement_plan"] = annual_procurement_plan
+                approval.full_clean()
+                approval.save()
+                approval.move_to_next_step()
 
-            model = self.models[STAGE_NAME]
-            record = model.objects.create(
-                **record_data,
-                officer=profile,
-            )
-            setattr(approval, STAGE_NAME, record)
-            approval.save()
+                return Response(
+                    {"message": "Action taken successfully"}, status=status.HTTP_200_OK
+                )
 
+        except Exception as e:
+            print(e)
             return Response(
-                {"message": "Requisition Approval updated"},
-                status=status.HTTP_200_OK,
+                {"message": "Something went wrong"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-
-        return Response(
-            {"message": "Error! Requisition Approval not updated"},
-            status=status.HTTP_400_BAD_REQUEST,
-        )

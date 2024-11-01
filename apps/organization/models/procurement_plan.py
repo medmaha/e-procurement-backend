@@ -69,14 +69,14 @@ class PlanItem(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
-    def save(self, *args, **kwargs):
-        matching_threshold = Threshold.objects.filter(
-            min_amount__lte=self.budget, max_amount__gte=self.budget
-        ).first()
-        if matching_threshold:
-            self.procurement_method = matching_threshold.procurement_method
-            return super().save(*args, **kwargs)
-        raise NotImplementedError("Not implemented yet")
+    # def save(self, *args, **kwargs):
+    #     matching_threshold = Threshold.objects.filter(
+    #         min_amount__lte=self.budget, max_amount__gte=self.budget
+    #     ).first()
+    #     if matching_threshold:
+    #         self.procurement_method = matching_threshold.procurement_method
+    #         return super().save(*args, **kwargs)
+    #     raise NotImplementedError("Not implemented yet")
 
     class Meta:
         ordering = ["-last_modified"]
@@ -87,6 +87,7 @@ class DepartmentProcurementPlan(models.Model):
     The Department procurement plan, an essential component of the E-Procurement system
     """
 
+    officer = models.ForeignKey(Staff, null=True, blank=True, on_delete=models.SET_NULL)
     department = models.ForeignKey(
         "Department", null=True, blank=True, default=None, on_delete=models.CASCADE
     )

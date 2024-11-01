@@ -1,36 +1,22 @@
+from collections.abc import Sequence
 from django.contrib import admin
+from django.contrib.auth.models import Permission
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.http.request import HttpRequest
 from . import models
 
 
 class AccountAdmin(admin.ModelAdmin):
     sortable_by = ["is_active", "last_login"]
-
-    fields = [
-        "email",
-        "is_active",
-        "is_staff",
-        "is_superuser",
-        "password",
+    list_display: Sequence[str] = [
+        "full_name",
         "first_name",
-        "middle_name",
         "last_name",
-        "groups",
+        "profile_type",
+        "is_active",
+        "__groups__",
         "last_login",
     ]
-    readonly_fields = ["last_login"]
-
-    def get_list_display(self, request: HttpRequest):
-        list_display = [
-            "full_name",
-            "first_name",
-            "last_name",
-            "profile_type",
-            "is_active",
-            "__groups__",
-            "last_login",
-        ]
-        return list_display
 
 
 class GroupAdmin(admin.ModelAdmin):
@@ -47,5 +33,6 @@ class GroupAdmin(admin.ModelAdmin):
 
 
 # admin.site.register(models.AuthGroup)
+admin.site.register(Permission)
 admin.site.register(models.Account, AccountAdmin)
 admin.site.register(models.AuthGroup, GroupAdmin)

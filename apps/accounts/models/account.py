@@ -21,11 +21,11 @@ def upload_avatar(instance, filename: str):
 
 class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    avatar = models.ImageField(
-        upload_to=upload_avatar,
+    avatar = models.CharField(
         null=True,
-        default="/img/default/avatar.png",
         blank=True,
+        max_length=255,
+        default="/img/default/avatar.png",
     )
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)

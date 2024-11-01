@@ -4,8 +4,8 @@ from apps.organization.models import Staff
 from apps.core.utilities.text_choices import (
     MeasurementUnitChoices,
     ApprovalChoices,
+    PRStatusChoices,
 )
-from apps.core.utilities.generators import generate_unique_id
 from apps.organization.models.department import Department
 
 
@@ -52,6 +52,12 @@ class Requisition(models.Model):
         default=ApprovalChoices.PENDING,
         choices=ApprovalChoices.choices,
     )
+    pr_status = models.CharField(
+        max_length=255,
+        blank=True,
+        default=PRStatusChoices.PENDING,
+        choices=PRStatusChoices.choices,
+    )
     officer = models.ForeignKey(
         Staff,
         on_delete=models.CASCADE,
@@ -69,7 +75,7 @@ class Requisition(models.Model):
     )
 
     current_approval_step = models.ForeignKey(
-        "ApprovalStep", null=True, blank=True, on_delete=models.SET_NULL
+        "WorkflowStep", null=True, blank=True, on_delete=models.SET_NULL
     )
 
     remarks = models.TextField(null=True, blank=True, default="")
@@ -83,4 +89,9 @@ class Requisition(models.Model):
 
     @property
     def total_price(self):
-        return sum([item.total_cost for item in self.items.filter(is_valid=True)])
+        return sum([item.total_cost for item in self.items.filter()])
+
+    def get_approval_matrix(self):
+        from apps.procurement.models.pr_approval_utils import get_matrix_for_requisition
+
+        return get_matrix_for_requisition(self)

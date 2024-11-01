@@ -1,5 +1,5 @@
 from django.contrib import admin
-from ..models.requisition_approval_workflow import (
+from ..models import (
     ApprovalAction,
     ApprovalMatrix,
     ApprovalStep,

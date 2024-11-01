@@ -1,0 +1,72 @@
+[
+  {
+    "model": "vendors.vendor",
+    "pk": 1,
+    "fields": {
+      "organization_name": "Vendor A",
+      "alias": "vendor-a",
+      "registration_type": null,
+      "tin_number": "3774829320392",
+      "vat_number": "3493090292339",
+      "license_number": "3884494949949",
+      "industry": "N/A",
+      "website": "https://unionlend.com",
+      "logo": null,
+      "description": "",
+      "established_date": "2018-05-10",
+      "active": true,
+      "contact_person": null,
+      "address": null,
+      "verified": false,
+      "created_date": "2024-10-29T19:16:55.889Z",
+      "last_modified": "2024-10-29T19:18:07.199Z",
+      "certificates": []
+    }
+  },
+  {
+    "model": "vendors.vendor",
+    "pk": 2,
+    "fields": {
+      "organization_name": "Vendor B",
+      "alias": "vendor-b",
+      "registration_type": null,
+      "tin_number": "9038331320392",
+      "vat_number": "1283390292339",
+      "license_number": "8373388338423",
+      "industry": "N/A",
+      "website": "https://unionlend.com",
+      "logo": null,
+      "description": "",
+      "established_date": "2018-05-10",
+      "active": true,
+      "contact_person": null,
+      "address": null,
+      "verified": false,
+      "created_date": "2024-10-29T19:17:38.431Z",
+      "last_modified": "2024-10-29T19:18:00.778Z",
+      "certificates": []
+    }
+  },
+  {
+    "model": "vendors.vendorregistration",
+    "pk": 1,
+    "fields": {
+      "vendor": 1,
+      "status": "inactive",
+      "is_validated": false,
+      "created_date": "2024-10-29T19:16:55.915Z",
+      "last_modified": "2024-10-29T19:16:55.915Z"
+    }
+  },
+  {
+    "model": "vendors.vendorregistration",
+    "pk": 2,
+    "fields": {
+      "vendor": 2,
+      "status": "inactive",
+      "is_validated": false,
+      "created_date": "2024-10-29T19:17:38.440Z",
+      "last_modified": "2024-10-29T19:17:38.440Z"
+    }
+  }
+]

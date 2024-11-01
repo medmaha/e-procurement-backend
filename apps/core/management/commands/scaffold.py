@@ -14,14 +14,20 @@ class Command(BaseCommand):
 
         # from scaffold.automation.thresholds import generate_thresholds
 
-        delete_pycache_files()
-        delete_migration_files(delete_db=True)
+        # delete_pycache_files()
+        # delete_migration_files(delete_db=True)
         #
-        execute_from_command_line(["manage.py", "makemigrations"])
-        execute_from_command_line(["manage.py", "migrate"])
+        # execute_from_command_line(["manage.py", "makemigrations"])
+        # execute_from_command_line(["manage.py", "migrate"])
 
-        execute_from_command_line(["manage.py", "create_superuser"])
+        # execute_from_command_line(["manage.py", "create_superuser"])
         with transaction.atomic():
+            from apps.core.automation.groups import DefaultPermissionGroups
+
+            DefaultPermissionGroups.create_if_not_exist()
+            # execute_from_command_line(["manage.py", "loaddata", "org.json"])
+            # execute_from_command_line(["manage.py", "loaddata", "suppliers.json"])
+
             # generate_thresholds()
             # automate_scaffold()
             pass

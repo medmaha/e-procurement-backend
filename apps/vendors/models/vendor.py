@@ -37,17 +37,17 @@ class Vendor(models.Model):
     vat_number = models.CharField(max_length=255)
     license_number = models.CharField(max_length=255)
     industry = models.CharField(max_length=255, blank=True, default="N/A")
-    # address = models.ForeignKey(
-    #     Address, on_delete=models.SET_NULL, null=True, blank=True
-    # )
+    address = models.CharField(max_length=255, null=True, blank=True)
     website = models.URLField(blank=True, null=True)
-    logo = models.ImageField(upload_to=upload_company_logo, null=True)
+    logo = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(max_length=1000, null=True, blank=True)
     established_date = models.DateField(null=True, blank=True)
 
     active = models.BooleanField(default=False, null=True, blank=True)
 
-    certificates = models.ManyToManyField(Certificate, related_name="vendors")
+    certificates = models.ManyToManyField(
+        Certificate, related_name="vendors", blank=True
+    )
     contact_person = models.ForeignKey(
         ContactPerson,
         on_delete=models.SET_NULL,
@@ -58,6 +58,7 @@ class Vendor(models.Model):
     user_account = models.ForeignKey(
         Account,
         blank=True,
+        null=True,
         on_delete=models.CASCADE,
         related_name="vendor_account",
     )

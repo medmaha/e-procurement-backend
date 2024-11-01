@@ -24,14 +24,14 @@ class PlanItemListSerializer(serializers.ModelSerializer):
             "quarter_4_budget",
         ]
 
-    def _validate_budget(self, value: int):
-        matching_threshold = Threshold.get_matching_threshold(value)
-        if not matching_threshold:
-            raise serializers.ValidationError("Budget not in threshold")
+    # def _validate_budget(self, value: int):
+    #     matching_threshold = Threshold.get_matching_threshold(value)
+    #     if not matching_threshold:
+    #         raise serializers.ValidationError("Budget not in threshold")
 
-        if self.instance:
-            self.instance.procurement_method = matching_threshold.procurement_method
-        return value
+    #     if self.instance:
+    #         self.instance.procurement_method = matching_threshold.procurement_method
+    #     return value
 
 
 class DepartmentProcurementPlanListSerializer(serializers.ModelSerializer):
@@ -58,12 +58,12 @@ class DepartmentProcurementPlanCreateSerializer(serializers.ModelSerializer):
             "description",
         ]
 
-    def validate(self, attr):
-        if not Threshold.objects.filter().exists():
-            raise serializers.ValidationError(
-                "Annual Procurement Can't be applied. GPPA Thresholds not available"
-            )
-        return attr
+    # def validate(self, attr):
+    #     if not Threshold.objects.filter().exists():
+    #         raise serializers.ValidationError(
+    #             "Annual Procurement Can't be applied. GPPA Thresholds not available"
+    #         )
+    #     return attr
 
 
 class AnnualPlanCreateSerializer(serializers.ModelSerializer):

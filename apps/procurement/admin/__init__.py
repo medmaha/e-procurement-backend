@@ -1,4 +1,5 @@
 from .requisition import RequisitionAdmin
+from .rfq import RFQAdmin
 
 from .approval_workflow import (
     ApprovalActionAdmin,
@@ -7,4 +8,10 @@ from .approval_workflow import (
     ApprovalWorkflowAdmin,
     DelegationAdmin,
     WorkflowStepAdmin,
+)
+from .rfq_contract import (
+    RFQContractAdmin,
+    RFQNegotiationAdmin,
+    RFQContractAwardAdmin,
+    RFQNegotiationNoteAdmin,
 )

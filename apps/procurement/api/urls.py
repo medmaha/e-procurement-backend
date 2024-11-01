@@ -88,19 +88,31 @@ urlpatterns = [
     path(
         "requisitions/workflows/approval-steps/",
         RequisitionApprovalStepAPIView.as_view(),
+        name="pr_approval_step",
     ),
     path(
         "requisitions/workflows/approval-steps/<approval_step_id>/",
         RequisitionApprovalStepAPIView.as_view(),
+        name="pr_approval_step_retrieve",
     ),
-    path("requisitions/workflows/", RequisitionWorkflowAPIView.as_view()),
+    path(
+        "requisitions/workflows/",
+        RequisitionWorkflowAPIView.as_view(),
+        name="pr_workflow",
+    ),
     path(
         "requisitions/workflows/<workflow_id>/",
         RequisitionWorkflowAPIView.as_view(),
+        name="pr_workflow_retrieve",
     ),
-    # ---- workflows ----
-    path("requisitions/<slug>/", RequisitionRetrieveView.as_view()),
-    path("requisitions/", RequisitionListView.as_view()),
+    # ---- workflows-ends ----
+    path("requisitions/", RequisitionListView.as_view(), name="pr_list"),
+    path("requisitions/<slug>/", RequisitionRetrieveView.as_view(), name="pr_retrieve"),
+    path(
+        "requisitions/<slug>/approve/",
+        RequisitionApprovalView.as_view(),
+        name="pr_approval",
+    ),
     #
     # RFQ Responses
     path("rfq/responses/select/", QuotationRespondSelectView.as_view()),

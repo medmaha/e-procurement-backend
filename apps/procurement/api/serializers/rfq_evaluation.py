@@ -17,7 +17,7 @@ class RFQEvaluationSerializer(serializers.ModelSerializer):
     def to_representation(self, instance: RFQEvaluation):
         data = super().to_representation(instance)
         data["id"] = instance.pk
-        data["rfq"] = {"id": instance.rfq.pk, "unique_id": instance.rfq.unique_id}
+        data["rfq"] = {"id": instance.rfq.pk}
         # data["requirements"] = RFQItemsSerializer(instance.rfq.items, many=True).data
         data["officer"] = {
             "id": instance.officer.pk,  # type:ignore

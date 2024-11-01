@@ -54,7 +54,7 @@ class QuotationRespondAdmin(admin.ModelAdmin):
         "approved_status",
         "status",
         "pricing",
-        "delivery_terms",
+        "delivery_date",
         "validity_period",
         "created_date",
     ]

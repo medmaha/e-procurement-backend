@@ -7,6 +7,8 @@ from django.contrib.auth.models import Group
 
 @receiver(pre_save, sender=Staff)
 def staff_user_account(sender, instance: Staff, **kwargs):
+    from apps.core.constants import DefaultGroups
+
     if not instance.user_account_id:  # type: ignore
         account = Account(
             email=instance.email,
@@ -21,8 +23,12 @@ def staff_user_account(sender, instance: Staff, **kwargs):
             instance.disabled = False
         account.set_password(account.DEFAULT_PASSWORD)
         account.save()
-        staff_group, _ = Group.objects.get_or_create(name="Staff")
+
+        staff_group, _ = Group.objects.get_or_create(
+            name=DefaultGroups.STAFF_MEMBER["name"]
+        )
         account.groups.add(staff_group)
+
         instance.user_account = account  # type: ignore
 
 

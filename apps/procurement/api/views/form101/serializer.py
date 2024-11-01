@@ -63,7 +63,6 @@ class Form101RFQRequestSerializer(serializers.ModelSerializer):
             "items",
             "created_date",
             "last_modified",
-            "unique_id",
             "vendor",
         ]
 
@@ -88,7 +87,7 @@ class Form101RFQRequestSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: RFQ):
         data = super().to_representation(instance)
-        data["deadline"] = str(instance.required_date)
+        data["deadline"] = str(instance.quotation_deadline_date)
         data["title"] = str(instance.title)
 
         from_company = APP_COMPANY["name"]
@@ -98,6 +97,7 @@ class Form101RFQRequestSerializer(serializers.ModelSerializer):
 
         data["fromLocation"] = from_location
 
+        data["quotation_no"] = "RFQ00293883"
         data["authorizedBy"] = str(instance.officer)
         data["gppaNumber"] = random.randrange(10000000000, 99999999999)
 

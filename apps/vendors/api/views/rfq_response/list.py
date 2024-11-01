@@ -1,9 +1,11 @@
 import threading
+from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 
-from apps.vendors.models.rfq_response import RFQResponse
+from apps.procurement.models import RFQItem
+from apps.vendors.models.rfq_response import Vendor, RFQResponse
 from apps.vendors.api.serializers.rfq_response import RFQResponseListSerializer
 
 
@@ -11,7 +13,12 @@ class RFQResponseListView(ListAPIView):
     serializer_class = RFQResponseListSerializer
 
     def get_queryset(self, vendor):
-        queryset = RFQResponse.objects.filter(vendor=vendor, status="accepted")
+
+        queryset = (
+            RFQResponse.objects.prefetch_related("rfq__items")
+            .select_related("rfq")
+            .filter(vendor=vendor)
+        )
         return queryset
 
     def list(self, request, *args, **kwargs):

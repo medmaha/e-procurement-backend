@@ -22,7 +22,7 @@ from apps.accounts.models.account import Account
 class RFQCreateView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         user = request.user
-        profile_name, profile = user.get_profile()
+        profile = user.profile
 
         data: Any = request.data.copy()
 
@@ -34,42 +34,55 @@ class RFQCreateView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        requisition = get_object_or_404(
-            Requisition,
-            pk=data.pop("requisition_id") if "requisition_id" in data else 0,
-        )
+        requisition = Requisition.objects.only("pk").get(pk=data.pop("requisition_id"))
 
         e_404 = "RFQ requires at least one supplier."
         e_kwargs = {"message": e_404}
-        suppliers = (
-            get_list_or_404(Vendor, pk__in=data.pop("suppliers"))
-            if "suppliers" in data
-            else None
-        )
+
+        suppliers_ids = data.pop("suppliers")
+
+        if not (suppliers_ids and isinstance(suppliers_ids, list)):
+            return Response(
+                e_kwargs,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        suppliers = get_list_or_404(Vendor, pk__in=suppliers_ids)
+
         if not suppliers:
             return Response(
                 e_kwargs,
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        items_serializer = (
-            RFQItemsCreateSerializer(data=data.pop("items"), many=True)
-            if "items" in data
-            else None
-        )
+        rfq_items_data = data.pop("items", None)
 
-        if not items_serializer or not items_serializer.is_valid():
+        if not rfq_items_data:
             return Response(
                 {
-                    "message": "RFQ requires at least one item to quote.",
+                    "message": "RFQ requires at least one item to quote. AA",
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        conditions = data.pop("conditions") if "conditions" in data else ""
-        auto_publish = data.get("auto_publish") == "on"
+        items_serializer = RFQItemsCreateSerializer(data=rfq_items_data, many=True)
 
-        data.update({"auto_publish": auto_publish, "terms_and_conditions": conditions})
+        if not items_serializer.is_valid():
+            return Response(
+                {
+                    "message": "RFQ requires at least one item to quote. BB",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        terms_and_conditions = data.pop("conditions") if "conditions" in data else ""
+        auto_publish = data.get("auto_publish", None) in ["on", "true", True]
+
+        data.update(
+            {"auto_publish": auto_publish, "terms_and_conditions": terms_and_conditions}
+        )
+
+        data["quotation_deadline_date"] = data.get("required_date")
 
         rfq_serializer: Any = RFQCreateSerializer(
             data=data, context={"request": request}
@@ -81,28 +94,19 @@ class RFQCreateView(CreateAPIView):
                 items_serializer.save(rfq=rfq)
                 rfq.suppliers.set(suppliers)
 
-                staff_ids = request.data.get("staff_ids")
-                if isinstance(staff_ids, list):
-                    try:
-                        for i, s in enumerate(staff_ids):
-                            staff_ids[i] = int(s)
-                    except:
-                        staff_ids = None
-                else:
-                    staff_ids = None
+                opened_by_accounts = Account.objects.only("pk").filter(
+                    groups__in=Group.objects.filter(name__iexact="RFQ Response Opener")
+                )
 
-                if staff_ids:
-                    accounts = Account.objects.filter(
-                        groups__in=Group.objects.filter(id__in=staff_ids)
+                opened_by_staffs = None
+                if opened_by_accounts:
+                    opened_by_staffs = Staff.objects.only("pk").filter(
+                        user_account__in=opened_by_accounts
                     )
-                else:
-                    accounts = Account.objects.filter(
-                        groups__in=Group.objects.filter(
-                            name__iexact="RFQ Response Opener"
-                        )
-                    )
-                opened_by_staffs = Staff.objects.filter(user_account__in=accounts)
-                rfq.opened_by.set(opened_by_staffs)
+
+                if opened_by_staffs:
+                    rfq.opened_by.set(opened_by_staffs)
+
                 return Response(
                     {
                         "message": "RFQ created successfully",

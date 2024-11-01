@@ -20,19 +20,22 @@ class DepartmentProcurementPlanCreateView(CreateAPIView):
     serializer_class = DepartmentProcurementPlanCreateSerializer
 
     def create(self, request, *args, **kwargs):
-        user: Account = request.user
-        profile_name, profile = user.get_profile()
+        profile = request.user.profile
 
-        # if not request.user.has_perm("organization.add_departmentprocurementplan"):
-        #     return Response(
-        #         {
-        #             "success": False,
-        #             "message": "You do not have permission to create a plan",
-        #         },
-        #         status=status.HTTP_400_BAD_REQUEST,
-        #     )
+        if not request.user.has_perm(
+            f"{DepartmentProcurementPlan._meta.app_label}.add_{DepartmentProcurementPlan._meta.model_name}"
+        ):
+            return Response(
+                {
+                    "success": False,
+                    "message": "You do not have permission to create a plan",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        annual_plan = AnnualPlan.get_plan_by_year(request.query_params.get("year"))
+        year = request.query_params.get("year")
+
+        annual_plan = AnnualPlan.get_plan_by_year(year)
 
         if not annual_plan:
             return Response(
@@ -67,11 +70,8 @@ class DepartmentProcurementPlanCreateView(CreateAPIView):
                     "quarter_4_budget": item.get("quarter_4_budget") or Decimal(0),
                 }
             )
-        department = Department.objects.filter(
-            id=plan_data.pop("department_id") if "department_id" else 0
-        ).first()
-        if not department:
-            return Response({"message": "The selected department is invalid"})
+
+        department = profile.department
 
         department_plan_item_serializer = PlanItemListSerializer(
             data=department_plan_items_data, many=True
@@ -80,6 +80,7 @@ class DepartmentProcurementPlanCreateView(CreateAPIView):
             department=department,
             annual_plan=annual_plan,  # this is a reverse query
         ).first()
+
         department_plan_serializer = self.get_serializer(
             instance=instance, data=plan_data
         )
@@ -88,9 +89,10 @@ class DepartmentProcurementPlanCreateView(CreateAPIView):
             if department_plan_item_serializer.is_valid():
                 with transaction.atomic():
                     department_plan = department_plan_serializer.save(
-                        department=department
+                        department=department, officer=profile
                     )
-                    department_plan.items.add(*department_plan_item_serializer.save())
+                    plan_items = department_plan_item_serializer.save()
+                    department_plan.items.add(*plan_items)
                     annual_plan.department_plans.add(department_plan)
                     return Response(
                         {
@@ -99,6 +101,7 @@ class DepartmentProcurementPlanCreateView(CreateAPIView):
                         },
                         status=status.HTTP_201_CREATED,
                     )
+
             return Response(
                 {
                     "success": False,
@@ -108,6 +111,7 @@ class DepartmentProcurementPlanCreateView(CreateAPIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
         return Response(
             {
                 "success": False,

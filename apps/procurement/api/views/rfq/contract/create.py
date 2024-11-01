@@ -121,7 +121,7 @@ class CreateContract(CreateAPIView):
                     rfq_response=rfq_response,
                     status=NegotiationAndAwardStatusChoices.PENDING,
                     officer=profile,
-                    delivery_terms=rfq_response.delivery_terms,
+                    delivery_terms=rfq_response.delivery_date,
                     validity_period=rfq_response.validity_period,
                     payment_method=rfq_response.payment_method,
                     terms_and_conditions=terms_and_conditions,
@@ -139,13 +139,13 @@ class CreateContract(CreateAPIView):
                 note.delivery_terms = contract.delivery_terms or ""
                 note.payment_method = contract.payment_method or ""
                 note.pricing = contract.pricing
-                note.save()
-                n.save()
-                n.notes.add(note)
 
                 try:
                     contract.full_clean()  # Checking all requirements of RFQContract
                     contract.save()
+                    note.save()
+                    n.save()
+                    n.notes.add(note)
                 except Exception as e:
                     return Response(
                         {"message": e},
@@ -154,7 +154,7 @@ class CreateContract(CreateAPIView):
 
                 # Congrats so far so good 👍
                 return Response(
-                    {"message": "Contract created successfully"},
+                    {"message": "Contract created successfully", "id": contract.pk},
                     status=status.HTTP_201_CREATED,
                 )
 
@@ -164,7 +164,7 @@ class CreateContract(CreateAPIView):
                 rfq_response=rfq_response,
                 status=NegotiationAndAwardStatusChoices.PENDING,
                 officer=profile,
-                pricing=int(rfq_response.pricing),
+                pricing=int(rfq_response.pricing or 0),  # type: ignore
             )
 
             note_serializer = NegotiationNoteCreateSerializer(data=data)

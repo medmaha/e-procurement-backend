@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import ListAPIView
 
-from apps.procurement.models import RFQ
+from apps.core.automation.groups import DefaultPermissionGroups
+from apps.procurement.models import RFQ, RFQApproval
 from apps.procurement.api.serializers.rfq import (
     RFQListSerializer,
     RFQSelectSerializer,
@@ -16,9 +17,11 @@ class RfqListView(ListAPIView):
     serializer_class = RFQListSerializer
 
     def get_queryset(self):
-        user: Account = self.request.user  # type: ignore
-        profile_name, profile = user.get_profile()  # type: ignore
-        queryset = RFQ.objects.filter()
+        queryset = (
+            RFQ.objects.filter()
+            .prefetch_related("items", "suppliers")
+            .select_related("requisition", "officer")
+        )
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -31,7 +34,12 @@ class RfqListView(ListAPIView):
             "read": request.user.has_perm("procurement.view_rfq"),
             "update": request.user.has_perm("procurement.change_rfq"),
             "delete": request.user.has_perm("procurement.delete_rfq"),
+            "approve": request.user.has_perm(
+                f"{RFQApproval._meta.app_label}.add_{RFQApproval._meta.model_name}"
+            ),
         }
+
+        print(auth_perms)
         data = {"data": serializer.data, "auth_perms": auth_perms}
         return Response(data, status=status.HTTP_200_OK)
 
@@ -56,6 +64,9 @@ class RfqSelectView(ListAPIView):
             "read": request.user.has_perm("procurement.view_rfqapproval"),
             "update": request.user.has_perm("procurement.change_rfqapproval"),
             "delete": request.user.has_perm("procurement.delete_rfqapproval"),
+            "approve": request.user.has_perm(
+                f"{RFQApproval._meta.app_label}._add{RFQApproval._meta.model_name}"
+            ),
         }
 
         data = {"data": serializer.data, "auth_perms": auth_perms}

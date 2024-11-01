@@ -31,7 +31,6 @@ class RFQContractListSerializer(serializers.ModelSerializer):
 
         data["rfq"] = {
             "id": instance.rfq.pk,
-            "unique_id": instance.rfq.unique_id,
         }
         data["officer"] = {
             "id": instance.officer.pk,
@@ -84,7 +83,7 @@ class RFQContractNegotiationSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data["contract"] = {
             "id": instance.contract.pk,
-            "name": str(instance.contract.rfq.unique_id),
+            "name": str(instance.contract.rfq.pk) + " - " + instance.contract.rfq.title,
         }
         data["supplier"] = {
             "id": instance.contract.supplier.pk,
@@ -98,7 +97,6 @@ class RFQContractNegotiationSerializer(serializers.ModelSerializer):
 
         data["rfq"] = {
             "id": instance.contract.rfq.pk,
-            "unique_id": instance.contract.rfq.unique_id,
         }
         data["officer"] = {
             "id": instance.contract.officer.pk,

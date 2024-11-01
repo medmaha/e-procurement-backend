@@ -16,7 +16,11 @@ class RequisitionRetrieveView(RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         slug = kwargs.get("slug")
         _id = revert_unique_id("R", slug or "0")
-        instance = get_object_or_404(Requisition, pk=_id)
+        instance = (
+            Requisition.objects.prefetch_related("items")
+            .select_related("officer")
+            .get(pk=_id)
+        )
         serializer = self.get_serializer(
             instance=instance, context={"request": request}
         )

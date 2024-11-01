@@ -25,10 +25,10 @@ class RFQItemsSerializer(serializers.ModelSerializer):
         model = RFQItem
         fields = [
             "id",
-            "item_description",
             "quantity",
-            "measurement_unit",
             "eval_criteria",
+            "item_description",
+            "measurement_unit",
         ]
 
 
@@ -38,8 +38,7 @@ class RFQListSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "title",
-            "unique_id",
-            "deadline",
+            "quotation_deadline_date",
             "level",
             "open_status",
             "approval_status",
@@ -54,30 +53,6 @@ class RFQListSerializer(serializers.ModelSerializer):
                 "name": instance.officer.name,
                 "employee_id": instance.officer.employee_id,
             }
-        if instance.requires_gppa_approval:
-            try:
-                approval_record = instance.approval_record  # type: ignore
-                if approval_record and not approval_record.gppa_approval:
-                    data["approval_status"] = ApprovalChoices.PENDING
-            except:
-                pass
-        if data["approval_status"].lower() == "accepted" and not instance.published:
-            data["publishable"] = True
-        data["editable"] = False
-        if "request" in self.context:
-            request = self.context["request"]
-            profile_type, profile = request.user.get_profile()
-
-            if profile_type == "Staff":
-                if request.user.has_perm("procurement.add_rfqapproval"):
-                    if data["approval_status"].lower() == ApprovalChoices.PENDING:
-                        data["approvable"] = True
-            if profile_type == "GPPA":
-                if request.user.has_perm("procurement.add_rfqapprovalgppa"):
-                    if data["approval_status"].lower() == ApprovalChoices.PENDING:
-                        data["approvable"] = True
-
-        data["status"] = data["approval_status"]
         return data
 
 
@@ -107,7 +82,6 @@ class RFQResponseListSerializer(serializers.ModelSerializer):
         model = RFQResponse
         fields = [
             "id",
-            "unique_id",
             "approved_status",
             "created_date",
             "status",
@@ -117,7 +91,7 @@ class RFQResponseListSerializer(serializers.ModelSerializer):
             "form101",
             "remarks",
             "pricing",
-            "delivery_terms",
+            "delivery_date",
             "validity_period",
             "payment_method",
             "last_modified",
@@ -125,7 +99,7 @@ class RFQResponseListSerializer(serializers.ModelSerializer):
         ]
 
     def get_deadline(self, obj):
-        return obj.rfq.deadline
+        return obj.rfq.quotation_deadline_date
 
     def get_status(self, obj):
         return obj.status.upper()
@@ -185,7 +159,7 @@ class RFQResponseRetrieveSerializer(serializers.ModelSerializer):
             "invited_at",
             "remarks",
             "pricing",
-            "delivery_terms",
+            "delivery_date",
             "validity_period",
             "payment_method",
             "approved_status",
@@ -205,7 +179,7 @@ class RFQResponseRetrieveSerializer(serializers.ModelSerializer):
         data["brochures"] = RFQResponseBrochureSerializer(
             instance=instance.brochures.filter(), many=True, context=self.context
         ).data
-        data["deadline"] = str(instance.rfq.deadline)
+        data["deadline"] = str(instance.rfq.quotation_deadline_date)
         data["vendor"] = {
             "id": instance.vendor.pk,
             "name": instance.vendor.name,

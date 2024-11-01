@@ -10,13 +10,22 @@ from .requisition import Requisition, RequisitionItem
 from .requisition_approval import (
     RequisitionApproval,
 )
-from .requisition_approval_workflow import (
-    ApprovalMatrix,
-    ApprovalWorkflow,
-    ApprovalStep,
+from .pr_approval_action import (
     ApprovalAction,
-    ApprovalChoices,
+)
+from .pr_approval_deligation import (
     Delegation,
+)
+from .pr_approval_matrix import (
+    ApprovalMatrix,
+)
+from .pr_approval_step import (
+    ApprovalStep,
+)
+from .pr_approval_workflow import (
+    ApprovalWorkflow,
+)
+from .pr_approval_workflow_step import (
     WorkflowStep,
 )
 

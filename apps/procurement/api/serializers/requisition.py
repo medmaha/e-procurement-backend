@@ -2,6 +2,7 @@ import re
 from rest_framework import serializers
 from apps.procurement.models import Requisition, RequisitionItem, RequisitionApproval
 from apps.organization.models import Staff
+from apps.procurement.models.pr_approval_action import ApprovalAction
 
 
 class RequisitionApprovalSerializer(serializers.ModelSerializer):
@@ -87,7 +88,7 @@ class RequisitionListOfficerSerializer(serializers.ModelSerializer):
 
 class RequisitionListSerializer(serializers.ModelSerializer):
     officer = RequisitionListOfficerSerializer(read_only=True)
-    approval = serializers.SerializerMethodField()
+    current_approver = serializers.SerializerMethodField()
     items = RequisitionItemSerializer(many=True)
 
     class Meta:
@@ -99,15 +100,29 @@ class RequisitionListSerializer(serializers.ModelSerializer):
             "request_type",
             "officer",
             "remarks",
-            "approval",
+            "current_approval_step",
+            "approval_status",
             "created_date",
             "last_modified",
+            "current_approver",
         ]
 
-    def get_approval(self, obj):
-        return RequisitionListApprovalSerializer(
-            instance=obj.approval_record, context=self.context
-        ).data
+    def get_current_approver(self, instance: Requisition):
+        # return RequisitionListApprovalSerializer(
+        #     instance=obj.approval_record, context=self.context
+        # ).data
+        if not instance.current_approval_step:
+            return False
+
+        workflow_step = instance.current_approval_step
+
+        if workflow_step and workflow_step.step.approver is None:
+            return False
+
+        return {
+            "id": workflow_step.step.approver.pk,
+            "name": workflow_step.step.approver.name,
+        }
 
 
 # ==================================== RETRIEVE ================================#
@@ -116,7 +131,7 @@ class RequisitionSelectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Requisition
-        fields = ["unique_id", "id", "name"]
+        fields = ["id", "name", "created_date"]
 
     def get_name(self, obj: Requisition):
         name = f" | ".join([i.description for i in obj.items.all()[:2]])
@@ -124,85 +139,6 @@ class RequisitionSelectSerializer(serializers.ModelSerializer):
 
 
 # ==================================== RETRIEVE ================================#
-class RequisitionRetrieveApprovalSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RequisitionApproval
-        fields = [
-            "id",
-            "unique_id",
-            "status",
-            "editable",
-            "stage",
-            "procurement_method",
-            "created_date",
-            "last_modified",
-        ]
-
-    def apposable(self, data: RequisitionApproval):
-        if "request" not in self.context:
-            return False
-        _stage = ["Unit", "Department", "Procurement", "Finance"]
-        _list = [
-            "unit_approval",
-            "department_approval",
-            "procurement_approval",
-            "finance_approval",
-        ]
-        for item in zip(_stage, _list):
-            stage, approval = item
-            if data.stage == stage:
-                if not getattr(data, approval):
-                    return True
-
-        return False
-
-    def to_representation(self, instance: RequisitionApproval):
-        data = super().to_representation(instance)
-        data["apposable"] = self.apposable(instance)
-        array = (
-            ("unit_approval", instance.unit_approval),
-            ("department_approval", instance.department_approval),
-            ("procurement_approval", instance.procurement_approval),
-            ("finance_approval", instance.finance_approval),
-        )
-        for item in array:
-            name, model = item
-            data[name] = {}
-            if model:
-                data[name]["id"] = str(model.pk)
-                data[name]["status"] = str(model)
-                data[name]["remark"] = model.remark
-                data[name]["created_date"] = model.created_date
-                data[name]["last_modified"] = model.last_modified
-
-                if name == "finance_approval":
-                    data[name]["funds_confirmed"] = model.funds_confirmed  # type: ignore
-
-                if name == "procurement_approval":
-                    data[name][
-                        "part_of_annual_plan"
-                    ] = instance.procurement_approval.part_of_annual_plan  # type:ignore
-                    if instance.procurement_approval:
-                        data[name]["annual_procurement_plan"] = {
-                            "id": (
-                                instance.procurement_approval.annual_procurement_plan.pk
-                                if instance.procurement_approval.annual_procurement_plan
-                                else None
-                            ),  # type:ignore
-                            "description": (
-                                instance.procurement_approval.annual_procurement_plan.description
-                                if instance.procurement_approval.annual_procurement_plan
-                                else None
-                            ),  # type:ignore
-                        }
-
-            else:
-                data[name]["status"] = "N/A"
-                data[name]["id"] = None
-
-        return data
-
-
 class RequisitionRetrieveOfficerSerializer(serializers.ModelSerializer):
     unit = serializers.SerializerMethodField()
     department = serializers.SerializerMethodField()
@@ -223,12 +159,14 @@ class RequisitionRetrieveOfficerSerializer(serializers.ModelSerializer):
             "id": obj.department.pk if obj.department else None,
             "name": obj.department.name if obj.department else None,
         }
+
         return data
 
 
 class RequisitionRetrieveSerializer(serializers.ModelSerializer):
     officer = RequisitionRetrieveOfficerSerializer()
-    approval = serializers.SerializerMethodField(read_only=True)
+    approvals = serializers.SerializerMethodField(read_only=True)
+    current_approval_step = serializers.SerializerMethodField(read_only=True)
     items = RequisitionItemSerializer(many=True, read_only=True)
 
     class Meta:
@@ -239,125 +177,116 @@ class RequisitionRetrieveSerializer(serializers.ModelSerializer):
             "officer",
             "items",
             "remarks",
-            "approval",
+            "approvals",
+            "approval_status",
+            "current_approval_step",
             "created_date",
             "last_modified",
         ]
 
-    def unit_approval(self, obj: RequisitionApproval):
-        try:
-            if not obj.unit_approval:
-                raise ValueError("")
+    def get_current_approval_step(self, instance: Requisition):
 
+        if instance.current_approval_step:
+            workflow_step = instance.current_approval_step
             return {
-                "id": obj.unit_approval.pk,
-                "name": "Unit Approval",
-                "approve": obj.unit_approval.approve,
-                "officer": {
-                    "id": obj.unit_approval.officer.pk,  # type: ignore
-                    "name": obj.unit_approval.officer.name,  # type: ignore
+                "id": workflow_step.pk,
+                "order": workflow_step.order,
+                "step": {
+                    "id": workflow_step.step.pk,
+                    "name": workflow_step.step.name,
+                    "order": workflow_step.step.order,
+                    "approver": (
+                        {
+                            "id": workflow_step.step.approver.pk,
+                            "name": workflow_step.step.approver.name,
+                            "avatar": workflow_step.step.approver.user_account.avatar,
+                            "job_title": workflow_step.step.approver.job_title,
+                            "unit": {
+                                "id": workflow_step.step.approver.unit.pk,
+                                "name": workflow_step.step.approver.unit.name,
+                                "department": {
+                                    "id": workflow_step.step.approver.department.pk,
+                                    "name": workflow_step.step.approver.department.name,
+                                },
+                            },
+                        }
+                        if workflow_step.step.approver
+                        else None
+                    ),
                 },
-                "remark": obj.unit_approval.remark,
-                "created_date": obj.unit_approval.created_date,
-            }
-        except:
-            return {
-                "id": 0,
-                "name": "Unit Approval",
-            }
-
-    def department_approval(self, obj: RequisitionApproval):
-        try:
-            if not obj.department_approval:
-                raise ValueError("")
-
-            return {
-                "id": obj.department_approval.pk,
-                "name": "Department Approval",
-                "approve": obj.department_approval.approve,
-                "officer": {
-                    "id": obj.department_approval.officer.pk,  # type: ignore
-                    "name": obj.department_approval.officer.name,  # type: ignore
+                "workflow": {
+                    "id": workflow_step.workflow.pk,
+                    "name": workflow_step.workflow.name,
+                    "steps": workflow_step.workflow.steps.count(),
                 },
-                "remark": obj.department_approval.remark,
-                "created_date": obj.department_approval.created_date,
-            }
-        except:
-            return {
-                "id": 0,
-                "name": "Department Approval",
+                "id": workflow_step.pk,
             }
 
-    def procurement_approval(self, obj: RequisitionApproval):
+        return None
 
-        try:
-            if not obj.procurement_approval:
-                raise ValueError("")
+    def get_approvals(self, instance: Requisition):
+        approvals = ApprovalAction.objects.filter(requisition=instance)
 
-            return {
-                "id": obj.procurement_approval.pk,
-                "name": "Procurement Approval",
-                "approve": obj.procurement_approval.approve,
-                "part_of_annual_plan": obj.procurement_approval.part_of_annual_plan,
-                "annual_procurement_plan": {
-                    "id": str(obj.procurement_approval.annual_procurement_plan.pk),  # type: ignore
-                    "title": str(obj.procurement_approval.annual_procurement_plan),
+        data = [
+            {
+                "id": approval.pk,
+                "action": approval.action,
+                "comments": approval.comments,
+                "created_date": approval.created_date,
+                "last_modified": approval.last_modified,
+                "workflow_step": (
+                    {
+                        "id": approval.workflow_step.pk,
+                        "order": approval.workflow_step.order,
+                        "step": {
+                            "id": approval.workflow_step.step.pk,
+                            "order": approval.workflow_step.step.order,
+                            "name": approval.workflow_step.step.order,
+                        },
+                        "workflow": {
+                            "id": approval.workflow_step.workflow.pk,
+                            "name": approval.workflow_step.workflow.name,
+                            "steps": approval.workflow_step.workflow.steps.count(),
+                        },
+                        "id": approval.workflow_step.pk,
+                    }
+                    if approval.workflow_step
+                    else None
+                ),
+                "approver": {
+                    "id": approval.approver.pk,
+                    "name": approval.approver.name,
+                    "avatar": approval.approver.user_account.avatar,
+                    "job_title": approval.approver.job_title,
+                    "unit": {
+                        "id": approval.approver.unit.pk,
+                        "name": approval.approver.unit.name,
+                        "department": (
+                            {
+                                "id": approval.approver.department.pk,
+                                "name": approval.approver.department.name,
+                            }
+                            if approval.approver.department
+                            else None
+                        ),
+                    },
                 },
-                "officer": {
-                    "id": obj.procurement_approval.officer.pk,  # type: ignore
-                    "name": obj.procurement_approval.officer.name,  # type: ignore
-                },
-                "remark": obj.procurement_approval.remark,
-                "created_date": obj.procurement_approval.created_date,
             }
+            for approval in approvals
+        ]
 
-        except:
-            return {
-                "id": 0,
-                "name": "Department Approval",
+        return data
+
+    def to_representation(self, instance: Requisition):
+        data = super().to_representation(instance)
+
+        data["officer_department"] = (
+            {
+                "id": instance.officer_department.pk,
+                "name": instance.officer_department.name,
             }
-
-    def finance_approval(self, obj: RequisitionApproval):
-
-        try:
-            if not obj.finance_approval:
-                raise ValueError("")
-
-            return {
-                "id": obj.finance_approval.pk,
-                "name": "Finance Approval",
-                "approve": obj.finance_approval.approve,
-                "funds_confirmed": obj.finance_approval.funds_confirmed,
-                "officer": {
-                    "id": obj.finance_approval.officer.pk,  # type: ignore
-                    "name": obj.finance_approval.officer.name,  # type: ignore
-                },
-                "remark": obj.finance_approval.remark,
-                "created_date": obj.finance_approval.created_date,
-            }
-
-        except:
-            return {
-                "name": "Department Approval",
-            }
-
-    def get_approval(self, instance: Requisition):
-        try:
-            approval: RequisitionApproval = instance.approval_record  # type: ignore
-        except:
-            return None
-        data = {}
-
-        data["id"] = approval.pk
-        data["stage"] = approval.stage
-        data["status"] = approval.status
-        data["editable"] = approval.editable
-        data["created_date"] = approval.created_date
-        data["procurement_method"] = approval.procurement_method
-
-        data["unit_approval"] = self.unit_approval(approval)
-        data["department_approval"] = self.department_approval(approval)
-        data["procurement_approval"] = self.procurement_approval(approval)
-        data["finance_approval"] = self.finance_approval(approval)
+            if instance.officer_department
+            else None
+        )
 
         return data

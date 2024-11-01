@@ -1,0 +1,487 @@
+[
+  {
+    "model": "organization.department",
+    "pk": 1,
+    "fields": {
+      "name": "Finance Department",
+      "email": null,
+      "description": "",
+      "department_head": null,
+      "disabled": false,
+      "phone": "",
+      "last_modified": "2024-10-27T17:10:54.471Z",
+      "created_date": "2024-10-27T17:10:54.471Z",
+      "enabled_since": "2024-10-27T17:10:54.471Z"
+    }
+  },
+  {
+    "model": "organization.department",
+    "pk": 2,
+    "fields": {
+      "name": "Techinal Department",
+      "email": null,
+      "description": "",
+      "department_head": null,
+      "disabled": false,
+      "phone": "",
+      "last_modified": "2024-10-27T17:13:15.723Z",
+      "created_date": "2024-10-27T17:13:15.723Z",
+      "enabled_since": "2024-10-27T17:13:15.723Z"
+    }
+  },
+  {
+    "model": "organization.department",
+    "pk": 3,
+    "fields": {
+      "name": "Business Department",
+      "email": null,
+      "description": "",
+      "department_head": null,
+      "disabled": false,
+      "phone": "",
+      "last_modified": "2024-10-27T17:18:31.941Z",
+      "created_date": "2024-10-27T17:18:31.941Z",
+      "enabled_since": "2024-10-27T17:18:31.941Z"
+    }
+  },
+  {
+    "model": "organization.department",
+    "pk": 4,
+    "fields": {
+      "name": "Project Management",
+      "email": null,
+      "description": "",
+      "department_head": null,
+      "disabled": false,
+      "phone": "",
+      "last_modified": "2024-10-27T17:20:53.472Z",
+      "created_date": "2024-10-27T17:20:53.472Z",
+      "enabled_since": "2024-10-27T17:20:53.472Z"
+    }
+  },
+  {
+    "model": "organization.department",
+    "pk": 5,
+    "fields": {
+      "name": "Admin Department",
+      "email": null,
+      "description": "",
+      "department_head": null,
+      "disabled": false,
+      "phone": "",
+      "last_modified": "2024-10-27T17:25:13.849Z",
+      "created_date": "2024-10-27T17:25:13.849Z",
+      "enabled_since": "2024-10-27T17:25:13.849Z"
+    }
+  },
+  {
+    "model": "organization.unit",
+    "pk": 1,
+    "fields": {
+      "name": "Finance And Accounting",
+      "email": "",
+      "department": 1,
+      "description": "",
+      "unit_head": null,
+      "phone": "",
+      "disabled": false,
+      "last_modified": "2024-10-27T17:10:58.242Z",
+      "created_date": "2024-10-27T17:10:58.242Z",
+      "enabled_since": "2024-10-27T17:10:58.242Z"
+    }
+  },
+  {
+    "model": "organization.unit",
+    "pk": 2,
+    "fields": {
+      "name": "Software Engineering",
+      "email": "",
+      "department": 2,
+      "description": "",
+      "unit_head": null,
+      "phone": "",
+      "disabled": false,
+      "last_modified": "2024-10-27T17:13:21.275Z",
+      "created_date": "2024-10-27T17:13:21.275Z",
+      "enabled_since": "2024-10-27T17:13:21.275Z"
+    }
+  },
+  {
+    "model": "organization.unit",
+    "pk": 3,
+    "fields": {
+      "name": "Marketing",
+      "email": "",
+      "department": 3,
+      "description": "",
+      "unit_head": null,
+      "phone": "",
+      "disabled": false,
+      "last_modified": "2024-10-27T17:18:34.563Z",
+      "created_date": "2024-10-27T17:18:34.563Z",
+      "enabled_since": "2024-10-27T17:18:34.563Z"
+    }
+  },
+  {
+    "model": "organization.unit",
+    "pk": 4,
+    "fields": {
+      "name": "PM Unit",
+      "email": "",
+      "department": 4,
+      "description": "",
+      "unit_head": null,
+      "phone": "",
+      "disabled": false,
+      "last_modified": "2024-10-27T17:20:55.963Z",
+      "created_date": "2024-10-27T17:20:55.963Z",
+      "enabled_since": "2024-10-27T17:20:55.963Z"
+    }
+  },
+  {
+    "model": "organization.unit",
+    "pk": 5,
+    "fields": {
+      "name": "Product Engineering",
+      "email": "",
+      "department": 2,
+      "description": "",
+      "unit_head": null,
+      "phone": "",
+      "disabled": false,
+      "last_modified": "2024-10-27T17:22:41.617Z",
+      "created_date": "2024-10-27T17:22:41.617Z",
+      "enabled_since": "2024-10-27T17:22:41.617Z"
+    }
+  },
+  {
+    "model": "organization.unit",
+    "pk": 6,
+    "fields": {
+      "name": "Management",
+      "email": "",
+      "department": 5,
+      "description": "",
+      "unit_head": null,
+      "phone": "",
+      "disabled": false,
+      "last_modified": "2024-10-27T17:25:17.214Z",
+      "created_date": "2024-10-27T17:25:17.214Z",
+      "enabled_since": "2024-10-27T17:25:17.214Z"
+    }
+  },
+  {
+    "model": "organization.unit",
+    "pk": 7,
+    "fields": {
+      "name": "Procurement",
+      "email": "",
+      "department": 5,
+      "description": "",
+      "unit_head": null,
+      "phone": "",
+      "disabled": false,
+      "last_modified": "2024-10-27T17:28:30.059Z",
+      "created_date": "2024-10-27T17:28:30.059Z",
+      "enabled_since": "2024-10-27T17:28:30.059Z"
+    }
+  },
+  {
+    "model": "organization.unit",
+    "pk": 8,
+    "fields": {
+      "name": "HR Unit",
+      "email": "",
+      "department": 5,
+      "description": "",
+      "unit_head": null,
+      "phone": "",
+      "disabled": false,
+      "last_modified": "2024-10-27T22:24:46.279Z",
+      "created_date": "2024-10-27T22:24:46.279Z",
+      "enabled_since": "2024-10-27T22:24:46.279Z"
+    }
+  },
+  {
+    "model": "organization.staff",
+    "pk": 1,
+    "fields": {
+      "email": "ousman.ndure@mail.com",
+      "first_name": "Ousman",
+      "last_name": "Ndure",
+      "middle_name": "",
+      "phone": "+220 1234567",
+      "biography": "",
+      "job_title": "Research And Development",
+      "gender": "male",
+      "address": null,
+      "disabled": true,
+      "is_admin": false,
+      "unit": 3,
+      "last_modified": "2024-10-27T17:26:00.488Z",
+      "created_date": "2024-10-27T17:11:20.324Z"
+    }
+  },
+  {
+    "model": "organization.staff",
+    "pk": 2,
+    "fields": {
+      "email": "mahammed.touray@mail.com",
+      "first_name": "Mahammed",
+      "last_name": "Touray",
+      "middle_name": "",
+      "phone": "+220 1234568",
+      "biography": "",
+      "job_title": "Software Engineer",
+      "gender": "male",
+      "address": null,
+      "disabled": false,
+      "is_admin": false,
+      "unit": 2,
+      "last_modified": "2024-10-28T20:41:40.397Z",
+      "created_date": "2024-10-27T17:13:32.359Z"
+    }
+  },
+  {
+    "model": "organization.staff",
+    "pk": 3,
+    "fields": {
+      "email": "mahammed.sillah@mail.com",
+      "first_name": "Muhammed",
+      "last_name": "Sillah",
+      "middle_name": "",
+      "phone": "+220 1234569",
+      "biography": "",
+      "job_title": "Business Development",
+      "gender": "male",
+      "address": null,
+      "disabled": true,
+      "is_admin": false,
+      "unit": 3,
+      "last_modified": "2024-10-27T17:18:44.001Z",
+      "created_date": "2024-10-27T17:18:44.001Z"
+    }
+  },
+  {
+    "model": "organization.staff",
+    "pk": 4,
+    "fields": {
+      "email": "modoulamin.drammeh@mail.com",
+      "first_name": "Modou",
+      "last_name": "Lamin",
+      "middle_name": "Drammeh",
+      "phone": "+220 1234570",
+      "biography": "",
+      "job_title": "Project Manager",
+      "gender": "male",
+      "address": null,
+      "disabled": true,
+      "is_admin": false,
+      "unit": 4,
+      "last_modified": "2024-10-27T17:21:00.618Z",
+      "created_date": "2024-10-27T17:21:00.618Z"
+    }
+  },
+  {
+    "model": "organization.staff",
+    "pk": 5,
+    "fields": {
+      "email": "jainaba.faal@mail.com",
+      "first_name": "Jainaba",
+      "last_name": "Faal",
+      "middle_name": "",
+      "phone": "+220 1234571",
+      "biography": "",
+      "job_title": "QA Engineer",
+      "gender": "female",
+      "address": null,
+      "disabled": true,
+      "is_admin": false,
+      "unit": 5,
+      "last_modified": "2024-10-27T17:22:53.553Z",
+      "created_date": "2024-10-27T17:22:53.553Z"
+    }
+  },
+  {
+    "model": "organization.staff",
+    "pk": 6,
+    "fields": {
+      "email": "muhammed.darboe@mail.com",
+      "first_name": "Muhammed",
+      "last_name": "Darboe",
+      "middle_name": "",
+      "phone": "+220 1234572",
+      "biography": "",
+      "job_title": "Software Engineer",
+      "gender": "male",
+      "address": null,
+      "disabled": true,
+      "is_admin": false,
+      "unit": 2,
+      "last_modified": "2024-10-27T17:23:39.261Z",
+      "created_date": "2024-10-27T17:23:39.261Z"
+    }
+  },
+  {
+    "model": "organization.staff",
+    "pk": 7,
+    "fields": {
+      "email": "system.admin@mail.com",
+      "first_name": "System",
+      "last_name": "Administrator",
+      "middle_name": "",
+      "phone": "1234573",
+      "biography": "",
+      "job_title": "System Administrator",
+      "gender": "other",
+      "address": null,
+      "disabled": false,
+      "is_admin": false,
+      "unit": 6,
+      "last_modified": "2024-10-27T17:25:26.354Z",
+      "created_date": "2024-10-27T17:25:26.354Z"
+    }
+  },
+  {
+    "model": "organization.staff",
+    "pk": 8,
+    "fields": {
+      "email": "finance.user@mail.com",
+      "first_name": "Finance",
+      "last_name": "User",
+      "middle_name": "",
+      "phone": "1234574",
+      "biography": "",
+      "job_title": "Finance Manager",
+      "gender": "female",
+      "address": null,
+      "disabled": true,
+      "is_admin": false,
+      "unit": 1,
+      "last_modified": "2024-10-27T17:26:53.817Z",
+      "created_date": "2024-10-27T17:26:53.817Z"
+    }
+  },
+  {
+    "model": "organization.staff",
+    "pk": 9,
+    "fields": {
+      "email": "procurement.user@mail.com",
+      "first_name": "Procurement",
+      "last_name": "User",
+      "middle_name": "",
+      "phone": "1234575",
+      "biography": "",
+      "job_title": "Procurement Officer",
+      "gender": "female",
+      "address": null,
+      "disabled": false,
+      "is_admin": false,
+      "unit": 7,
+      "last_modified": "2024-10-27T17:28:34.676Z",
+      "created_date": "2024-10-27T17:28:34.676Z"
+    }
+  },
+  {
+    "model": "organization.staff",
+    "pk": 10,
+    "fields": {
+      "email": "hr.user@mail.com",
+      "first_name": "HR",
+      "last_name": "User",
+      "middle_name": "",
+      "phone": "1234576",
+      "biography": "",
+      "job_title": "Human Resource",
+      "gender": "female",
+      "address": null,
+      "disabled": false,
+      "is_admin": false,
+      "unit": 8,
+      "last_modified": "2024-10-28T11:08:38.614Z",
+      "created_date": "2024-10-27T22:24:53.984Z"
+    }
+  },
+  {
+    "model": "organization.planitem",
+    "pk": 1,
+    "fields": {
+      "description": "Office Supplies",
+      "quantity": 100,
+      "budget": "200000.00",
+      "measurement_unit": "units",
+      "procurement_method": "",
+      "quarter_1_budget": "0.00",
+      "quarter_2_budget": "0.00",
+      "quarter_3_budget": "0.00",
+      "quarter_4_budget": "0.00",
+      "created_date": "2024-10-28T23:06:55.679Z",
+      "last_modified": "2024-10-28T23:06:55.679Z"
+    }
+  },
+  {
+    "model": "organization.planitem",
+    "pk": 2,
+    "fields": {
+      "description": "IT Equipment",
+      "quantity": 50,
+      "budget": "160000.00",
+      "measurement_unit": "pieces",
+      "procurement_method": "",
+      "quarter_1_budget": "0.00",
+      "quarter_2_budget": "0.00",
+      "quarter_3_budget": "0.00",
+      "quarter_4_budget": "0.00",
+      "created_date": "2024-10-28T23:06:55.680Z",
+      "last_modified": "2024-10-28T23:06:55.680Z"
+    }
+  },
+  {
+    "model": "organization.planitem",
+    "pk": 3,
+    "fields": {
+      "description": "Marketing Materials",
+      "quantity": 80,
+      "budget": "185000.00",
+      "measurement_unit": "bundles",
+      "procurement_method": "",
+      "quarter_1_budget": "0.00",
+      "quarter_2_budget": "0.00",
+      "quarter_3_budget": "0.00",
+      "quarter_4_budget": "0.00",
+      "created_date": "2024-10-28T23:06:55.680Z",
+      "last_modified": "2024-10-28T23:06:55.681Z"
+    }
+  },
+  {
+    "model": "organization.departmentprocurementplan",
+    "pk": 1,
+    "fields": {
+      "officer": 7,
+      "department": 5,
+      "description": null,
+      "created_date": "2024-10-28T23:06:55.667Z",
+      "last_modified": "2024-10-28T23:06:55.667Z",
+      "items": [3, 2, 1]
+    }
+  },
+  {
+    "model": "organization.annualplan",
+    "pk": 1,
+    "fields": {
+      "title": "Annual Procurement Plan 2024",
+      "description": "",
+      "year_start": "2024-01-01",
+      "renewed_year": null,
+      "officer": 7,
+      "org_approved": false,
+      "gppa_approved": false,
+      "is_operational": false,
+      "is_current_plan": false,
+      "latest_approval_request_date": null,
+      "created_date": "2024-10-28T22:33:53.592Z",
+      "last_modified": "2024-10-28T22:33:53.592Z",
+      "department_plans": [1]
+    }
+  }
+]

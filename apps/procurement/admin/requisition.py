@@ -1,14 +1,12 @@
 from django.contrib import admin
-from ..models import Requisition
-from django import forms
-
-
-class Form(forms.ModelForm):
-    class Meta:
-        model = Requisition
-        exclude = []
+from ..models import Requisition, RequisitionItem
 
 
 @admin.register(Requisition)
 class RequisitionAdmin(admin.ModelAdmin):
-    form = Form
+    pass
+
+
+@admin.register(RequisitionItem)
+class RequisitionItemAdmin(admin.ModelAdmin):
+    pass
