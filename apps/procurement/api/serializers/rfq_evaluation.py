@@ -34,21 +34,31 @@ class RFQQuotationEvaluationSerializer(serializers.ModelSerializer):
     def to_representation(self, instance: RFQQuotationEvaluation):
         data = super().to_representation(instance)
         data["id"] = instance.pk  # type:ignore
-        data["officer"] = {
-            "id": instance.officer.pk,  # type:ignore
-            "name": instance.officer.name,  # type:ignore
-        }
+        data["officer"] = (
+            {
+                "id": instance.officer.pk,
+                "name": instance.officer.name,
+                "job_title": instance.officer.job_title,
+            }
+            if instance.officer
+            else None
+        )
         if not self.context.get("slim"):
             data["item"] = {
                 "id": instance.item.pk,
                 "name": instance.item.item_description,
             }
             data["quotation"] = {
-                "id": instance.quotation.pk,  # type:ignore
-                "submitted_date": str(instance.created_date),  # type:ignore
+                "id": instance.quotation.pk,
+                "pricing": instance.quotation.pricing,
+                "submitted_date": str(instance.created_date),
+                "delivery_date": str(instance.quotation.delivery_date),
+                "evaluation_status": instance.quotation.evaluation_status,
                 "vendor": {
                     "id": instance.quotation.vendor.pk,
+                    "logo": instance.quotation.vendor.logo,
                     "name": instance.quotation.vendor.name,
+                    "short_desc": instance.quotation.vendor.short_desc,
                 },
             }
         else:
@@ -72,20 +82,25 @@ class RFQQuotationWinnerEvaluationSerializer(serializers.ModelSerializer):
         data["officer"] = {
             "id": instance.officer.pk,  # type:ignore
             "name": instance.officer.name,  # type:ignore
+            "job_title": instance.officer.job_title,  # type:ignore
         }
-        if not self.context.get("slim"):
-            data["item"] = {
-                "id": instance.item.pk,
-                "name": instance.item.item_description,
-            }
-            data["quotation"] = {
-                "id": instance.quotation.pk,  # type:ignore
-                "submitted_date": str(instance.created_date),  # type:ignore
-                "vendor": {
-                    "id": instance.quotation.vendor.pk,
-                    "name": instance.quotation.vendor.name,
-                },
-            }
+        data["item"] = {
+            "id": instance.item.pk,
+            "name": instance.item.item_description,
+        }
+        data["quotation"] = {
+            "id": instance.quotation.pk,
+            "pricing": instance.quotation.pricing,
+            "submitted_date": str(instance.created_date),
+            "delivery_date": str(instance.quotation.delivery_date),
+            "evaluation_status": instance.quotation.evaluation_status,
+            "vendor": {
+                "id": instance.quotation.vendor.pk,
+                "logo": instance.quotation.vendor.logo,
+                "name": instance.quotation.vendor.name,
+                "short_desc": instance.quotation.vendor.short_desc,
+            },
+        }
 
         return data
 

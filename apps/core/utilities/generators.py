@@ -16,7 +16,7 @@ def generate_unique_id(prefix, instance_id, z=5):
     return "%s%s%s" % (prefix if prefix else "", "".join(zeros), instance_id)
 
 
-def revert_unique_id(prefix, unique_id):
+def revert_generated_unique_id(prefix, unique_id):
     """
     Reverts the generated unique id to its original id
     * e.g. RFQ000250 -> 250

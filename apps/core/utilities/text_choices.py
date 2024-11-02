@@ -41,6 +41,7 @@ class RFQLevelChoices(models.TextChoices):
     PUBLISH_LEVEL = "PUBLISH LEVEL", "Publish Level"
     QUOTATION_LEVEL = "QUOTATION LEVEL", "Quotation Level"
     EVALUATION_LEVEL = "EVALUATION LEVEL", "Evaluation Level"
+    AWARD_LEVEL = "AWARD LEVEL", "Award Level"
     CONTRACT_LEVEL = "CONTRACT LEVEL", "Contract Level"
     PURCHASE_ORDER_LEVEL = "PURCHASE ORDER LEVEL", "Purchase Order Level"
     INVOICE_LEVEL = "INVOICE LEVEL", "Invoice Level"

@@ -8,7 +8,7 @@ from apps.procurement.api.serializers.rfq_evaluation import (
     RFQQuotationEvaluationSerializer,
 )
 from apps.procurement.models.rfq import RFQ
-from apps.core.utilities.generators import revert_unique_id
+from apps.core.utilities.generators import revert_generated_unique_id
 
 
 class RFQEvaluationRetrieveView(RetrieveAPIView):
@@ -23,7 +23,7 @@ class RFQEvaluationRetrieveView(RetrieveAPIView):
 
         # TODO - Check if profile has permission to to view this evaluation
 
-        rfq_id = revert_unique_id(None, kwargs.get("rfq_id", 0))
+        rfq_id = revert_generated_unique_id(None, kwargs.get("rfq_id", 0))
         rfq = get_object_or_404(RFQ, pk=rfq_id)
         evaluation = get_object_or_404(RFQEvaluation, rfq=rfq)
         if evaluation.officer != profile:

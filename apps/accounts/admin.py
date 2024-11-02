@@ -9,9 +9,8 @@ from . import models
 class AccountAdmin(admin.ModelAdmin):
     sortable_by = ["is_active", "last_login"]
     list_display: Sequence[str] = [
+        "email",
         "full_name",
-        "first_name",
-        "last_name",
         "profile_type",
         "is_active",
         "__groups__",

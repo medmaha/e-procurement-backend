@@ -3,10 +3,13 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from apps.organization.models import Staff
-from apps.organization.api.serializers.staff import StaffRetrieveSerializer,     StaffUpdateRetrieveSerializer
+from apps.organization.api.serializers.staff import (
+    StaffRetrieveSerializer,
+    StaffUpdateRetrieveSerializer,
+)
 
 from apps.accounts.models import Account
-from apps.core.utilities.generators import revert_unique_id
+from apps.core.utilities.generators import revert_generated_unique_id
 
 
 class StaffRetrieveView(RetrieveAPIView):
@@ -15,7 +18,7 @@ class StaffRetrieveView(RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         user: Account = request.user
         profile_name, profile = user.get_profile()
-        slug = revert_unique_id("EM", kwargs.get("id") or "0")
+        slug = revert_generated_unique_id("EM", kwargs.get("id") or "0")
         staff = get_object_or_404(Staff, pk=slug)
 
         if not staff:

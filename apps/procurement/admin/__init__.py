@@ -15,3 +15,10 @@ from .rfq_contract import (
     RFQContractAwardAdmin,
     RFQNegotiationNoteAdmin,
 )
+
+from .contract import (
+    ContractAdmin,
+    ContractAttachmentAdmin,
+    ContractAwardAdmin,
+    ContractAwardApprovalAdmin,
+)

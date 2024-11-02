@@ -69,6 +69,8 @@ class DefaultGroups:
         "perms": [
             f"{proc.RFQApproval._meta.app_label}.add_{proc.RFQApproval._meta.model_name}",
             f"{proc.RFQApproval._meta.app_label}.change_{proc.RFQApproval._meta.model_name}",
+            #
+            f"{proc.ContractAwardApproval._meta.app_label}.add_{proc.ContractAwardApproval._meta.model_name}",
         ],
     }
 
@@ -77,6 +79,7 @@ class DefaultGroups:
         "perms": [
             f"{proc.RFQ._meta.app_label}.add_{proc.RFQ._meta.model_name}",
             f"{proc.RFQ._meta.app_label}.change_{proc.RFQ._meta.model_name}",
+            f"{proc.Contract._meta.app_label}.add_{proc.Contract._meta.model_name}",
         ],
     }
 

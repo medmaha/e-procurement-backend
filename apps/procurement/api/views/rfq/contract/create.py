@@ -15,7 +15,10 @@ from apps.core.utilities.errors import get_serializer_error_message
 from apps.procurement.models.rfq import RFQ
 from apps.vendors.models.vendor import Vendor
 from apps.vendors.models.rfq_response import RFQResponse
-from apps.core.utilities.generators import generate_unique_id, revert_unique_id
+from apps.core.utilities.generators import (
+    generate_unique_id,
+    revert_generated_unique_id,
+)
 from apps.core.utilities.text_choices import RFQLevelChoices
 from apps.procurement.api.serializers.rfq_contract import (
     NegotiationNoteCreateSerializer,
@@ -43,7 +46,7 @@ class CreateContract(CreateAPIView):
             # Get the RFQ in which the contract is/will-be based on
             rfq = (
                 RFQ.objects.select_for_update()
-                .filter(pk=revert_unique_id("", data.get("rfq_id")))
+                .filter(pk=revert_generated_unique_id("", data.get("rfq_id")))
                 .first()
             )
             if not rfq:

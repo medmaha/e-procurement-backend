@@ -12,7 +12,10 @@ from apps.procurement.api.serializers.quotations import (
 )
 from apps.vendors.models.rfq_response import RFQResponse
 from apps.core.utilities.text_choices import ApprovalChoices
-from apps.core.utilities.generators import revert_unique_id, generate_unique_id
+from apps.core.utilities.generators import (
+    revert_generated_unique_id,
+    generate_unique_id,
+)
 from apps.procurement.models.rfq import RFQ
 
 
@@ -54,7 +57,7 @@ class QuotationRespondListView(ListAPIView):
 
         if search:
             if search_includes_rfq:
-                qs = queryset.filter(rfq__id=revert_unique_id("", search))
+                qs = queryset.filter(rfq__id=revert_generated_unique_id("", search))
                 queryset = qs
                 filtered = qs.exists()
             elif re.search("[a-zA-Z]", search):
@@ -65,7 +68,7 @@ class QuotationRespondListView(ListAPIView):
                 queryset = qs
                 filtered = qs.exists()
             else:
-                qs = queryset.filter(Q(id=revert_unique_id("", search)))
+                qs = queryset.filter(Q(id=revert_generated_unique_id("", search)))
                 queryset = qs
                 filtered = qs.exists()
         if year:

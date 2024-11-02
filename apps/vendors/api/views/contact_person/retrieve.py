@@ -6,7 +6,7 @@ from rest_framework.generics import RetrieveAPIView
 
 from apps.vendors.models import ContactPerson
 from apps.vendors.api.serializers.contact_person import ContactPersonRetrieveSerializer
-from apps.core.utilities.generators import revert_unique_id
+from apps.core.utilities.generators import revert_generated_unique_id
 
 
 class ContactPersonSerializer(serializers.ModelSerializer):
@@ -65,7 +65,7 @@ class ContactPersonRetrieveDetailsView(RetrieveAPIView):
         profile_type, profile = request.user.get_profile()
 
         slug = kwargs.get("slug") or "0"
-        _id = revert_unique_id("", slug)
+        _id = revert_generated_unique_id("", slug)
         instance = get_object_or_404(ContactPerson, pk=_id)
         serializer = self.get_serializer(instance)
         return Response({"data": serializer.data})

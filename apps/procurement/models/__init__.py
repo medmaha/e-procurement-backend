@@ -47,5 +47,9 @@ from .rfq_contract import (
     RFQNegotiationNote,
 )
 
+
+from .contract import Contract, ContractAttachment
+from .contract_award import ContractAward, ContractAwardApproval
+
 #
 from .purchase_order import PurchaseOrder, PurchaseOrderApproval

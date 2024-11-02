@@ -40,6 +40,7 @@ class Vendor(models.Model):
     address = models.CharField(max_length=255, null=True, blank=True)
     website = models.URLField(blank=True, null=True)
     logo = models.CharField(max_length=255, null=True, blank=True)
+    short_desc = models.CharField(max_length=80, null=True, blank=True)
     description = models.TextField(max_length=1000, null=True, blank=True)
     established_date = models.DateField(null=True, blank=True)
 
@@ -79,6 +80,12 @@ class Vendor(models.Model):
     @property
     def name(self):
         return self.organization_name
+
+    def save(self, *args, **kwargs):
+        if self.description:
+            self.short_desc = self.description[:80]
+
+        return super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Vendor"

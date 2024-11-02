@@ -7,7 +7,7 @@ from apps.procurement.models import RFQ, RFQApproval
 from apps.procurement.api.serializers.rfq import (
     RFQListSerializer,
 )
-from apps.core.utilities.generators import revert_unique_id
+from apps.core.utilities.generators import revert_generated_unique_id
 
 
 class RfqRetrieveView(RetrieveAPIView):
@@ -15,7 +15,7 @@ class RfqRetrieveView(RetrieveAPIView):
 
     def retrieve(self, request, slug, *args, **kwargs):
         try:
-            _id = revert_unique_id("RFQ", slug or "0")
+            _id = revert_generated_unique_id("RFQ", slug or "0")
 
             instance = (
                 RFQ.objects.prefetch_related("items", "suppliers", "opened_by")

@@ -17,7 +17,7 @@ from apps.core.utilities.errors import get_serializer_error_message
 from apps.organization.models.staff import Staff
 from apps.procurement.models.rfq import RFQ
 from apps.accounts.models.account import Account
-from apps.core.utilities.generators import revert_unique_id
+from apps.core.utilities.generators import revert_generated_unique_id
 from apps.core.utilities.text_choices import RFQLevelChoices
 
 
@@ -33,7 +33,7 @@ class RFUpdateView(UpdateAPIView):
             )
 
         rfq = get_object_or_404(
-            RFQ, pk=revert_unique_id(None, request.data.get("rfq_id"))
+            RFQ, pk=revert_generated_unique_id(None, request.data.get("rfq_id"))
         )
         if rfq.level != RFQLevelChoices.APPROVAL_LEVEL.value:
             return Response(

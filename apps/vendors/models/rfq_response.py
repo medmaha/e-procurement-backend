@@ -46,21 +46,37 @@ class RFQResponseBrochure(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
 
+class EvaluationStatusChoices(models.TextChoices):
+    PENDING = "PENDING", "Pending"
+    AWARDED = "AWARDED", "Awarded"
+    REJECTED = "REJECTED", "Rejected"
+    EVALUATED = "EVALUATED", "Evaluated"
+    AWARD_AWAITING_APPROVAL = "AWARD_AWAITING_APPROVAL", "Await Await"
+
+
 class RFQResponse(models.Model):
     "Supplies Send this quote to the [Procuring Organization]"
 
     rfq = models.ForeignKey(
         "procurement.RFQ", on_delete=models.CASCADE, related_name="responses"
     )
+
     vendor = models.ForeignKey(
         Vendor, on_delete=models.CASCADE, related_name="rfq_responses"
     )
 
     status = models.CharField(
-        default="pending",
         max_length=10,
+        default=ApprovalChoices.PENDING,
         choices=ApprovalChoices.choices,
-        help_text="Whether vendor accepted this requisition or rejects it",
+        help_text="Whether vendor accepts or rejects this requisition",
+    )
+
+    evaluation_status = models.CharField(
+        max_length=50,
+        default=EvaluationStatusChoices.PENDING,
+        choices=EvaluationStatusChoices.choices,
+        help_text="Whether vendor accepts or rejects this requisition",
     )
 
     proforma = models.FileField(upload_to=upload_proforma, null=True)
@@ -74,6 +90,7 @@ class RFQResponse(models.Model):
 
     remarks = models.TextField(max_length=2500, default="", blank=True)
 
+    # FIXME: Avoid using these fields
     approved_date = models.DateField(null=True, blank=True)
     approved_remarks = models.TextField(max_length=2500, null=True, blank=True)
     approved_officer = models.ForeignKey(

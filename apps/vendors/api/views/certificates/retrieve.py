@@ -7,7 +7,7 @@ from apps.vendors.models import Certificate
 from apps.vendors.api.serializers.certificates import (
     CertificateRetrieveSerializer,
 )
-from apps.core.utilities.generators import revert_unique_id
+from apps.core.utilities.generators import revert_generated_unique_id
 
 
 class CertificateRetrieveView(RetrieveAPIView):
@@ -15,7 +15,7 @@ class CertificateRetrieveView(RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         slug = kwargs.get("slug")
-        _id = revert_unique_id("", slug or "0")
+        _id = revert_generated_unique_id("", slug or "0")
         instance = get_object_or_404(Certificate, pk=_id)
         serializer = self.get_serializer(instance, context={"request": request})
         auth_perms = {

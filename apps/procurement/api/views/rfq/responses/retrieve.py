@@ -7,7 +7,7 @@ from apps.procurement.api.serializers.quotations import (
     RFQResponseRetrieveSerializer,
 )
 from apps.vendors.models.rfq_response import RFQResponse
-from apps.core.utilities.generators import revert_unique_id
+from apps.core.utilities.generators import revert_generated_unique_id
 from apps.procurement.models.rfq_contract import RFQContract
 
 
@@ -17,7 +17,7 @@ class QuotationRespondRetrieveView(RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         profile_type, vendor = request.user.get_profile()
         slug = self.kwargs.get("slug") or "0"
-        _id = revert_unique_id(None, slug)
+        _id = revert_generated_unique_id(None, slug)
         queryset = get_object_or_404(RFQResponse, pk=_id)
 
         isContract = request.query_params.get("for") is not None

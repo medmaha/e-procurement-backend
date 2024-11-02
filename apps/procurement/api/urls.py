@@ -38,6 +38,14 @@ from .views.rfq.evaluation.retrieve import RFQEvaluationRetrieveView
 from .views.rfq.responses.reject import QuotationRespondRejectView
 from .views.rfq.responses.retrieve import QuotationRespondRetrieveView
 
+#  Contract
+from .views.contracts import ContractListAPIView, ContractAwardListAPIView
+
+# from .views.rfq.contract.list import RFQContractListView
+# from .views.rfq.contract.approve import ContractApprovalCreateAPIView
+# from .views.rfq.contract.negotiations import (
+#     RFQNegotiationView,
+# )
 # RFQ Contract
 from .views.rfq.contract.create import CreateContract
 from .views.rfq.contract.list import RFQContractListView
@@ -124,6 +132,22 @@ urlpatterns = [
     path("rfq/evaluation/create/", RFQEvaluationCreateView.as_view()),
     path("rfq/evaluation/remove/", RFQEvaluationRemoveView.as_view()),
     path("rfq/evaluation/retrieve/<rfq_id>/", RFQEvaluationRetrieveView.as_view()),
+    #
+    # Contracts
+    path("contracts/", ContractListAPIView.as_view()),
+    path("contracts/<contract_id>/", ContractListAPIView.as_view()),
+    path("contracts/awards/", ContractAwardListAPIView.as_view()),
+    path("contracts/awards/<award_id>/", ContractAwardListAPIView.as_view()),
+    path("contracts/awards/<award_id>/", ContractAwardListAPIView.as_view()),
+    # path("rfq/contracts/negotiations/<contract_id>/", RFQNegotiationView.as_view()),
+    # path("rfq/contracts/negotiations/", RFQNegotiationView.as_view()),  # CRUD Handlers
+    # path("rfq/contracts/list/", RFQContractListView.as_view()),
+    # path("rfq/contracts/create/", CreateContract.as_view()),
+    # path("rfq/contracts/create/", CreateContract.as_view()),
+    # path("rfq/contracts/", RFQContractListView.as_view()),
+    # path(
+    #     "rfq/contracts/<contract_id>/approval/", ContractApprovalCreateAPIView.as_view()
+    # ),
     #
     # RFQ Contracts
     path("rfq/contracts/negotiations/list/", RFQNegotiationView.as_view()),

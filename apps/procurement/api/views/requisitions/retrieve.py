@@ -7,7 +7,7 @@ from apps.procurement.models import Requisition
 from apps.procurement.api.serializers.requisition import (
     RequisitionRetrieveSerializer,
 )
-from apps.core.utilities.generators import revert_unique_id
+from apps.core.utilities.generators import revert_generated_unique_id
 
 
 class RequisitionRetrieveView(RetrieveAPIView):
@@ -15,7 +15,7 @@ class RequisitionRetrieveView(RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         slug = kwargs.get("slug")
-        _id = revert_unique_id("R", slug or "0")
+        _id = revert_generated_unique_id("R", slug or "0")
         instance = (
             Requisition.objects.prefetch_related("items")
             .select_related("officer")

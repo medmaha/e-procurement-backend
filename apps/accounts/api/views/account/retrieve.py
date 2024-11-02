@@ -6,7 +6,7 @@ from rest_framework.generics import RetrieveAPIView
 
 from apps.accounts.models import Account
 from apps.organization.api.serializers.staff import StaffRetrieveSerializer
-from apps.core.utilities.generators import revert_unique_id
+from apps.core.utilities.generators import revert_generated_unique_id
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -26,7 +26,9 @@ class AccountSerializer(serializers.ModelSerializer):
 
 class AccountRetrieveView(RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
-        user_id = revert_unique_id(None, kwargs.get("user_id") or request.user.id)
+        user_id = revert_generated_unique_id(
+            None, kwargs.get("user_id") or request.user.id
+        )
         account = get_object_or_404(Account, pk=user_id)
         profile_type, profile = account.get_profile()
 
