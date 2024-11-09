@@ -134,11 +134,11 @@ urlpatterns = [
     path("rfq/evaluation/retrieve/<rfq_id>/", RFQEvaluationRetrieveView.as_view()),
     #
     # Contracts
-    path("contracts/", ContractListAPIView.as_view()),
-    path("contracts/<contract_id>/", ContractListAPIView.as_view()),
     path("contracts/awards/", ContractAwardListAPIView.as_view()),
     path("contracts/awards/<award_id>/", ContractAwardListAPIView.as_view()),
     path("contracts/awards/<award_id>/", ContractAwardListAPIView.as_view()),
+    path("contracts/", ContractListAPIView.as_view()),
+    path("contracts/<contract_id>/", ContractListAPIView.as_view()),
     # path("rfq/contracts/negotiations/<contract_id>/", RFQNegotiationView.as_view()),
     # path("rfq/contracts/negotiations/", RFQNegotiationView.as_view()),  # CRUD Handlers
     # path("rfq/contracts/list/", RFQContractListView.as_view()),
